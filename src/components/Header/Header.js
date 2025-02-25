@@ -33,7 +33,7 @@ const Header = () => {
           >
             RESUME
           </Nav.Link>
-          <Nav.Link
+          {/* <Nav.Link
             as={NavLink}
             to="/portfolio"
             className={
@@ -43,7 +43,7 @@ const Header = () => {
             }
           >
             PORTFOLIO
-          </Nav.Link>
+          </Nav.Link> */}
           {/* <Nav.Link
             as={NavLink}
             to="/blog"

@@ -7,8 +7,8 @@ import "./Contact.css";
 const Contact = () => {
   return (
     <>
-      <Grid container spacing={10} className="pb_45">
-        <Grid item xs={12} lg={6}>
+      <Grid container spacing={5} className="pb_45">
+        {/* <Grid item xs={12} lg={6}>
           <Grid container className="section pb_45">
             <Grid item className="section_title mb_30">
               <span></span>
@@ -50,9 +50,9 @@ const Contact = () => {
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} lg={5}>
-          <Grid container className="section pb_45">
+          <Grid container className="section">
             <Grid item className="section_title mb_30">
               <span></span>
               <Typography variant="h6" className="section_title_text">

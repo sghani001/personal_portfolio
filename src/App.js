@@ -24,7 +24,7 @@ function App() {
             <div className="main-content container_shadow">
               <Routes>
                 <Route path="/" element={<Resume />} />
-                <Route path="/portfolio" element={<Portfolio />} />
+                {/* <Route path="/portfolio" element={<Portfolio />} /> */}
                 <Route path="/contact" element={<Contact />} />
               </Routes>
             </div>
