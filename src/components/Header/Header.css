@@ -42,7 +42,7 @@
   padding-right: 22px;
 }
 
-.header .header_right>a>.MuiSvgIcon-root {
+.header .header_right > a > .MuiSvgIcon-root {
   font-size: 16px !important;
   margin-right: 12px;
   color: black;
