@@ -1,9 +1,9 @@
 import React from "react";
 import "./Resume.css";
-import { Grid, Icon, Paper, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import resumeData from "../../utils/resumeData";
 import "../../App.css";
-import { TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineSeparator } from "@mui/lab";
+import { TimelineContent, TimelineItem } from "@mui/lab";
 import CustomTimeline, {
   CustomTimelineSeparator,
 } from "../../components/Timeline/Timeline";

@@ -4,7 +4,6 @@ import "./App.css";
 import Profile from "./components/Profile/Profile";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import Portfolio from "./pages/Portfolio/Portfolio";
 import Resume from "./pages/Resume/Resume";
 import Contact from "./pages/Contact/Contact";
 import { Navbar } from "react-bootstrap";

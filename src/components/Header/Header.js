@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import { Nav, Navbar } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import { HomeRounded } from "@mui/icons-material";
 import Button from "../Button/Button";
 import resumeData from "../../utils/resumeData";
