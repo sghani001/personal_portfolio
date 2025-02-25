@@ -1,14 +1,41 @@
 import { Grid, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Button from "../../components/Button/Button";
 import resumeData from "../../utils/resumeData";
 import "./Contact.css";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+
+    // Capitalize Name Input
+    if (name === "name") {
+      value = value
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const mailtoLink = `mailto:syedghani001@gmail.com?subject=Contact from ${encodeURIComponent(
+    formData.name
+  )}&body=Name: ${encodeURIComponent(
+    formData.name
+  )}%0AEmail: ${encodeURIComponent(formData.email)}%0A%0A${encodeURIComponent(
+    formData.message
+  )}`;
+
   return (
     <>
       <Grid container spacing={5} className="pb_45">
-        {/* <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={6}>
           <Grid container className="section pb_45">
             <Grid item className="section_title mb_30">
               <span></span>
@@ -24,6 +51,8 @@ const Contact = () => {
                     name="name"
                     label="Name"
                     variant="standard"
+                    value={formData.name}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -32,6 +61,8 @@ const Contact = () => {
                     name="email"
                     label="E-mail"
                     variant="standard"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -42,15 +73,19 @@ const Contact = () => {
                     variant="standard"
                     multiline
                     rows={4}
+                    value={formData.message}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button text="Submit"></Button>
+                  <a href={mailtoLink} style={{ textDecoration: "none" }}>
+                    <Button text="Submit" />
+                  </a>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} lg={5}>
           <Grid container className="section">
             <Grid item className="section_title mb_30">
@@ -86,7 +121,7 @@ const Contact = () => {
             <Grid item xs={12}>
               <Grid container className="contactInfo_socialsContainer">
                 {Object.keys(resumeData.socials).map((key) => (
-                  <Grid item className="contactInfo_social">
+                  <Grid item className="contactInfo_social" key={key}>
                     <a href={resumeData.socials[key].link}>
                       {resumeData.socials[key].icon}
                     </a>
