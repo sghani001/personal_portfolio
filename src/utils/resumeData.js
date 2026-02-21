@@ -60,13 +60,13 @@ export const resumeData = {
             "Microservices-based AI bookkeeping platform. Designed and built the Stripe payment microservice (subscriptions, billing, webhooks) and integrated it with the core Docyt platform for accounting and hospitality product lines.",
           image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
         },
-        {
-          name: "Monthend / Controllr",
-          url: "https://fly.controllr.app/",
-          description:
-            "Controllr SaaS: authentication (email and Google), user flows, and product features supporting month-end and control workflows.",
-          image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
-        },
+        // {
+        //   name: "Monthend / Controllr",
+        //   url: "https://fly.controllr.app/",
+        //   description:
+        //     "Controllr SaaS: authentication (email and Google), user flows, and product features supporting month-end and control workflows.",
+        //   image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
+        // },
       ],
     },
     {
