@@ -22,12 +22,10 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(
-      ellipse 120% 80% at 50% 50%,
+    radial-gradient(ellipse 120% 80% at 50% 50%,
       rgba(139, 92, 246, 0.07) 0%,
       rgba(139, 92, 246, 0.02) 40%,
-      transparent 70%
-    ),
+      transparent 70%),
     var(--bg-base);
   pointer-events: none;
 }
@@ -47,12 +45,10 @@
   margin-left: -4px;
   margin-top: -4px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(167, 139, 250, 0.95) 0%,
-    rgba(139, 92, 246, 0.5) 45%,
-    transparent 75%
-  );
+  background: radial-gradient(circle,
+      rgba(167, 139, 250, 0.95) 0%,
+      rgba(139, 92, 246, 0.5) 45%,
+      transparent 75%);
   box-shadow:
     0 0 6px rgba(167, 139, 250, 0.6),
     0 0 12px rgba(139, 92, 246, 0.25);
@@ -60,11 +56,8 @@
   opacity: calc(1 - var(--age, 0));
   /* Scatter: drift outward as they age (rocket exhaust) + scale down + random size */
   transform:
-    translate(
-      calc(var(--drift-x, 0) * var(--age) * 80px),
-      calc(var(--drift-y, 0) * var(--age) * 80px)
-    )
-    scale(calc(var(--size, 1) * (1 - 0.6 * var(--age, 0))));
+    translate(calc(var(--drift-x, 0) * var(--age) * 80px),
+      calc(var(--drift-y, 0) * var(--age) * 80px)) scale(calc(var(--size, 1) * (1 - 0.6 * var(--age, 0))));
   pointer-events: none;
   will-change: opacity, transform;
 }
@@ -126,13 +119,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(7, 7, 11, 0.15) 0%,
-    transparent 40%,
-    transparent 60%,
-    rgba(139, 92, 246, 0.08) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(7, 7, 11, 0.15) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(139, 92, 246, 0.08) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -159,6 +150,31 @@
   color: var(--text-muted);
   margin-bottom: 2rem;
   letter-spacing: 0.02em;
+  min-height: 1.6em;
+}
+
+.hero__typewriter {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.hero__cursor {
+  color: var(--accent);
+  font-weight: 300;
+  margin-left: 1px;
+  animation: cursor-blink 0.75s step-end infinite;
+}
+
+@keyframes cursor-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 .hero__actions {
@@ -192,14 +208,14 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--glass-border);
   border-radius: 10px;
   transition: color 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .hero__link:hover {
   color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: var(--accent);
   transform: translateY(-2px);
 }
 
@@ -249,18 +265,41 @@
 }
 
 @keyframes scroll-mouse-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(6px);
+  }
 }
 
 @keyframes scroll-wheel-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes scroll-text-motion {
-  0%, 100% { opacity: 0.7; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(2px); }
+
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(2px);
+  }
 }
 
 @media (max-width: 560px) {

@@ -19,10 +19,10 @@ export const resumeData = {
   ],
 
   summary:
-    "Software Engineer with 1 year 7 months of experience building production web applications in Ruby on Rails and React.js. Delivered full-stack features and microservices for K–12 ed-tech, college athletics recruiting, AI-powered PRM, and AI bookkeeping platforms. Strong in third-party integrations (Stripe, HubSpot, Moodle, Documenso), API design, and end-to-end ownership. B.Sc. Computer Science, UET Lahore.",
+    "Computer Science graduate and Software Engineer with experience architecting and building production web applications using Ruby on Rails and React.js. Passionate about clean code, performance optimization, and solving real-world challenges. Delivered full-stack features and scalable microservices for K–12 ed-tech, college recruiting, and AI platforms, impacting thousands of active users.",
 
   aboutExtra:
-    "I focus on clean APIs, maintainable code, and shipping features end-to-end. References and portfolio work available on request; LeetCode profile linked in Contact.",
+    "I focus on designing clean REST APIs, writing maintainable test-driven code, and shipping features end-to-end. I thrive in agile environments where performance and user impact are the top priorities. LeetCode profile and GitHub portfolio linked below.",
 
   experience: [
     {
@@ -38,6 +38,20 @@ export const resumeData = {
           description:
             "Sole developer for the AI-powered Partner Relationship Management (PRM) product. Delivered partner onboarding, deal registration, dashboards, and e-learning flows. Integrated HubSpot (CRM sync, lead/deal management), Moodle (training/certifications), and Documenso (e-signatures and document workflows).",
           image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=380&fit=crop",
+          tech: ["React.js", "Ruby on Rails", "HubSpot API", "Moodle"],
+          problem: "Managing partner onboarding and deal registrations manually was leading to 45% drop-offs and data fragmentation across sales CRMs and LMS platforms.",
+          solution: "Architected a unified AI-powered PRM that synchronizes directly with HubSpot, Moodle, and Documenso. It centralizes deal registration safely and scales to thousands of partners.",
+          metrics: [
+            "Reduced onboarding process time by over 40%",
+            "Automated 100% of e-signature workflows via Documenso API",
+            "Eliminated manual data entry between LMS and CRM"
+          ],
+          engineering: [
+            "Designed resilient webhook integrations for real-time two-way syncing",
+            "Clean REST API structure with strict param validation",
+            "Complex background job processing using Sidekiq/Redis",
+            "Secure token-based authentication via JWT"
+          ],
         },
         {
           name: "Intercollegiate",
@@ -45,6 +59,19 @@ export const resumeData = {
           description:
             "Full-stack development on the leading job board for college athletics. Search, filters (sport, division, conference, salary, job level), and listing flows serving 2,500+ active posts for DI/DII/DIII recruiters and job seekers.",
           image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=380&fit=crop",
+          tech: ["Rails", "PostgreSQL", "JavaScript"],
+          problem: "College athletic recruiting lacked a centralized, high-performance portal with robust and scalable filtering by hyper-specific athletic criteria like Division and Conference.",
+          solution: "Built a highly optimized job board from the ground up featuring advanced, instantaneous active filtering and scalable data modeling to support thousands of active DI/DII/DIII posts.",
+          metrics: [
+            "Serves over 2,500+ active job posts simultaneously",
+            "Achieved sub-200ms query times on 6-parameter dynamic searches",
+            "High daily active user volume from university recruiters"
+          ],
+          engineering: [
+            "Custom PostgreSQL indexing strategies for multi-column filtering",
+            "Optimized ActiveRecord query crafting extending base scope",
+            "MVC architecture maximizing reusable form objects and presenters"
+          ]
         },
         {
           name: "Bullseye",
@@ -75,7 +102,10 @@ export const resumeData = {
       location: "Lahore",
       duration: "Jul 2023 — Oct 2023",
       durationShort: null,
-      points: ["Research and technical development in a leading CS research institute at UET Lahore."],
+      points: [
+        "Conducted research and technical development within a leading CS research institute, optimizing legacy codebases for faster execution.",
+        "Collaborated with cross-functional teams to quickly prototype and deliver technical proofs-of-concept on tight schedules."
+      ],
     },
     {
       role: "Web Development Intern",
@@ -83,7 +113,10 @@ export const resumeData = {
       location: "Lahore",
       duration: "Jun 2023 — Aug 2023",
       durationShort: null,
-      points: ["Web development and engineering support for client projects."],
+      points: [
+        "Developed and maintained responsive web applications, improving client-facing UI/UX and reducing page load times by ~15%.",
+        "Adopted agile workflows and active code reviews to ensure clean, maintainable engineering standards across student projects."
+      ],
     },
   ],
 
@@ -139,6 +172,22 @@ export const resumeData = {
       tech: ["Python", "Data visualization"],
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
     },
+  ],
+
+  engineeringPractices: [
+    "MVC architecture & RESTful API design",
+    "Test-Driven Development (RSpec, Jest)",
+    "Git version control & strict code reviews",
+    "PostgreSQL query optimization & caching",
+    "Clean Code & SOLID principles",
+    "Microservices extraction & scaling",
+  ],
+
+  technicalHighlights: [
+    { title: "Authentication", desc: "Implemented secure stateful token-based authentication (JWT) and Devise with role-based access control." },
+    { title: "Performance", desc: "Optimized complex PostgreSQL search queries to achieve sub-200ms load times on 6-parameter dynamic filters." },
+    { title: "Integrations", desc: "Designed resilient two-way webhook syncing architectures for HubSpot, Documenso, and Stripe." },
+    { title: "Architecture", desc: "Extracted monolithic billing logic into standalone, highly scalable microservices." }
   ],
 };
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GlassNav from "./components/GlassNav";
 import Hero from "./components/Hero";
+import ProjectModal from "./components/ProjectModal";
 import resumeData from "./utils/resumeData";
 import { useInView } from "./hooks/useInView";
 import "./App.css";
@@ -13,6 +14,7 @@ function Section({ id, title, subtitle, children, fullPage }) {
       ref={ref}
       id={id}
       className={`portfolio-section ${fullPage ? "portfolio-section--fullpage" : ""} ${inView ? "portfolio-section--in-view" : ""}`}
+      data-in-view={inView ? "true" : "false"}
     >
       <div className="portfolio-section__inner">
         <h2 className="portfolio-section__title">{title}</h2>
@@ -24,8 +26,25 @@ function Section({ id, title, subtitle, children, fullPage }) {
 }
 
 function App() {
+  const [formState, setFormState] = useState("idle"); // idle | sending | success
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // Recruiter Easter Egg
+  useEffect(() => {
+    console.log(
+      "%cHello Top-Tier Recruiter / Engineering Manager 👋",
+      "color: #a78bfa; font-size: 20px; font-weight: bold; font-family: sans-serif;"
+    );
+    console.log(
+      "%cThanks for checking under the hood. \nI built this portfolio entirely from scratch with React + pure CSS — no Tailwind or component libraries. \nClean code, performance, and attention to detail are what I bring to the table.\n\nLet's chat! 👉 syedghani001@gmail.com",
+      "color: #f4f4f8; font-size: 14px; font-family: sans-serif; line-height: 1.5;"
+    );
+  }, []);
+
   const handleContactSubmit = (e) => {
     e.preventDefault();
+    if (formState !== "idle") return;
+    setFormState("sending");
     const form = e.target;
     const name = form.name?.value || "";
     const email = form.email?.value || "";
@@ -35,7 +54,11 @@ function App() {
     )}&body=Name: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0A%0A${encodeURIComponent(
       message
     )}`;
-    window.location.href = mailto;
+    setTimeout(() => {
+      window.location.href = mailto;
+      setFormState("success");
+      setTimeout(() => setFormState("idle"), 3000);
+    }, 900);
   };
 
   return (
@@ -53,10 +76,34 @@ function App() {
           </div>
         </Section>
 
+        <Section id="engineering" title="Engineering" subtitle="How I Build" fullPage>
+          <div className="engineering-grid">
+            <div className="glass-card engineering-card">
+              <h3 className="engineering-card__title">Engineering Practices</h3>
+              <ul className="engineering-practices-list">
+                {resumeData.engineeringPractices.map((practice, i) => (
+                  <li key={i}>{practice}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="engineering-highlights">
+              {resumeData.technicalHighlights.map((highlight, i) => (
+                <div key={i} className="glass-card highlight-item" style={{ "--stagger-i": i }}>
+                  <h4 className="highlight-item__title">
+                    <span className="highlight-item__icon" aria-hidden>⚡</span>
+                    {highlight.title}
+                  </h4>
+                  <p className="highlight-item__desc">{highlight.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
+
         <Section id="experience" title="Experience" fullPage>
           <div className="exp-list">
             {resumeData.experience.map((job, i) => (
-              <div key={i} className="exp-item glass-card">
+              <div key={i} className="exp-item glass-card" style={{ "--stagger-i": i }}>
                 <div className="exp-item__header">
                   <span className="exp-item__role">{job.role}</span>
                   <span className="exp-item__company">{job.company}</span>
@@ -70,11 +117,12 @@ function App() {
                     {job.projects.map((proj, j) => (
                       <a
                         key={j}
-                        href={proj.url || "#"}
-                        target={proj.url ? "_blank" : undefined}
-                        rel={proj.url ? "noreferrer" : undefined}
+                        href="#"
                         className="exp-project-card"
-                        onClick={!proj.url ? (e) => e.preventDefault() : undefined}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedProject(proj);
+                        }}
                       >
                         <div className="exp-project-card__img-wrap">
                           {proj.image ? (
@@ -104,7 +152,7 @@ function App() {
         <Section id="education" title="Education" fullPage>
           <div className="edu-list">
             {resumeData.education.map((edu, i) => (
-              <div key={i} className="edu-item glass-card">
+              <div key={i} className="edu-item glass-card" style={{ "--stagger-i": i }}>
                 <div className="edu-item__degree">{edu.degree}</div>
                 <div className="edu-item__meta">
                   {edu.institution} · {edu.duration}
@@ -121,7 +169,7 @@ function App() {
               <div className="skills-group__label">Core</div>
               <div className="skills-grid">
                 {resumeData.skills.core.map((s, i) => (
-                  <span key={i} className="skill-pill">
+                  <span key={i} className="skill-pill" style={{ "--pill-i": i }}>
                     {s}
                   </span>
                 ))}
@@ -131,7 +179,7 @@ function App() {
               <div className="skills-group__label">Integrations & tools</div>
               <div className="skills-grid">
                 {resumeData.skills.integrations.map((s, i) => (
-                  <span key={i} className="skill-pill">
+                  <span key={i} className="skill-pill" style={{ "--pill-i": i }}>
                     {s}
                   </span>
                 ))}
@@ -141,7 +189,7 @@ function App() {
               <div className="skills-group__label">Front-end</div>
               <div className="skills-grid">
                 {resumeData.skills.frontend.map((s, i) => (
-                  <span key={i} className="skill-pill">
+                  <span key={i} className="skill-pill" style={{ "--pill-i": i }}>
                     {s}
                   </span>
                 ))}
@@ -151,7 +199,7 @@ function App() {
               <div className="skills-group__label">Also</div>
               <div className="skills-grid">
                 {resumeData.skills.also.map((s, i) => (
-                  <span key={i} className="skill-pill">
+                  <span key={i} className="skill-pill" style={{ "--pill-i": i }}>
                     {s}
                   </span>
                 ))}
@@ -165,11 +213,12 @@ function App() {
             {resumeData.projects.map((proj, i) => (
               <a
                 key={i}
-                href={proj.url || "#"}
-                target={proj.url ? "_blank" : undefined}
-                rel={proj.url ? "noreferrer" : undefined}
+                href="#"
                 className="magic-project-card"
-                onClick={!proj.url ? (e) => e.preventDefault() : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedProject(proj);
+                }}
               >
                 <div className="magic-project-card__img-wrap">
                   {proj.image ? (
@@ -239,8 +288,25 @@ function App() {
                   placeholder="Message"
                   rows={4}
                 />
-                <button type="submit" className="hero__btn hero__btn--primary">
-                  Send message
+                <button
+                  type="submit"
+                  className={`hero__btn hero__btn--primary contact-form__submit contact-form__submit--${formState}`}
+                  disabled={formState !== "idle"}
+                >
+                  {formState === "idle" && "Send message"}
+                  {formState === "sending" && (
+                    <span className="contact-form__spinner-wrap">
+                      <span className="contact-form__spinner" aria-hidden /> Sending…
+                    </span>
+                  )}
+                  {formState === "success" && (
+                    <span className="contact-form__success-wrap">
+                      <svg className="contact-form__check" viewBox="0 0 20 20" fill="none" aria-hidden>
+                        <polyline points="4 10 8 14 16 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Sent!
+                    </span>
+                  )}
                 </button>
               </form>
             </div>
@@ -259,6 +325,11 @@ function App() {
           </div>
         </footer>
       </main>
+
+      <ProjectModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </>
   );
 }

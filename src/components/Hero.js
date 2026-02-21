@@ -2,6 +2,15 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { resumeData } from "../utils/resumeData";
 import "./Hero.css";
 
+const ROLES = [
+  "Ruby on Rails Developer",
+  "React.js Engineer",
+  "Full-Stack Problem Solver",
+];
+const TYPE_SPEED = 55;
+const DELETE_SPEED = 30;
+const PAUSE_MS = 1800;
+
 const heroPhoto = process.env.PUBLIC_URL + "/hero-photo.png";
 const TRAIL_DECAY_MS = 1000;
 const MOVE_THRESHOLD = 0.005;
@@ -16,6 +25,31 @@ export default function Hero() {
   const trailRef = useRef([]);
   const rafRef = useRef(null);
   const idRef = useRef(0);
+
+  // Typewriter
+  const [displayText, setDisplayText] = useState("");
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentRole = ROLES[roleIdx];
+    let timeout;
+    if (!isDeleting) {
+      if (displayText.length < currentRole.length) {
+        timeout = setTimeout(() => setDisplayText(currentRole.slice(0, displayText.length + 1)), TYPE_SPEED);
+      } else {
+        timeout = setTimeout(() => setIsDeleting(true), PAUSE_MS);
+      }
+    } else {
+      if (displayText.length > 0) {
+        timeout = setTimeout(() => setDisplayText(displayText.slice(0, -1)), DELETE_SPEED);
+      } else {
+        setIsDeleting(false);
+        setRoleIdx((i) => (i + 1) % ROLES.length);
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, roleIdx]);
 
   const handleMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -121,7 +155,8 @@ export default function Hero() {
             {resumeData.name}
           </h1>
           <p className="hero__tagline animate-in" style={{ animationDelay: "0.4s" }}>
-            {resumeData.tagline}
+            <span className="hero__typewriter">{displayText}</span>
+            <span className="hero__cursor" aria-hidden>|</span>
           </p>
           <div className="hero__actions animate-in" style={{ animationDelay: "0.55s" }}>
             <button type="button" className="hero__btn" onClick={scrollTo("summary")}>

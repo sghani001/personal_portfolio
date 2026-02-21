@@ -2,12 +2,12 @@
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  border-radius: 20px;
   box-shadow: var(--glass-shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-card:hover {
@@ -93,6 +93,7 @@
   font-size: 1rem;
   line-height: 1.75;
 }
+
 .magic-brief--extra {
   margin-top: 1rem;
   opacity: 0.9;
@@ -110,7 +111,8 @@
   text-decoration: none;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -182,6 +184,84 @@
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.75;
+}
+
+/* Engineering Section */
+.engineering-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .engineering-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.engineering-card {
+  padding: 1.75rem 2rem;
+}
+
+.engineering-card__title {
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.engineering-practices-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.engineering-practices-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.engineering-practices-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.engineering-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.highlight-item {
+  padding: 1.25rem 1.5rem;
+}
+
+.highlight-item__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.highlight-item__icon {
+  color: var(--magic-blue);
+}
+
+.highlight-item__desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Experience */
@@ -270,8 +350,8 @@
   text-decoration: none;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.2s;
 }
 
@@ -610,4 +690,175 @@
 
 .magic-footer__inner a:hover {
   color: var(--accent);
+}
+
+/* ===== Feature 4: Staggered skill pill reveal ===== */
+.portfolio-section--in-view .skill-pill {
+  animation: pill-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.05s + var(--pill-i, 0) * 0.045s);
+}
+
+.skill-pill {
+  opacity: 0;
+}
+
+@keyframes pill-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== Feature 7: Staggered exp / edu card reveal ===== */
+.exp-item,
+.edu-item,
+.highlight-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: none;
+}
+
+.portfolio-section--in-view .exp-item,
+.portfolio-section--in-view .edu-item,
+.portfolio-section--in-view .highlight-item {
+  animation: card-stagger-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.08s + var(--stagger-i, 0) * 0.12s);
+}
+
+@keyframes card-stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Restore hover transform for cards once revealed */
+.portfolio-section--in-view .exp-item:hover {
+  transform: translateY(-2px);
+  transition: transform 0.25s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ===== Feature 5: Enhanced project card shimmer hover ===== */
+.magic-project-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.magic-project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 60%);
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  transition: background-position 0.5s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.magic-project-card:hover::after {
+  background-position: -50% 0;
+}
+
+.magic-project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.38), 0 0 0 1.5px rgba(139, 92, 246, 0.35);
+  border-color: rgba(139, 92, 246, 0.45);
+}
+
+/* ===== Feature 6: Contact form micro-interactions ===== */
+
+/* Input focus glow pulse */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--magic-violet);
+  background: rgba(139, 92, 246, 0.06);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  animation: input-glow 0.3s ease forwards;
+}
+
+@keyframes input-glow {
+  from {
+    box-shadow: 0 0 0 0px rgba(139, 92, 246, 0);
+  }
+
+  to {
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  }
+}
+
+/* Submit button states */
+.contact-form__submit {
+  position: relative;
+  min-width: 148px;
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.contact-form__submit:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+/* Spinner */
+.contact-form__spinner-wrap,
+.contact-form__success-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-form__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success checkmark */
+.contact-form__check {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  animation: check-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes check-pop {
+  from {
+    transform: scale(0) rotate(-20deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.contact-form__submit--success {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
 }
