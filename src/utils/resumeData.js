@@ -1,8 +1,8 @@
-// Syed M Ghani — Portfolio data (from resume)
+// Syed Ghani — Portfolio data (from resume)
 // LinkedIn: https://www.linkedin.com/in/syed-m-ghani-357ba4234
 
 export const resumeData = {
-  name: "Syed M Ghani",
+  name: "Syed Ghani",
   title: "Software Engineer",
   tagline: "Ruby on Rails · React.js · Full-stack",
   email: "2020cs669@student.uet.edu.pk",

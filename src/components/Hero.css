@@ -121,6 +121,22 @@
   flex-shrink: 0;
 }
 
+/* Subtle theme tint so the photo matches the dark violet look */
+.hero__photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 7, 11, 0.15) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(139, 92, 246, 0.08) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
 .hero__photo {
   width: 100%;
   height: 100%;
