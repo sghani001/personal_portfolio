@@ -25,7 +25,7 @@ export function useInView(options = {}) {
 
     if (scrollEl) observer.observe(el);
     return () => observer.disconnect();
-  }, [options.threshold, options.rootMargin]);
+  }, [options.threshold, options.rootMargin, options.root]);
 
   return [ref, inView];
 }

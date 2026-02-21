@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { resumeData } from "../utils/resumeData";
 import "./GlassNav.css";
 
 const navLinks = [
