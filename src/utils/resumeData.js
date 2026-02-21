@@ -1,179 +1,145 @@
-import React from "react";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import AlternateEmailTwoToneIcon from "@mui/icons-material/AlternateEmailTwoTone";
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import CodeIcon from '@mui/icons-material/Code';
-import PestControlIcon from '@mui/icons-material/PestControl';
-import MobileFriendlyIcon from '@mui/icons-material/MobileFriendly';
-import { WebOutlined } from "@mui/icons-material";
-import BuildIcon from '@mui/icons-material/Build';
-import PsychologyIcon from '@mui/icons-material/Psychology';
+// Syed M Ghani — Portfolio data (from resume)
+// LinkedIn: https://www.linkedin.com/in/syed-m-ghani-357ba4234
 
-const getIcon = (icon) => {
-  switch (icon) {
-    case "email":
-      return <AlternateEmailTwoToneIcon />;
-    case "linkedin":
-      return <LinkedInIcon />;
-    case "github":
-      return <GitHubIcon />;
-    default:
-      return null;
-  }
-};
+export const resumeData = {
+  name: "Syed M Ghani",
+  title: "Software Engineer",
+  tagline: "Ruby on Rails · React.js · Full-stack",
+  email: "2020cs669@student.uet.edu.pk",
+  emailPersonal: "syedghani001@gmail.com",
+  location: "Lahore, Pakistan",
+  phone: "+92 309 0204019",
+  portfolioUrl: "https://sghani001.github.io/portfolio/",
+  leetcodeUrl: "https://leetcode.com/syedghani/",
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  name: "Syed Ghani",
-  title: "Full Stack ROR Developer",
-  birthday: "5th September 1999",
-  job: "Associate Software Engineer",
-  email: "syedghani001@gmail.com",
-  address: "Shahadara, Lahore",
-  phone: "+923090204019",
+  socials: [
+    { name: "LinkedIn", url: "https://www.linkedin.com/in/syed-m-ghani-357ba4234", icon: "linkedin" },
+    { name: "GitHub", url: "https://github.com/sghani001", icon: "github" },
+    { name: "Email", url: "mailto:syedghani001@gmail.com", icon: "email" },
+  ],
 
-  socials: {
-    Email: {
-      link: "mailto:syedghani001@gmail.com",
-      text: "syedghani001@gmail.com",
-      icon: getIcon("email"),
+  summary:
+    "Software Engineer with 1 year 7 months of experience building production web applications in Ruby on Rails and React.js. Delivered full-stack features and microservices for K–12 ed-tech, college athletics recruiting, AI-powered PRM, and AI bookkeeping platforms. Strong in third-party integrations (Stripe, HubSpot, Moodle, Documenso), API design, and end-to-end ownership. B.Sc. Computer Science, UET Lahore.",
+
+  aboutExtra:
+    "I focus on clean APIs, maintainable code, and shipping features end-to-end. References and portfolio work available on request; LeetCode profile linked in Contact.",
+
+  experience: [
+    {
+      role: "Software Engineer",
+      company: "Blackstack Software Solutions",
+      location: "Lahore, Pakistan",
+      duration: "Aug 2024 — Present",
+      durationShort: "1 yr 7 mo",
+      projects: [
+        {
+          name: "CinnaLab",
+          url: "https://cinnalab.io/",
+          description:
+            "Sole developer for the AI-powered Partner Relationship Management (PRM) product. Delivered partner onboarding, deal registration, dashboards, and e-learning flows. Integrated HubSpot (CRM sync, lead/deal management), Moodle (training/certifications), and Documenso (e-signatures and document workflows).",
+          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=380&fit=crop",
+        },
+        {
+          name: "Intercollegiate",
+          url: "https://intercollegiate.co/",
+          description:
+            "Full-stack development on the leading job board for college athletics. Search, filters (sport, division, conference, salary, job level), and listing flows serving 2,500+ active posts for DI/DII/DIII recruiters and job seekers.",
+          image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=380&fit=crop",
+        },
+        {
+          name: "Bullseye",
+          url: "https://bullseye.education/",
+          description:
+            "Built and maintained features for the K–12 instructional support platform: customizable walkthroughs and coaching workflows, in-the-moment feedback capture (web/mobile), and analytics for principals and district leaders.",
+          image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=380&fit=crop",
+        },
+        {
+          name: "Docyt",
+          url: "https://docyt.com/",
+          description:
+            "Microservices-based AI bookkeeping platform. Designed and built the Stripe payment microservice (subscriptions, billing, webhooks) and integrated it with the core Docyt platform for accounting and hospitality product lines.",
+          image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
+        },
+        {
+          name: "Monthend / Controllr",
+          url: "https://fly.controllr.app/",
+          description:
+            "Controllr SaaS: authentication (email and Google), user flows, and product features supporting month-end and control workflows.",
+          image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
+        },
+      ],
     },
-    LinkedIn: {
-      link: "https://pk.linkedin.com/in/syed-m-ghani-357ba4234",
-      text: "Syed M Ghani",
-      icon: getIcon("linkedin"),
+    {
+      role: "Research and Development Intern",
+      company: "Al-Khawarizmi Institute of Computer Science (KICS), UET Lahore",
+      location: "Lahore",
+      duration: "Jul 2023 — Oct 2023",
+      durationShort: null,
+      points: ["Research and technical development in a leading CS research institute at UET Lahore."],
     },
-    Github: {
-      link: "https://github.com/sghani001",
-      text: "sghani001",
-      icon: getIcon("github"),
+    {
+      role: "Web Development Intern",
+      company: "Apex Space",
+      location: "Lahore",
+      duration: "Jun 2023 — Aug 2023",
+      durationShort: null,
+      points: ["Web development and engineering support for client projects."],
     },
+  ],
+
+  education: [
+    {
+      degree: "Bachelor of Science, Computer Science",
+      institution: "University of Engineering and Technology (UET), Lahore",
+      duration: "2020 — 2024",
+      gpa: "3.3",
+    },
+  ],
+
+  skills: {
+    core: ["Ruby on Rails", "React.js", "JavaScript (ES6+)", "REST APIs", "PostgreSQL", "MySQL", "Redis"],
+    integrations: ["Stripe", "HubSpot", "Moodle", "Documenso", "Git", "Linux"],
+    frontend: ["TailwindCSS", "Vite", "React Query", "React Router", "Redux"],
+    also: ["Python", "Node.js", "Microservices", "Third-party API design"],
   },
 
-  aboutMe:
-    "A dedicated and results-driven Associate Software Engineer with hands-on experience in full-stack web development, currently pursuing a Bachelor's in Computer Science.\n\n" +
-    "I have gained valuable experience working on U.S based projects using technologies like Ruby on Rails, HTML, CSS, JavaScript, and Python. My work includes developing new features, debugging, and optimizing web applications to enhance user experiences.\n\n" +
-    "Skilled in both front-end and back-end development, I have a strong passion for building scalable, efficient, and user-friendly applications. I thrive in collaborative, team-oriented environments, where I contribute to brainstorming sessions, problem-solving, and delivering quality solutions.\n\n" +
-    "With a focus on clean code and effective communication, I consistently work with cross-functional teams to meet project goals and deadlines. Eager to apply my technical expertise, enthusiasm, and team collaboration skills to impactful projects, I am excited to contribute to dynamic teams and solve real-world challenges.",
-
-  workHistory: [
-    {
-      position: "Associate Software Engineer",
-      company: "Blackstack Software Solutions, Lahore, Pakistan",
-      duration: "Aug 2024 - Present",
-      responsibilities: [
-        "Debugged and resolved application issues to enhance functionality and performance.\n",
-        "Implemented new features based on client requirements to improve user experience.\n",
-        "Utilized Git and GitHub for version control and team collaboration on code projects.\n",
-        "Assisted in code reviews to ensure adherence to best practices and coding standards.\n",
-        "Collaborated with cross-functional teams to deliver high-quality software solutions.\n",
-        "Wrote unit tests to ensure code quality and reduce bugs.\n",
-      ],
-    },
-    {
-      position: "Research and Development Intern",
-      company: "Al-Khawarizmi Institute of Computer Science (KICS), UET Lahore",
-      duration: "Jul 2023 - Oct 2023",
-      responsibilities: [
-        "Assisted in the development and testing of new algorithms for data processing.\n",
-        "Prepared technical reports and documentation on research findings.\n",
-      ],
-    },
-    {
-      position: "Web Development Intern",
-      company: "Apex Space, Lahore, Pakistan",
-      duration: "Jun 2023 - Aug 2023",
-      responsibilities: [
-        "Gained foundational knowledge in web development, focusing on front-end technologies such as HTML, CSS, and JavaScript.\n",
-        "Developed a strong understanding of building responsive, user-friendly interfaces and creating dynamic web pages.\n",
-        "Gained experience in version control using GitHub for collaborative development and code management.\n",
-      ],
-    },
+  companies: [
+    { name: "Blackstack", url: null },
+    { name: "UET Lahore", url: "https://uet.edu.pk" },
+    { name: "KICS", url: null },
+    { name: "Apex Space", url: null },
   ],
 
-  educationHistory: [
+  projects: [
     {
-      degree: "Bachelor’s degree in Computer Science",
-      institution: "University of Engineering and Technology, Lahore",
-      duration: "Oct 2020 - May 2024",
+      name: "FYP (Final Year Project)",
+      description: "Final Year Project at UET Lahore — full-stack capstone with exam management, roles, and reporting (Rails, PostgreSQL).",
+      url: "https://github.com/sghani001/Online_Exam_System",
+      tech: ["Rails", "PostgreSQL"],
+      image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&h=380&fit=crop",
     },
     {
-      degree: "Intermediate FSc Pre-Engineering",
-      institution: "Government Islamia College Civil Lines",
-      duration: "Feb 2017 - June 2019",
-    },
-  ],
-
-  skills: [
-    {
-      title: "Front-End",
-      icon: <CodeIcon/>,
-      description: [
-        "HTML",
-        " CSS",
-        "JavaScript",
-        "ReactJs"
-      ]
+      name: "Online Exam System",
+      description: "Full-stack exam creation, admin approval, student taking, and teacher grading (Rails).",
+      url: "https://github.com/sghani001/Online_Exam_System",
+      tech: ["Rails", "PostgreSQL"],
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=380&fit=crop",
     },
     {
-      title: "Back-End",
-      icon: <SettingsOutlinedIcon/>,
-      description: [
-        "Ruby",
-        "Ruby on Rails",
-        "C",
-        "C++"
-      ]
+      name: "WhatsApp Analyzer",
+      description: "Python tool for group/direct chat analytics and insights.",
+      url: "https://github.com/sghani001/Whatsapp_Analyzer",
+      tech: ["Python"],
+      image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=600&h=380&fit=crop",
     },
     {
-      title: "Development Tools",
-      icon: <BuildIcon/>,
-      description: [
-        "Git",
-        "GitHub"
-      ]
+      name: "Olympics Analysis",
+      description: "Data analysis and visualization on Olympics datasets.",
+      url: "https://github.com/sghani001/Olympics",
+      tech: ["Python", "Data visualization"],
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
     },
-    {
-      title: "Soft Skills",
-      icon: <PsychologyIcon/>,
-      description: [
-        "Communication Skills",
-        "Team Work"
-      ]
-    }
-  ],
-
-  myServices: [
-    {
-      service: "Full-stack Web Development",
-      icon: <WebOutlined/>,
-      description: "Developing scalable web applications with Ruby on Rails, ensuring responsive and user-friendly designs."
-    },
-    {
-      service: "Backend Development",
-      icon: <SettingsOutlinedIcon/>,
-      description: "Building robust and efficient backend systems using Rails, including API development and database management."
-    },
-    {
-      service: "Frontend Development & UI Design",
-      icon: <CodeIcon/>,
-      description: "Creating intuitive UI using modern frameworks, ensuring cross-browser compatibility."
-    },
-    {
-      service: "Debugging & Optimization",
-      icon: <PestControlIcon/>,
-      description: "Fixing performance issues and optimizing applications for efficiency."
-    },
-    {
-      service: "Version Control & Collaboration",
-      icon: <GitHubIcon/>,
-      description: "Managing code repositories with Git/GitHub for seamless teamwork."
-    },
-    {
-      service: "Code Reviews & Quality Assurance",
-      icon: <MobileFriendlyIcon/>,
-      description: "Conducting reviews and writing unit tests to ensure clean, maintainable code."
-    }
   ],
 };
+
+export default resumeData;

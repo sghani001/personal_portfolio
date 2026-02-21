@@ -1,19 +1,119 @@
+/* ------------------------------- Magic Portfolio theme ------------------------------- */
+
 * {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Magic Portfolio palette */
+  --bg-base: #07070b;
+  --bg-elevated: #0c0c12;
+  --bg-card: rgba(18, 18, 28, 0.6);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 20px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* Magic accents — violet / blue / fuchsia */
+  --magic-violet: #8b5cf6;
+  --magic-blue: #6366f1;
+  --magic-fuchsia: #d946ef;
+  --magic-cyan: #22d3ee;
+
+  --accent: #a78bfa;
+  --accent-soft: rgba(139, 92, 246, 0.2);
+  --accent-glow: rgba(139, 92, 246, 0.35);
+  --accent-gradient: linear-gradient(135deg, #a78bfa 0%, #6366f1 50%, #d946ef 100%);
+
+  /* Text */
+  --text-primary: #f4f4f8;
+  --text-secondary: rgba(244, 244, 248, 0.8);
+  --text-muted: rgba(244, 244, 248, 0.5);
+
+  --success: #34d399;
+  --hero-teal: #a78bfa;
+  --hero-teal-soft: rgba(167, 139, 250, 0.5);
+
+  --max-width: 900px;
+  --section-padding: clamp(3rem, 8vw, 5rem);
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: aliceblue;
+  background: var(--bg-base);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+  color: var(--text-primary);
   overflow-x: hidden;
-  background: url(./assets/images/backgroundImage.png);
+  line-height: 1.6;
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+/* Full-page scroll container — same base + subtle gradient everywhere so background doesn’t “change” on scroll */
+.fullpage-scroll {
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  background:
+    radial-gradient(
+      ellipse 120% 60% at 50% 0%,
+      rgba(139, 92, 246, 0.06) 0%,
+      transparent 50%
+    ),
+    var(--bg-base);
+}
+
+.fullpage-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fullpage-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.fullpage-scroll::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+}
+
+.fullpage-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+a:hover {
+  color: var(--text-primary);
+  opacity: 0.95;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: ui-monospace, monospace;
 }
