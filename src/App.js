@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GlassNav from "./components/GlassNav";
 import Hero from "./components/Hero";
 import ProjectModal from "./components/ProjectModal";
+import LeetcodeStats from "./components/LeetcodeStats";
 import resumeData from "./utils/resumeData";
 import { useInView } from "./hooks/useInView";
 import "./App.css";
@@ -270,31 +271,43 @@ function App() {
           </div>
         </Section>
 
-        <Section id="github" title="Open Source & Activity" subtitle="GitHub Stats" fullPage>
-          <div className="github-stats-grid">
-            <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
-              <img
-                src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&icon_color=${theme === 'dark' ? '8b5cf6' : '7c3aed'}&hide_border=true&bg_color=00000000`}
-                alt="Syed Ghani's GitHub Stats"
-                className="github-stat-img"
-              />
-            </a>
-            <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <img
-                src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&hide_border=true&bg_color=00000000`}
-                alt="Top Languages"
-                className="github-stat-img"
-              />
-            </a>
-          </div>
-          <div className="github-contribution glass-card fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <h3 className="github-contribution-title">Recent Activity</h3>
-            <div className="github-chart-wrapper">
-              <img
-                src={`https://ghchart.rshah.org/${theme === 'dark' ? '8b5cf6' : '7c3aed'}/sghani001`}
-                alt="sghani001's Github chart"
-                className="github-chart-img"
-              />
+        <Section id="activity" title="Technical Prowess" subtitle="Stats & Activity" fullPage>
+          <div className="activity-grid">
+            <div className="github-activity">
+              <h3 className="activity-group-title">GitHub Activity</h3>
+              <div className="github-stats-grid">
+                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
+                  <img
+                    src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&icon_color=${theme === 'dark' ? '8b5cf6' : '7c3aed'}&hide_border=true&bg_color=00000000`}
+                    alt="Syed Ghani's GitHub Stats"
+                    className="github-stat-img"
+                  />
+                </a>
+                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
+                  <img
+                    src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&hide_border=true&bg_color=00000000`}
+                    alt="Top Languages"
+                    className="github-stat-img"
+                  />
+                </a>
+              </div>
+              <div className="github-contribution glass-card fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <h3 className="github-contribution-title">Contributions</h3>
+                <div className="github-chart-wrapper">
+                  <img
+                    src={`https://ghchart.rshah.org/${theme === 'dark' ? '8b5cf6' : '7c3aed'}/sghani001`}
+                    alt="sghani001's Github chart"
+                    className="github-chart-img"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="leetcode-activity">
+              <h3 className="activity-group-title">LeetCode Stats</h3>
+              <div className="fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <LeetcodeStats username="syedghani" />
+              </div>
             </div>
           </div>
         </Section>

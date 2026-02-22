@@ -1124,56 +1124,92 @@
   transition: transform 0.25s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
+/* ===== Technical Prowess Section ===== */
+.activity-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.activity-group-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activity-group-title::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, var(--glass-border), transparent);
+}
+
+.github-activity,
+.leetcode-activity {
+  width: 100%;
+}
+
 /* ===== GitHub Stats Section ===== */
 .github-stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 950px) {
   .github-stats-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .github-card {
-  padding: 1.5rem;
+  padding: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  min-height: 180px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+  min-height: 240px;
+  overflow: hidden;
 }
 
 .github-card:hover,
 .github-contribution:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.2);
-  border-color: rgba(139, 92, 246, 0.35);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(139, 92, 246, 0.25);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .github-stat-img {
   width: 100%;
-  max-width: 440px;
+  max-width: 550px;
   height: auto;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
 }
 
 .github-contribution {
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .github-contribution-title {
   align-self: flex-start;
-  margin-bottom: 1.5rem;
-  font-size: 1.15rem;
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .github-calendar-container {
