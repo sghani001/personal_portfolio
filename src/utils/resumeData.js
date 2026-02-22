@@ -26,11 +26,13 @@ export const resumeData = {
 
   experience: [
     {
-      role: "Software Engineer",
       company: "Blackstack Software Solutions",
+      companyUrl: "https://www.linkedin.com/company/blackstack-software-solutions/posts/?feedView=all",
       location: "Lahore, Pakistan",
-      duration: "Aug 2024 — Present",
-      durationShort: "1 yr 7 mo",
+      roles: [
+        { title: "Software Engineer", duration: "Dec 2024 — Present" },
+        { title: "Associate Software Engineer", duration: "Aug 2024 — Dec 2024" },
+      ],
       projects: [
         {
           name: "CinnaLab",
@@ -87,21 +89,14 @@ export const resumeData = {
             "Microservices-based AI bookkeeping platform. Designed and built the Stripe payment microservice (subscriptions, billing, webhooks) and integrated it with the core Docyt platform for accounting and hospitality product lines.",
           image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
         },
-        // {
-        //   name: "Monthend / Controllr",
-        //   url: "https://fly.controllr.app/",
-        //   description:
-        //     "Controllr SaaS: authentication (email and Google), user flows, and product features supporting month-end and control workflows.",
-        //   image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
-        // },
       ],
     },
     {
       role: "Research and Development Intern",
       company: "Al-Khawarizmi Institute of Computer Science (KICS), UET Lahore",
-      location: "Lahore",
+      companyUrl: "https://www.linkedin.com/company/kics/posts/?feedView=all",
+      location: "Lahore, Pakistan",
       duration: "Jul 2023 — Oct 2023",
-      durationShort: null,
       points: [
         "Conducted research and technical development within a leading CS research institute, optimizing legacy codebases for faster execution.",
         "Collaborated with cross-functional teams to quickly prototype and deliver technical proofs-of-concept on tight schedules."
@@ -110,9 +105,9 @@ export const resumeData = {
     {
       role: "Web Development Intern",
       company: "Apex Space",
-      location: "Lahore",
+      companyUrl: "https://www.linkedin.com/company/apexspace/posts/?feedView=all",
+      location: "Lahore, Pakistan",
       duration: "Jun 2023 — Aug 2023",
-      durationShort: null,
       points: [
         "Developed and maintained responsive web applications, improving client-facing UI/UX and reducing page load times by ~15%.",
         "Adopted agile workflows and active code reviews to ensure clean, maintainable engineering standards across student projects."
@@ -125,7 +120,7 @@ export const resumeData = {
       degree: "Bachelor of Science, Computer Science",
       institution: "University of Engineering and Technology (UET), Lahore",
       duration: "2020 — 2024",
-      gpa: "3.3",
+      gpa: "3.1",
     },
   ],
 
@@ -141,6 +136,44 @@ export const resumeData = {
     { name: "UET Lahore", url: "https://uet.edu.pk" },
     { name: "KICS", url: null },
     { name: "Apex Space", url: null },
+  ],
+
+  journey: [
+    {
+      year: "2020",
+      title: "Started Computer Science",
+      description: "Started studying at UET Lahore, building strong fundamentals in software engineering and computer architecture.",
+    },
+    {
+      year: "2023",
+      title: "Internships & Research",
+      description: "Worked as a Web Development Intern at Apex Space and an R&D Intern at KICS, optimizing legacy code and exploring frontend technologies.",
+    },
+    {
+      year: "Aug 2024",
+      title: "Associate Software Engineer",
+      description: "Graduated and began my professional career at Blackstack Software Solutions. Architected multi-tenant platforms and built scalable core components.",
+    },
+    {
+      year: "Dec 2024",
+      title: "Promoted to Software Engineer",
+      description: "Recognized for ownership and rapid execution. Leading end-to-end development of AI products and robust third-party API integrations like HubSpot and Documenso.",
+    },
+  ],
+
+  testimonials: [
+    {
+      quote: "Ghani has proven himself to be a phenomenal asset to the company, taking full ownership of his responsibilities and going above and beyond to support his team. His dedication and punctuality truly make a difference in our office.",
+      author: "Blackstack Software Solutions",
+      title: "Performance Bonus & Appreciation 2025",
+      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workculture-employeeappreciation-employeecelebration-activity-7396172400092053504-Ci2f"
+    },
+    {
+      quote: "Your dedication, respect towards your seniors, and support for your juniors truly sets you apart. You’ve been a great team member, bringing positive energy that reflects beautifully in our workplace culture. A true technical wizard.",
+      author: "Blackstack Software Solutions",
+      title: "1st Work Anniversary Spotlight",
+      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workanniversary-milestone-firstworkanniversary-activity-7356977157857849344-X7fF"
+    }
   ],
 
   projects: [

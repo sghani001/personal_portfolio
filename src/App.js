@@ -118,13 +118,51 @@ function App() {
             {resumeData.experience.map((job, i) => (
               <div key={i} className="exp-item glass-card" style={{ "--stagger-i": i }}>
                 <div className="exp-item__header">
-                  <span className="exp-item__role">{job.role}</span>
-                  <span className="exp-item__company">{job.company}</span>
+                  {job.roles ? (
+                    <div className="exp-item__roles-list">
+                      {job.roles.map((r, rIdx) => (
+                        <div key={rIdx} className="exp-item__role-entry">
+                          <span className="exp-item__role">{r.title}</span>
+                          <span className="exp-item__role-duration">{r.duration}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="exp-item__role">{job.role}</span>
+                  )}
+                  {job.companyUrl ? (
+                    <a href={job.companyUrl} target="_blank" rel="noreferrer" className="exp-item__company-link">
+                      <span className="exp-item__company">{job.company}</span>
+                      <svg
+                        className="exp-item__link-icon"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                  ) : (
+                    <span className="exp-item__company">{job.company}</span>
+                  )}
                 </div>
-                <div className="exp-item__meta">
-                  {job.duration}
-                  {job.durationShort && ` (${job.durationShort})`} · {job.location}
-                </div>
+                {!job.roles ? (
+                  <div className="exp-item__meta">
+                    {job.duration}
+                    {job.durationShort && ` (${job.durationShort})`} · {job.location}
+                  </div>
+                ) : (
+                  <div className="exp-item__meta">
+                    {job.location}
+                  </div>
+                )}
                 {job.projects && (
                   <div className="exp-item__projects exp-item__projects--cards">
                     {job.projects.map((proj, j) => (
@@ -221,6 +259,35 @@ function App() {
           </div>
         </Section>
 
+        <Section id="github" title="Open Source & Activity" subtitle="GitHub Stats" fullPage>
+          <div className="github-stats-grid">
+            <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
+              <img
+                src="https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=a78bfa&text_color=f4f4f8&icon_color=8b5cf6&hide_border=true&bg_color=00000000"
+                alt="Syed Ghani's GitHub Stats"
+                className="github-stat-img"
+              />
+            </a>
+            <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
+              <img
+                src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=a78bfa&text_color=f4f4f8&hide_border=true&bg_color=00000000"
+                alt="Top Languages"
+                className="github-stat-img"
+              />
+            </a>
+          </div>
+          <div className="github-contribution glass-card fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <h3 className="github-contribution-title">Recent Activity</h3>
+            <div className="github-chart-wrapper">
+              <img
+                src="https://ghchart.rshah.org/8b5cf6/sghani001"
+                alt="sghani001's Github chart"
+                className="github-chart-img"
+              />
+            </div>
+          </div>
+        </Section>
+
         <Section id="projects" title="Personal Projects" fullPage>
           <div className="magic-projects">
             {resumeData.projects.map((proj, i) => (
@@ -245,6 +312,49 @@ function App() {
                   <span className="magic-project-card__desc">{proj.description}</span>
                 )}
               </a>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="journey" title="My Journey" subtitle="Timeline" fullPage>
+          <div className="journey-timeline">
+            {resumeData.journey.map((item, i) => (
+              <div key={i} className="journey-item" style={{ "--stagger-i": i }}>
+                <div className="journey-item__dot"></div>
+                <div className="journey-item__content glass-card">
+                  <div className="journey-item__year">{item.year}</div>
+                  <h3 className="journey-item__title">{item.title}</h3>
+                  <p className="journey-item__desc">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="testimonials" title="Testimonials" subtitle="What They Say" fullPage>
+          <div className="testimonials-grid">
+            {resumeData.testimonials.map((test, i) => (
+              <div key={i} className="testimonial-card glass-card" style={{ "--stagger-i": i }}>
+                <svg className="testimonial-quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+                <p className="testimonial-text">"{test.quote}"</p>
+                <div className="testimonial-author-wrap">
+                  <div className="testimonial-author-info">
+                    <h4 className="testimonial-author">{test.author}</h4>
+                    <span className="testimonial-role">{test.title}</span>
+                  </div>
+                  {test.url && (
+                    <a href={test.url} target="_blank" rel="noreferrer" className="testimonial-link" aria-label="View original post">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         </Section>

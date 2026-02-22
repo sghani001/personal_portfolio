@@ -288,7 +288,7 @@
 .exp-item__header {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
@@ -304,6 +304,29 @@
   font-size: 0.95rem;
   color: var(--accent);
   font-weight: 500;
+}
+
+.exp-item__company-link {
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.exp-item__company-link:hover {
+  opacity: 0.8;
+}
+
+.exp-item__link-icon {
+  color: var(--accent);
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.exp-item__company-link:hover .exp-item__link-icon {
+  transform: translate(1px, -1px);
+  opacity: 1;
 }
 
 .exp-item__meta {
@@ -335,6 +358,27 @@
   border-radius: 50%;
   background: var(--magic-violet);
   opacity: 0.9;
+}
+
+.exp-item__roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.exp-item__role-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 0.75rem;
+}
+
+.exp-item__role-duration {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
 /* Experience: project cards grid (e.g. Blackstack) */
@@ -861,4 +905,317 @@
 .contact-form__submit--success {
   background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* ===== Journey / Timeline Section ===== */
+.journey-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
+}
+
+.journey-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  width: 2px;
+  background: var(--glass-border);
+}
+
+.journey-item {
+  position: relative;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.portfolio-section--in-view .journey-item {
+  animation: slide-in-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.1s + var(--stagger-i, 0) * 0.15s);
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.journey-item__dot {
+  position: absolute;
+  left: -2rem;
+  top: 1.5rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--magic-violet);
+  box-shadow: 0 0 10px var(--magic-violet);
+  transform: translateX(-1px);
+}
+
+.journey-item__content {
+  padding: 1.5rem 2rem;
+  position: relative;
+}
+
+.journey-item__content::before {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--glass-border);
+}
+
+.journey-item__content::after {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--glass-bg);
+}
+
+.journey-item__year {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.journey-item__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.journey-item__desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== Testimonials Section ===== */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimonial-card {
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--magic-blue), var(--magic-violet));
+  opacity: 0.8;
+}
+
+.testimonial-quote-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--glass-border);
+  margin-bottom: 1rem;
+}
+
+.testimonial-text {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 1.75rem;
+  flex: 1;
+}
+
+.testimonial-author-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.25rem;
+}
+
+.testimonial-author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-author {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.testimonial-role {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.testimonial-link {
+  color: var(--text-muted);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.testimonial-link:hover {
+  color: var(--magic-blue);
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.portfolio-section--in-view .testimonial-card {
+  animation: card-stagger-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.1s + var(--stagger-i, 0) * 0.15s);
+}
+
+/* Matching hover effects for Journey and Testimonial cards */
+.journey-item__content:hover,
+.testimonial-card:hover {
+  background: rgba(139, 92, 246, 0.06);
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.05);
+}
+
+.portfolio-section--in-view .journey-item__content:hover,
+.portfolio-section--in-view .testimonial-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.25s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ===== GitHub Stats Section ===== */
+.github-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .github-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.github-card {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  min-height: 180px;
+}
+
+.github-card:hover,
+.github-contribution:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+.github-stat-img {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+}
+
+.github-contribution {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.github-contribution-title {
+  align-self: flex-start;
+  margin-bottom: 1.5rem;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.github-calendar-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.github-calendar-container text {
+  fill: var(--text-muted) !important;
+  font-size: 0.8rem !important;
+  font-family: inherit !important;
+}
+
+.github-calendar-container .react-activity-calendar {
+  margin: 0 auto;
+}
+
+.github-chart-wrapper {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.github-chart-img {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  /* Transform the green/white chart to match purple/dark theme */
+  filter: invert(1) hue-rotate(255deg) brightness(1.5) contrast(1.1);
+  mix-blend-mode: screen;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.portfolio-section--in-view .fade-in-up {
+  animation: slide-in-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
