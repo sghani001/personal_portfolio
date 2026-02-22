@@ -4,33 +4,50 @@ import "./LeetcodeStats.css";
 const LeetcodeStats = ({ username = "syedghani" }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+        // Using an alternative API that supports CORS better than the previous one
+        const response = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${username}`);
         const result = await response.json();
-        if (result.status === "error") {
-          throw new Error(result.message);
+
+        if (result.errors || !result.totalSolved) {
+          throw new Error(result.errors ? result.errors[0].message : "Failed to fetch stats");
         }
-        setData(result);
+
+        // Map the new API format to what our component expects
+        const processedData = {
+          ...result,
+          totalSubmissionsCount: (result.matchedUserStats && result.matchedUserStats.totalSubmissionNum)
+            ? result.matchedUserStats.totalSubmissionNum[0].submissions
+            : (result.totalSubmissions && result.totalSubmissions[0] ? result.totalSubmissions[0].submissions : 54),
+          // Correct Acceptance Rate: (Accepted Submissions / Total Submissions)
+          acceptanceRate: (result.matchedUserStats && result.matchedUserStats.acSubmissionNum && result.matchedUserStats.totalSubmissionNum)
+            ? ((result.matchedUserStats.acSubmissionNum[0].submissions / result.matchedUserStats.totalSubmissionNum[0].submissions) * 100).toFixed(1)
+            : "70.4",
+          contributionPoints: result.contributionPoint || 130,
+          beatsPercentage: "42.2" // Not in API, taken from user screenshot
+        };
+
+        setData(processedData);
       } catch (err) {
         console.error("Failed to fetch LeetCode stats:", err);
-        setError(err.message);
-        // Fallback to screenshot data if API fails
+        // Fallback to latest known stats if API fails
         setData({
-          totalSolved: 18,
-          easySolved: 13,
-          mediumSolved: 4,
-          hardSolved: 1,
-          acceptanceRate: 60.0,
-          ranking: "N/A",
-          contributionPoints: "N/A",
-          totalQuestions: 3300,
-          totalEasy: 800,
-          totalMedium: 1700,
-          totalHard: 800,
+          totalSolved: 28,
+          easySolved: 14,
+          mediumSolved: 9,
+          hardSolved: 5,
+          totalSubmissionsCount: 54,
+          acceptanceRate: "70.4",
+          ranking: "4,073,014",
+          contributionPoints: 130,
+          totalQuestions: 3850,
+          totalEasy: 927,
+          totalMedium: 2013,
+          totalHard: 910,
+          beatsPercentage: "42.2"
         });
       } finally {
         setLoading(false);
@@ -64,7 +81,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
           </div>
           <div className="leetcode-beats">
             <span className="beats-icon">🔥</span>
-            <span>Beats 25.5%</span>
+            <span>Beats {stats.beatsPercentage}%</span>
           </div>
         </div>
 
@@ -111,7 +128,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
       <div className="leetcode-secondary-grid">
         <div className="glass-card leetcode-mini-card">
           <span className="mini-card__label">Submissions</span>
-          <span className="mini-card__val mini-card__val--submissions">40</span>
+          <span className="mini-card__val mini-card__val--submissions">{stats.totalSubmissionsCount}</span>
         </div>
         <div className="glass-card leetcode-mini-card">
           <span className="mini-card__label">Acceptance</span>
@@ -128,23 +145,26 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
         </div>
         <div className="leetcode-bubble-container">
           {[
-            { name: 'Hash Table', solved: 15, total: 20, size: 'xl', color: '#a78bfa' },
+            { name: 'Dynamic Programming', solved: 12, total: 20, size: 'xl', color: '#a78bfa' },
             { name: 'Greedy', solved: 8, total: 15, size: 'large', color: '#00b8a3' },
-            { name: 'Sorting', solved: 12, total: 15, size: 'large', color: '#ffc01e' },
             { name: 'Array', solved: 25, total: 30, size: 'xl', color: '#3b82f6' },
-            { name: 'Simulation', solved: 5, total: 10, size: 'medium', color: '#6366f1' },
-            { name: 'Two Pointers', solved: 9, total: 12, size: 'medium', color: '#ec4899' },
-            { name: 'Stack', solved: 7, total: 10, size: 'medium', color: '#10b981' },
-            { name: 'Linked List', solved: 12, total: 15, size: 'medium', color: '#06b6d4' },
+            { name: 'Hash Table', solved: 15, total: 20, size: 'xl', color: '#ffc01e' },
+            { name: 'Binary Search', solved: 11, total: 15, size: 'medium', color: '#22c55e' },
+            { name: 'Math', solved: 14, total: 20, size: 'large', color: '#8b5cf6' },
+            { name: 'Matrix', solved: 6, total: 12, size: 'medium', color: '#f97316' },
             { name: 'String', solved: 18, total: 20, size: 'large', color: '#ef4743' },
-            { name: 'Divide and Conquer', solved: 3, total: 8, size: 'small', color: '#f59e0b' },
+            { name: 'Merge Sort', solved: 4, total: 10, size: 'small', color: '#6366f1' },
+            { name: 'String Matching', solved: 3, total: 5, size: 'small', color: '#f43f5e' },
             { name: 'Recursion', solved: 4, total: 10, size: 'small', color: '#8b5cf6' },
             { name: 'Trie', solved: 2, total: 5, size: 'small', color: '#14b8a6' },
-            { name: 'String Matching', solved: 3, total: 5, size: 'small', color: '#f43f5e' },
-            { name: 'Math', solved: 14, total: 20, size: 'large', color: '#8b5cf6' },
-            { name: 'Database', solved: 10, total: 15, size: 'medium', color: '#3b82f6' },
-            { name: 'Matrix', solved: 6, total: 12, size: 'medium', color: '#f97316' },
-            { name: 'Binary Search', solved: 11, total: 15, size: 'medium', color: '#22c55e' }
+            { name: 'Two Pointers', solved: 9, total: 12, size: 'medium', color: '#ec4899' },
+            { name: 'Stack', solved: 7, total: 10, size: 'medium', color: '#10b981' },
+            { name: 'Divide and Conquer', solved: 3, total: 8, size: 'small', color: '#f59e0b' },
+            { name: 'Sliding Window', solved: 5, total: 10, size: 'small', color: '#06b6d4' },
+            { name: 'Linked List', solved: 12, total: 15, size: 'medium', color: '#06b6d4' },
+            { name: 'Bit Manipulation', solved: 6, total: 12, size: 'small', color: '#f97316' },
+            { name: 'Heap (Priority Queue)', solved: 3, total: 8, size: 'small', color: '#f59e0b' },
+            { name: 'Database', solved: 10, total: 15, size: 'medium', color: '#3b82f6' }
           ].map((topic, i) => (
             <div
               key={topic.name}
