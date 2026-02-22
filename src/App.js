@@ -28,6 +28,17 @@ function Section({ id, title, subtitle, children, fullPage }) {
 function App() {
   const [formState, setFormState] = useState("idle"); // idle | sending | success
   const [selectedProject, setSelectedProject] = useState(null);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("portfolio-theme") || "dark";
+  });
+
+  // Apply theme on mount + change
+  useEffect(() => {
+    document.body.setAttribute("data-theme", theme);
+    localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
 
   // Recruiter Easter Egg
   useEffect(() => {
@@ -76,7 +87,7 @@ function App() {
 
   return (
     <>
-      <GlassNav />
+      <GlassNav theme={theme} toggleTheme={toggleTheme} />
       <main className="fullpage-scroll">
         <Hero />
 
@@ -263,14 +274,14 @@ function App() {
           <div className="github-stats-grid">
             <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
               <img
-                src="https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=a78bfa&text_color=f4f4f8&icon_color=8b5cf6&hide_border=true&bg_color=00000000"
+                src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&icon_color=${theme === 'dark' ? '8b5cf6' : '7c3aed'}&hide_border=true&bg_color=00000000`}
                 alt="Syed Ghani's GitHub Stats"
                 className="github-stat-img"
               />
             </a>
             <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
               <img
-                src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=a78bfa&text_color=f4f4f8&hide_border=true&bg_color=00000000"
+                src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === 'dark' ? 'a78bfa' : '7c3aed'}&text_color=${theme === 'dark' ? 'f4f4f8' : '111118'}&hide_border=true&bg_color=00000000`}
                 alt="Top Languages"
                 className="github-stat-img"
               />
@@ -280,7 +291,7 @@ function App() {
             <h3 className="github-contribution-title">Recent Activity</h3>
             <div className="github-chart-wrapper">
               <img
-                src="https://ghchart.rshah.org/8b5cf6/sghani001"
+                src={`https://ghchart.rshah.org/${theme === 'dark' ? '8b5cf6' : '7c3aed'}/sghani001`}
                 alt="sghani001's Github chart"
                 className="github-chart-img"
               />

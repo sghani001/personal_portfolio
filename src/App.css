@@ -1194,21 +1194,43 @@
 
 .github-chart-wrapper {
   width: 100%;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-elevated);
   padding: 2rem 1.5rem;
   border-radius: 16px;
   display: flex;
   justify-content: center;
   overflow: hidden;
+  border: 1px solid var(--glass-border);
 }
 
 .github-chart-img {
   width: 100%;
   max-width: 800px;
   height: auto;
-  /* Transform the green/white chart to match purple/dark theme */
-  filter: invert(1) hue-rotate(255deg) brightness(1.5) contrast(1.1);
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Dark mode chart adjustments */
+[data-theme="dark"] .github-chart-img {
+  filter: brightness(1.2) contrast(1.1);
   mix-blend-mode: screen;
+}
+
+/* Light mode chart adjustments */
+[data-theme="light"] .github-chart-img {
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+/* Fix for GitHub cards in light mode */
+[data-theme="light"] .github-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .github-chart-wrapper {
+  background: #ffffff;
 }
 
 .fade-in-up {
@@ -1218,4 +1240,116 @@
 
 .portfolio-section--in-view .fade-in-up {
   animation: slide-in-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ===== Blog Section ===== */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.blog-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  background: var(--accent-soft);
+  border-color: var(--accent-glow);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .blog-card:hover {
+  box-shadow: 0 15px 35px rgba(124, 58, 237, 0.12);
+  background: rgba(124, 58, 237, 0.04);
+}
+
+.blog-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.blog-card__tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--magic-blue);
+  background: var(--accent-soft);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.blog-card__date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.blog-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.blog-card__description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.blog-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: gap 0.2s ease;
+}
+
+.blog-card__link:hover {
+  gap: 0.75rem;
+}
+
+/* Hover fixes for GitHub section */
+.github-card:hover,
+.github-contribution:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--accent-soft);
+  border-color: var(--accent-glow);
+}
+
+[data-theme="light"] .github-card:hover,
+[data-theme="light"] .github-contribution:hover {
+  background: #ffffff;
+  box-shadow: 0 15px 40px rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+/* Unified hover for other cards */
+.exp-item:hover,
+.journey-item__content:hover,
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-glow);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .exp-item:hover,
+[data-theme="light"] .journey-item__content:hover,
+[data-theme="light"] .testimonial-card:hover {
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.2);
 }

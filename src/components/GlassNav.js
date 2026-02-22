@@ -17,19 +17,10 @@ const navLinks = [
 
 const visibleLinks = navLinks.filter((l) => l.label);
 
-export default function GlassNav() {
+export default function GlassNav({ theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeId, setActiveId] = useState("hero");
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("portfolio-theme") || "dark";
-  });
-
-  // Apply theme on mount + change
-  useEffect(() => {
-    document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("portfolio-theme", theme);
-  }, [theme]);
 
   // Scrolled state
   useEffect(() => {
@@ -64,7 +55,7 @@ export default function GlassNav() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
