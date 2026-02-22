@@ -66,6 +66,8 @@ export default function GlassNav() {
   const handleNavClick = (e, id) => {
     e.preventDefault();
     setMobileOpen(false);
+    // Push the hash to the URL so shared links work accurately
+    window.history.pushState(null, null, `#${id}`);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 

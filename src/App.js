@@ -41,6 +41,19 @@ function App() {
     );
   }, []);
 
+  // Scroll to hash on load
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 300); // Small delay to wait for rendering
+    }
+  }, []);
+
   const handleContactSubmit = (e) => {
     e.preventDefault();
     if (formState !== "idle") return;
