@@ -56,7 +56,7 @@ export default function GlassNav({ theme, toggleTheme }) {
   return (
     <header className="dock-nav">
       <div className={`dock-nav__bar ${mobileOpen ? "dock-nav__bar--open" : ""}`}>
-        <a href="#hero" className="dock-nav__brand" onClick={(e) => handleNavClick(e, "hero")} aria-label="Home">
+        <a href="#hero" className={`dock-nav__brand ${activeId === "hero" ? "dock-nav__brand--active" : ""}`} onClick={(e) => handleNavClick(e, "hero")} aria-label="Home">
           <span className="dock-nav__brand-mark">SG</span>
         </a>
 

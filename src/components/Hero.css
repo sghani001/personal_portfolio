@@ -22,19 +22,29 @@
 }
 
 @media (max-width: 900px) {
+  .hero--vision {
+    padding-top: 6.5rem;
+  }
+
   .hero__grid {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 1rem;
   }
 
   .hero__copy {
     order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .hero__visual {
     order: 0;
+    width: 100%;
     max-width: 420px;
     margin: 0 auto;
+    min-height: 280px;
   }
 
   .hero__bullets {
@@ -46,6 +56,52 @@
 
   .hero__actions {
     justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero--vision {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+  }
+
+  .hero__visual {
+    max-width: 320px;
+    min-height: 240px;
+  }
+
+  .hero-scene {
+    transform: scale(0.85);
+    transform-origin: center top;
+    margin-bottom: -2rem;
+  }
+
+  .hero-scene__depth {
+    inset: 5% 5% 15%;
+  }
+
+  .glass-hero-photo {
+    width: 90px;
+    height: 90px;
+    right: 2%;
+    bottom: 2%;
+  }
+
+  .hero-scene__ruby-wrap {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hero-scene__ruby {
+    width: 72px;
+    height: 72px;
+  }
+
+  .hero-scene__orbit {
+    width: 160px;
+    height: 160px;
+    margin-left: -80px;
+    margin-top: -80px;
   }
 }
 
