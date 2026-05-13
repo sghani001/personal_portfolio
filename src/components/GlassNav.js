@@ -4,33 +4,23 @@ import "./GlassNav.css";
 const navLinks = [
   { id: "hero", label: null },
   { id: "summary", label: "About" },
-  { id: "engineering", label: "Engineering" },
-  { id: "experience", label: "Experience" },
+  { id: "engineering", label: "Build" },
+  { id: "experience", label: "Work" },
   { id: "education", label: "Education" },
   { id: "skills", label: "Skills" },
-  { id: "activity", label: "Prowess" },
+  { id: "activity", label: "Stats" },
   { id: "projects", label: "Projects" },
   { id: "journey", label: "Journey" },
-  { id: "testimonials", label: "Testimonials" },
+  { id: "testimonials", label: "Voices" },
   { id: "contact", label: "Contact" },
 ];
 
 const visibleLinks = navLinks.filter((l) => l.label);
 
 export default function GlassNav({ theme, toggleTheme }) {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeId, setActiveId] = useState("hero");
 
-  // Scrolled state
-  useEffect(() => {
-    const el = document.querySelector(".fullpage-scroll");
-    const onScroll = () => setScrolled(el ? el.scrollTop > 40 : false);
-    if (el) el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el && el.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Active section tracking
   useEffect(() => {
     const scrollEl = document.querySelector(".fullpage-scroll");
     const sectionIds = navLinks.map((l) => l.id);
@@ -43,11 +33,10 @@ export default function GlassNav({ theme, toggleTheme }) {
       const obs = new IntersectionObserver(
         ([entry]) => {
           visibilityMap[id] = entry.intersectionRatio;
-          // Pick the section with highest visibility
           const best = Object.entries(visibilityMap).sort((a, b) => b[1] - a[1])[0];
           if (best && best[1] > 0) setActiveId(best[0]);
         },
-        { root: scrollEl, threshold: [0, 0.25, 0.5, 0.75, 1] }
+        { root: scrollEl, threshold: [0, 0.2, 0.45, 0.7, 1] }
       );
       obs.observe(el);
       observers.push(obs);
@@ -55,53 +44,54 @@ export default function GlassNav({ theme, toggleTheme }) {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-
-
   const handleNavClick = (e, id) => {
     e.preventDefault();
     setMobileOpen(false);
-    // Push the hash to the URL so shared links work accurately
-    window.history.pushState(null, null, `#${id}`);
+    window.history.pushState(null, "", `#${id}`);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   const cvUrl = process.env.PUBLIC_URL + "/Syed_Ghani.pdf";
 
   return (
-    <header className={`magic-nav ${scrolled ? "magic-nav--scrolled" : ""}`}>
-      <div className="magic-nav__inner">
-        <a href="#hero" className="magic-nav__logo" onClick={(e) => handleNavClick(e, "hero")}>
-          <span className="magic-nav__logo-mark" aria-hidden>G</span>
+    <header className="dock-nav">
+      <div className={`dock-nav__bar ${mobileOpen ? "dock-nav__bar--open" : ""}`}>
+        <a href="#hero" className="dock-nav__brand" onClick={(e) => handleNavClick(e, "hero")} aria-label="Home">
+          <span className="dock-nav__brand-mark">SG</span>
         </a>
+
         <button
           type="button"
-          className="magic-nav__toggle"
+          className="dock-nav__menu"
           aria-label="Menu"
           aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() => setMobileOpen((o) => !o)}
         >
-          <span /><span /><span />
+          <span />
+          <span />
         </button>
-        <nav className={`magic-nav__links ${mobileOpen ? "magic-nav__links--open" : ""}`}>
+
+        <nav className={`dock-nav__links ${mobileOpen ? "dock-nav__links--visible" : ""}`} aria-label="Primary">
           {visibleLinks.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
               onClick={(e) => handleNavClick(e, id)}
-              className={`magic-nav__link ${activeId === id ? "magic-nav__link--active" : ""}`}
+              className={`dock-nav__link ${activeId === id ? "dock-nav__link--active" : ""}`}
             >
               {label}
             </a>
           ))}
         </nav>
+
         <button
           type="button"
-          className={`magic-nav__theme-toggle ${theme === "light" ? "magic-nav__theme-toggle--light" : ""}`}
+          className={`dock-nav__theme ${theme === "light" ? "dock-nav__theme--light" : ""}`}
           onClick={toggleTheme}
-          aria-label="Toggle theme"
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
           {theme === "dark" ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <circle cx="12" cy="12" r="5" />
               <line x1="12" y1="1" x2="12" y2="3" />
               <line x1="12" y1="21" x2="12" y2="23" />
@@ -113,13 +103,14 @@ export default function GlassNav({ theme, toggleTheme }) {
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           )}
         </button>
-        <a href={cvUrl} download="Syed_Ghani.pdf" className="magic-nav__cv" rel="noopener noreferrer">
-          CV
+
+        <a href={cvUrl} download="Syed_Ghani.pdf" className="dock-nav__pill dock-nav__pill--cv" rel="noopener noreferrer">
+          PDF
         </a>
       </div>
     </header>

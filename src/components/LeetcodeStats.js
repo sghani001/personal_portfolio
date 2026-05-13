@@ -94,7 +94,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
             <div className="diff-progress">
               <div
                 className="diff-progress-bar"
-                style={{ width: `${(stats.easySolved / stats.totalSolved) * 100}%` }}
+                style={{ width: `${(stats.easySolved / Math.max(stats.totalSolved, 1)) * 100}%` }}
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
             <div className="diff-progress">
               <div
                 className="diff-progress-bar"
-                style={{ width: `${(stats.mediumSolved / stats.totalSolved) * 100}%` }}
+                style={{ width: `${(stats.mediumSolved / Math.max(stats.totalSolved, 1)) * 100}%` }}
               />
             </div>
           </div>
@@ -118,7 +118,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
             <div className="diff-progress">
               <div
                 className="diff-progress-bar"
-                style={{ width: `${(stats.hardSolved / stats.totalSolved) * 100}%` }}
+                style={{ width: `${(stats.hardSolved / Math.max(stats.totalSolved, 1)) * 100}%` }}
               />
             </div>
           </div>

@@ -1,15 +1,16 @@
-// Syed Ghani — Portfolio data (from resume)
-// LinkedIn: https://www.linkedin.com/in/syed-m-ghani-357ba4234
+// Syed Ghani — portfolio & resume content (single source of truth)
 
-export const resumeData = {
+const resumeData = {
   name: "Syed Ghani",
   title: "Software Engineer",
-  tagline: "Ruby on Rails · React.js · Full-stack",
+  tagline: "Rails · React · APIs that ship",
+  headline:
+    "Full-stack engineer building production web apps with Ruby on Rails and React — from schema and jobs to polished UI.",
   email: "2020cs669@student.uet.edu.pk",
   emailPersonal: "syedghani001@gmail.com",
   location: "Lahore, Pakistan",
   phone: "+92 309 0204019",
-  portfolioUrl: "https://sghani001.github.io/portfolio/",
+  portfolioUrl: "https://sghani001.github.io/personal_portfolio/",
   leetcodeUrl: "https://leetcode.com/syedghani/",
 
   socials: [
@@ -18,17 +19,23 @@ export const resumeData = {
     { name: "Email", url: "mailto:syedghani001@gmail.com", icon: "email" },
   ],
 
+  heroBullets: [
+    "Rails APIs, PostgreSQL, and background work with Sidekiq / Redis",
+    "React SPAs: auth flows, dashboards, and integration-heavy UIs",
+    "Third-party systems: Stripe, HubSpot, Moodle, Documenso, webhooks",
+  ],
+
   summary:
-    "Computer Science graduate and Software Engineer with experience architecting and building production web applications using Ruby on Rails and React.js. Passionate about clean code, performance optimization, and solving real-world challenges. Delivered full-stack features and scalable microservices for K–12 ed-tech, college recruiting, and AI platforms, impacting thousands of active users.",
+    "Software engineer focused on Ruby on Rails and React. I design and ship end-to-end features for SaaS products — REST APIs, data modeling, background jobs, and accessible front ends — in agile teams where reliability and pace both matter. Recent work spans AI-enabled PRM, college recruiting marketplaces, K–12 coaching platforms, and fintech-style billing services.",
 
   aboutExtra:
-    "I focus on designing clean REST APIs, writing maintainable test-driven code, and shipping features end-to-end. I thrive in agile environments where performance and user impact are the top priorities. LeetCode profile and GitHub portfolio linked below.",
+    "I care about clear boundaries between domains, tests that earn their keep (RSpec / Jest), and integrations that survive real traffic. Comfortable owning a slice of the stack from migration to deploy.",
 
   experience: [
     {
       company: "Blackstack Software Solutions",
       companyUrl: "https://www.linkedin.com/company/blackstack-software-solutions/posts/?feedView=all",
-      location: "Lahore, Pakistan",
+      location: "Lahore, Pakistan · Remote-friendly",
       roles: [
         { title: "Software Engineer", duration: "Dec 2024 — Present" },
         { title: "Associate Software Engineer", duration: "Aug 2024 — Dec 2024" },
@@ -38,89 +45,120 @@ export const resumeData = {
           name: "CinnaLab",
           url: "https://cinnalab.io/",
           description:
-            "Sole developer for the AI-powered Partner Relationship Management (PRM) product. Delivered partner onboarding, deal registration, dashboards, and e-learning flows. Integrated HubSpot (CRM sync, lead/deal management), Moodle (training/certifications), and Documenso (e-signatures and document workflows).",
+            "AI-assisted Partner Relationship Management: partner onboarding, deal registration, training, and e-signatures with CRM and LMS sync.",
           image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=380&fit=crop",
-          tech: ["React.js", "Ruby on Rails", "HubSpot API", "Moodle"],
-          problem: "Managing partner onboarding and deal registrations manually was leading to 45% drop-offs and data fragmentation across sales CRMs and LMS platforms.",
-          solution: "Architected a unified AI-powered PRM that synchronizes directly with HubSpot, Moodle, and Documenso. It centralizes deal registration safely and scales to thousands of partners.",
+          tech: ["React.js", "Ruby on Rails", "HubSpot API", "Moodle", "Documenso", "Redis", "Sidekiq"],
+          problem:
+            "Partner programs lived across HubSpot, Moodle, and documents — high drop-off, duplicate data, and fragile manual handoffs between sales and enablement.",
+          solution:
+            "Built CinnaLab as the operational hub: guided onboarding, deal registration, and training paths with two-way sync to HubSpot and Moodle plus Documenso for agreements.",
           metrics: [
-            "Reduced onboarding process time by over 40%",
-            "Automated 100% of e-signature workflows via Documenso API",
-            "Eliminated manual data entry between LMS and CRM"
+            "Cut onboarding cycle time materially through guided flows and automation",
+            "Standardized e-signature and document paths via Documenso",
+            "Reduced manual re-entry between CRM and LMS via resilient webhooks",
           ],
           engineering: [
-            "Designed resilient webhook integrations for real-time two-way syncing",
-            "Clean REST API structure with strict param validation",
-            "Complex background job processing using Sidekiq/Redis",
-            "Secure token-based authentication via JWT"
+            "Webhook-driven sync with retries, idempotency-minded handlers, and clear audit trails",
+            "JWT-based session model alongside secure server-side checks",
+            "Sidekiq queues for imports, exports, and long-running partner operations",
+            "Strict API contracts and validation at Rails boundaries",
           ],
         },
         {
           name: "Intercollegiate",
           url: "https://intercollegiate.co/",
           description:
-            "Full-stack development on the leading job board for college athletics. Search, filters (sport, division, conference, salary, job level), and listing flows serving 2,500+ active posts for DI/DII/DIII recruiters and job seekers.",
+            "National job board for college athletics — search, filters, and listings at scale for DI / DII / DIII programs and candidates.",
           image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=380&fit=crop",
-          tech: ["Rails", "PostgreSQL", "JavaScript"],
-          problem: "College athletic recruiting lacked a centralized, high-performance portal with robust and scalable filtering by hyper-specific athletic criteria like Division and Conference.",
-          solution: "Built a highly optimized job board from the ground up featuring advanced, instantaneous active filtering and scalable data modeling to support thousands of active DI/DII/DIII posts.",
+          tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Performance tuning"],
+          problem:
+            "Recruiters and candidates needed fast, trustworthy search across sport, division, conference, compensation, and role level without painful load times.",
+          solution:
+            "Implemented indexed, composable querying and a Rails-centric architecture that keeps filters snappy as listing volume grows.",
           metrics: [
-            "Serves over 2,500+ active job posts simultaneously",
-            "Achieved sub-200ms query times on 6-parameter dynamic searches",
-            "High daily active user volume from university recruiters"
+            "2,500+ concurrent listings with responsive filter UX",
+            "Tuned multi-parameter search into sub-200ms paths on representative workloads",
+            "Served steady daily traffic from athletic departments and applicants",
           ],
           engineering: [
-            "Custom PostgreSQL indexing strategies for multi-column filtering",
-            "Optimized ActiveRecord query crafting extending base scope",
-            "MVC architecture maximizing reusable form objects and presenters"
-          ]
+            "PostgreSQL indexing and scoped ActiveRecord patterns for heavy filter combinations",
+            "Presenter-style view layer to keep complex search readable",
+            "Performance passes on N+1 hotspots and hot query paths",
+          ],
         },
         {
           name: "Bullseye",
           url: "https://bullseye.education/",
           description:
-            "Built and maintained features for the K–12 instructional support platform: customizable walkthroughs and coaching workflows, in-the-moment feedback capture (web/mobile), and analytics for principals and district leaders.",
+            "K–12 instructional coaching: walkthroughs, in-the-moment feedback (web / mobile signals), and analytics for school leaders.",
           image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=380&fit=crop",
+          tech: ["Ruby on Rails", "React.js", "PostgreSQL"],
+          problem:
+            "Districts needed consistent coaching workflows and visibility into classroom support — not one-off spreadsheets or ad hoc tools.",
+          solution:
+            "Contributed features across coaching workflows, feedback capture, and reporting surfaces used by principals and district leads.",
+          metrics: [
+            "Shipped iterative improvements alongside product and instructional design",
+            "Hardened flows used in live districts during the school year",
+          ],
+          engineering: [
+            "Feature work spanning Rails services and React client components",
+            "Collaboration on permissions and role-aware views for staff vs leaders",
+          ],
         },
         {
           name: "Docyt",
           url: "https://docyt.com/",
           description:
-            "Microservices-based AI bookkeeping platform. Designed and built the Stripe payment microservice (subscriptions, billing, webhooks) and integrated it with the core Docyt platform for accounting and hospitality product lines.",
+            "AI-assisted bookkeeping — microservices for payments and subscriptions integrated with the core accounting product.",
           image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
+          tech: ["Ruby on Rails", "Stripe", "Microservices", "Webhooks"],
+          problem:
+            "Subscription and invoicing logic needed to live in a dedicated service with reliable Stripe webhooks and clear reconciliation.",
+          solution:
+            "Designed and implemented the Stripe-facing microservice: plans, billing cycles, webhooks, and handoff to core Docyt services.",
+          metrics: [
+            "Production-ready Stripe flows for hospitality and accounting lines",
+            "Webhook handling with operational logging for finance teams",
+          ],
+          engineering: [
+            "Service extraction from monolith billing paths",
+            "Idempotent webhook processing and defensive error handling",
+            "REST contracts between payment service and platform core",
+          ],
         },
         {
           name: "Monthend / Controllr",
           url: "https://fly.controllr.app/",
           description:
-            "Contributed to the Controllr SaaS application: authentication (email and Google OAuth), session management, user onboarding flows, and product features supporting month-end close and control workflows. Collaborated on API design and front-end components.",
+            "SaaS for month-end close and controls — auth, onboarding, and workflows for finance teams.",
           image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=380&fit=crop",
-          tech: ["Ruby on Rails", "React.js", "OAuth", "PostgreSQL"],
-          problem: "Month-end close processes were manual and error-prone, lacking a unified control layer for finance teams to track and manage closing tasks.",
-          solution: "Built authentication, onboarding, and core product features for Controllr — a SaaS platform that centralizes and automates month-end close workflows for finance teams.",
+          tech: ["Ruby on Rails", "React.js", "OAuth", "PostgreSQL", "Devise"],
+          problem:
+            "Finance teams lacked a single place to run close tasks with clear ownership and audit-friendly history.",
+          solution:
+            "Built authentication (email + Google OAuth), onboarding, and product surfaces that support recurring close and control tasks.",
           metrics: [
-            "Delivered full Google OAuth + email auth flow end-to-end",
-            "Streamlined user onboarding reducing setup friction",
-            "Enabled finance teams to close books faster with automated controls"
+            "Delivered OAuth and email auth end-to-end with session hygiene",
+            "Reduced friction in first-run setup for new orgs",
           ],
           engineering: [
-            "Implemented secure Google OAuth 2.0 alongside email/password auth using Devise",
-            "Designed session management with token refresh and expiry handling",
-            "Built modular React components for onboarding multi-step flows",
-            "Collaborated on RESTful API design for control workflow endpoints"
+            "Devise + Google OAuth 2.0 with careful callback and token refresh handling",
+            "Multi-step React onboarding with shared form state patterns",
+            "REST collaboration on control and checklist endpoints",
           ],
         },
       ],
     },
     {
-      role: "Research and Development Intern",
+      role: "Research & Development Intern",
       company: "Al-Khawarizmi Institute of Computer Science (KICS), UET Lahore",
       companyUrl: "https://www.linkedin.com/company/kics/posts/?feedView=all",
       location: "Lahore, Pakistan",
       duration: "Jul 2023 — Oct 2023",
       points: [
-        "Conducted research and technical development within a leading CS research institute, optimizing legacy codebases for faster execution.",
-        "Collaborated with cross-functional teams to quickly prototype and deliver technical proofs-of-concept on tight schedules."
+        "Optimized legacy research code paths and prototyped ideas on short research cycles.",
+        "Worked with faculty-led teams to turn requirements into runnable experiments.",
       ],
     },
     {
@@ -130,15 +168,15 @@ export const resumeData = {
       location: "Lahore, Pakistan",
       duration: "Jun 2023 — Aug 2023",
       points: [
-        "Developed and maintained responsive web applications, improving client-facing UI/UX and reducing page load times by ~15%.",
-        "Adopted agile workflows and active code reviews to ensure clean, maintainable engineering standards across student projects."
+        "Built and refined responsive client sites; improved perceived performance on key pages.",
+        "Practiced agile rituals, reviews, and documentation on student-led deliveries.",
       ],
     },
   ],
 
   education: [
     {
-      degree: "Bachelor of Science, Computer Science",
+      degree: "B.S. Computer Science",
       institution: "University of Engineering and Technology (UET), Lahore",
       duration: "2020 — 2024",
       gpa: "3.1",
@@ -146,82 +184,80 @@ export const resumeData = {
   ],
 
   skills: {
-    core: ["Ruby on Rails", "React.js", "JavaScript (ES6+)", "REST APIs", "PostgreSQL", "MySQL", "Redis"],
-    integrations: ["Stripe", "HubSpot", "Moodle", "Documenso", "Git", "Linux"],
-    frontend: ["TailwindCSS", "Vite", "React Query", "React Router", "Redux"],
-    also: ["Python", "Node.js", "Microservices", "Third-party API design"],
+    core: [
+      "Ruby on Rails",
+      "React.js",
+      "JavaScript (ES6+)",
+      "REST APIs",
+      "PostgreSQL",
+      "MySQL",
+      "Redis",
+      "Sidekiq",
+    ],
+    integrations: ["Stripe", "HubSpot", "Moodle", "Documenso", "Git", "Linux", "Docker (basics)"],
+    frontend: ["Tailwind CSS", "Vite", "React Query", "React Router", "Redux"],
+    also: ["Python", "Node.js", "Microservices", "Third-party API design", "RSpec", "Jest"],
   },
-
-  companies: [
-    { name: "Blackstack", url: null },
-    { name: "UET Lahore", url: "https://uet.edu.pk" },
-    { name: "KICS", url: null },
-    { name: "Apex Space", url: null },
-  ],
 
   journey: [
     {
       year: "2020",
-      title: "Started Computer Science",
-      description: "Started studying at UET Lahore, building strong fundamentals in software engineering and computer architecture.",
+      title: "Computer Science @ UET",
+      description: "Foundations in software engineering, systems, and algorithms; early full-stack coursework and projects.",
     },
     {
       year: "2023",
-      title: "Internships & Research",
-      description: "Worked as a Web Development Intern at Apex Space and an R&D Intern at KICS, optimizing legacy code and exploring frontend technologies.",
+      title: "Internships",
+      description: "Web intern at Apex Space; R&D intern at KICS — shipping under guidance and learning how research maps to code.",
     },
     {
       year: "Aug 2024",
-      title: "Associate Software Engineer",
-      description: "Graduated and began my professional career at Blackstack Software Solutions. Architected multi-tenant platforms and built scalable core components.",
+      title: "Associate Software Engineer — Blackstack",
+      description: "Joined a product-focused consultancy shipping Rails and React for US-facing SaaS customers.",
     },
     {
       year: "Dec 2024",
-      title: "Promoted to Software Engineer",
-      description: "Recognized for ownership and rapid execution. Leading end-to-end development of AI products and robust third-party API integrations like HubSpot and Documenso.",
+      title: "Software Engineer",
+      description: "Promotion after owning delivery on integrations-heavy products (PRM, payments, recruiting).",
     },
   ],
 
   testimonials: [
     {
-      quote: "Ghani has proven himself to be a phenomenal asset to the company, taking full ownership of his responsibilities and going above and beyond to support his team. His dedication and punctuality truly make a difference in our office.",
+      quote:
+        "Ghani has proven himself to be a phenomenal asset to the company, taking full ownership of his responsibilities and going above and beyond to support his team. His dedication and punctuality truly make a difference in our office.",
       author: "Blackstack Software Solutions",
-      title: "Performance Bonus & Appreciation 2025",
-      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workculture-employeeappreciation-employeecelebration-activity-7396172400092053504-Ci2f"
+      title: "Performance bonus & appreciation — 2025",
+      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workculture-employeeappreciation-employeecelebration-activity-7396172400092053504-Ci2f",
     },
     {
-      quote: "Your dedication, respect towards your seniors, and support for your juniors truly sets you apart. You’ve been a great team member, bringing positive energy that reflects beautifully in our workplace culture. A true technical wizard.",
+      quote:
+        "Your dedication, respect towards your seniors, and support for your juniors truly sets you apart. You've been a great team member, bringing positive energy that reflects beautifully in our workplace culture. A true technical wizard.",
       author: "Blackstack Software Solutions",
-      title: "1st Work Anniversary Spotlight",
-      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workanniversary-milestone-firstworkanniversary-activity-7356977157857849344-X7fF"
-    }
+      title: "First work anniversary spotlight",
+      url: "https://www.linkedin.com/posts/blackstack-software-solutions_workanniversary-milestone-firstworkanniversary-activity-7356977157857849344-X7fF",
+    },
   ],
 
   projects: [
     {
-      name: "FYP (Final Year Project)",
-      description: "Final Year Project at UET Lahore — full-stack capstone with exam management, roles, and reporting (Rails, PostgreSQL).",
+      name: "Online Exam System",
+      description:
+        "Capstone-style Rails app: exam authoring, approvals, student attempts, grading, and reporting (PostgreSQL).",
       url: "https://github.com/sghani001/Online_Exam_System",
-      tech: ["Rails", "PostgreSQL"],
+      tech: ["Rails", "PostgreSQL", "RSpec"],
       image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&h=380&fit=crop",
     },
     {
-      name: "Online Exam System",
-      description: "Full-stack exam creation, admin approval, student taking, and teacher grading (Rails).",
-      url: "https://github.com/sghani001/Online_Exam_System",
-      tech: ["Rails", "PostgreSQL"],
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=380&fit=crop",
-    },
-    {
       name: "WhatsApp Analyzer",
-      description: "Python tool for group/direct chat analytics and insights.",
+      description: "Python utilities to parse chats and surface group / direct-message insights.",
       url: "https://github.com/sghani001/Whatsapp_Analyzer",
-      tech: ["Python"],
+      tech: ["Python", "Pandas"],
       image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=600&h=380&fit=crop",
     },
     {
       name: "Olympics Analysis",
-      description: "Data analysis and visualization on Olympics datasets.",
+      description: "Exploratory analysis and charts on historical Olympics data.",
       url: "https://github.com/sghani001/Olympics",
       tech: ["Python", "Data visualization"],
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
@@ -229,19 +265,31 @@ export const resumeData = {
   ],
 
   engineeringPractices: [
-    "MVC architecture & RESTful API design",
-    "Test-Driven Development (RSpec, Jest)",
-    "Git version control & strict code reviews",
-    "PostgreSQL query optimization & caching",
-    "Clean Code & SOLID principles",
-    "Microservices extraction & scaling",
+    "REST API design with explicit contracts and validation",
+    "Automated tests where they protect regressions (RSpec, Jest)",
+    "Git workflows with meaningful review and small diffs",
+    "PostgreSQL tuning: indexes, scopes, and explain-driven fixes",
+    "SOLID-friendly Rails objects — not god models",
+    "Operational thinking for jobs, queues, and integrations",
   ],
 
   technicalHighlights: [
-    { title: "Authentication", desc: "Implemented secure stateful token-based authentication (JWT) and Devise with role-based access control." },
-    { title: "Performance", desc: "Optimized complex PostgreSQL search queries to achieve sub-200ms load times on 6-parameter dynamic filters." },
-    { title: "Integrations", desc: "Designed resilient two-way webhook syncing architectures for HubSpot, Documenso, and Stripe." },
-    { title: "Architecture", desc: "Extracted monolithic billing logic into standalone, highly scalable microservices." }
+    {
+      title: "Auth & access",
+      desc: "JWT-aware flows, Devise, Google OAuth, and role-aware UI patterns.",
+    },
+    {
+      title: "Performance",
+      desc: "Search and listing endpoints tuned for multi-filter workloads on PostgreSQL.",
+    },
+    {
+      title: "Integrations",
+      desc: "Stripe, HubSpot, Moodle, Documenso — webhooks, retries, and idempotent handlers.",
+    },
+    {
+      title: "Architecture",
+      desc: "Extracted billing into a focused service with clear boundaries to the monolith.",
+    },
   ],
 };
 

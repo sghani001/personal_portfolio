@@ -1,209 +1,277 @@
-/* Magic Portfolio nav — minimal dark bar, small logo, text links (Figma) */
-
-.magic-nav {
+.dock-nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-  padding: 0.6rem 1.25rem;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+  width: min(96vw, 920px);
+  pointer-events: none;
 }
 
-.magic-nav--scrolled {
-  background: rgba(30, 30, 35, 0.5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+.dock-nav * {
+  pointer-events: auto;
 }
 
-[data-theme="light"] .magic-nav--scrolled {
-  background: rgba(255, 255, 255, 0.65);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
-}
-
-.magic-nav__inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.magic-nav__logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.magic-nav__logo-mark {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  font-size: 0.85rem;
-}
-
-.magic-nav__links {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-.magic-nav__link {
-  padding: 0.4rem 0.65rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border-radius: 6px;
-  transition: color 0.2s, background 0.2s;
-}
-
-.magic-nav__link:hover {
-  color: var(--text-primary);
-  background: rgba(139, 92, 246, 0.08);
-}
-
-.magic-nav__link--active {
-  color: var(--accent) !important;
-  font-weight: 600;
-  background: transparent;
+.dock-nav__bar {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.45rem 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(12, 16, 30, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 18px 50px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(60px) saturate(160%);
+  -webkit-backdrop-filter: blur(60px) saturate(160%);
 }
 
-.magic-nav__link--active::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  left: 0.65rem;
-  right: 0.65rem;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.magic-nav__cv {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  padding: 0.4rem 0.5rem;
-  transition: color 0.2s;
-}
-
-.magic-nav__cv:hover {
-  color: var(--text-primary);
-}
-
-.magic-nav__theme-toggle {
+.dock-nav__brand {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.3s ease;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
-.magic-nav__theme-toggle:hover {
+.dock-nav__brand-mark {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--text-primary);
-  background: rgba(139, 92, 246, 0.12);
-  border-color: rgba(139, 92, 246, 0.3);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(124, 61, 255, 0.35), rgba(56, 189, 248, 0.15));
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.magic-nav__theme-toggle--light {
-  transform: rotate(180deg);
+.dock-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.magic-nav__toggle {
+.dock-nav__links::-webkit-scrollbar {
+  display: none;
+}
+
+.dock-nav__link {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.dock-nav__link:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dock-nav__link--active {
+  color: var(--text-primary);
+  background: rgba(124, 61, 255, 0.22);
+  border: 1px solid rgba(124, 61, 255, 0.35);
+}
+
+.dock-nav__pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.dock-nav__pill--cv {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dock-nav__pill--cv:hover {
+  color: var(--text-primary);
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.dock-nav__menu {
   display: none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
-  background: transparent;
   border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   color: var(--text-primary);
 }
 
-.magic-nav__toggle span {
+.dock-nav__menu span {
   display: block;
-  height: 1.5px;
-  width: 18px;
-  background: currentColor;
+  width: 14px;
+  height: 2px;
+  margin: 0 auto;
   border-radius: 2px;
-  transition: transform 0.25s, opacity 0.25s;
+  background: currentColor;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.magic-nav__toggle[aria-expanded="true"] span:nth-child(1) {
-  transform: translateY(6.5px) rotate(45deg);
+.dock-nav__bar--open .dock-nav__menu span:first-child {
+  transform: translateY(3.5px) rotate(45deg);
 }
 
-.magic-nav__toggle[aria-expanded="true"] span:nth-child(2) {
-  opacity: 0;
+.dock-nav__bar--open .dock-nav__menu span:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
 }
 
-.magic-nav__toggle[aria-expanded="true"] span:nth-child(3) {
-  transform: translateY(-6.5px) rotate(-45deg);
-}
+@media (max-width: 820px) {
+  .dock-nav {
+    width: min(96vw, 520px);
+  }
 
-@media (max-width: 768px) {
-  .magic-nav__toggle {
+  .dock-nav__menu {
     display: flex;
   }
 
-  .magic-nav__links {
+  .dock-nav__links {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 0.5rem);
     left: 0;
     right: 0;
     flex-direction: column;
-    padding: 0.75rem 1rem;
-    background: rgba(7, 7, 11, 0.98);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    align-items: stretch;
+    gap: 0.15rem;
+    padding: 0.5rem;
+    border-radius: 20px;
+    background: rgba(10, 14, 26, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    max-height: 0;
+    overflow: hidden;
     opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+    pointer-events: none;
+    transition: max-height 0.35s ease, opacity 0.2s ease;
   }
 
-  [data-theme="light"] .magic-nav__links {
-    background: rgba(244, 244, 248, 0.98);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  [data-theme="light"] .dock-nav__links {
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
   }
 
-  .magic-nav__links--open {
+  .dock-nav__links--visible {
+    max-height: 70vh;
     opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    pointer-events: auto;
+    overflow-y: auto;
   }
 
-  .magic-nav__link {
+  .dock-nav__link {
     width: 100%;
-    padding: 0.6rem 0.75rem;
+    text-align: center;
+    padding: 0.55rem 0.75rem;
   }
+}
 
-  .magic-nav__cv {
-    margin-left: auto;
-  }
+.dock-nav__theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.35s ease;
+}
+
+.dock-nav__theme:hover {
+  color: var(--text-primary);
+  background: rgba(124, 61, 255, 0.15);
+  border-color: rgba(124, 61, 255, 0.35);
+}
+
+.dock-nav__theme--light {
+  transform: rotate(180deg);
+}
+
+[data-theme="light"] .dock-nav__bar {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .dock-nav__brand-mark {
+  color: #111827;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .dock-nav__link {
+  color: rgba(17, 24, 39, 0.55);
+}
+
+[data-theme="light"] .dock-nav__link:hover {
+  color: #111827;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+[data-theme="light"] .dock-nav__link--active {
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .dock-nav__pill {
+  color: rgba(17, 24, 39, 0.7);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .dock-nav__pill--cv:hover {
+  border-color: rgba(217, 119, 6, 0.45);
+  background: rgba(251, 191, 36, 0.12);
+}
+
+[data-theme="light"] .dock-nav__theme {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: rgba(17, 24, 39, 0.55);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="light"] .dock-nav__theme:hover {
+  color: #111827;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .dock-nav__menu {
+  background: rgba(0, 0, 0, 0.05);
+  color: #111827;
 }
