@@ -19,34 +19,70 @@ const visibleLinks = navLinks.filter((l) => l.label);
 
 export default function GlassNav({ theme, toggleTheme }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeId, setActiveId] = useState("hero");
+  const [activeId, setActiveId] = useState(() => {
+    const hash = window.location.hash.replace("#", "");
+    return hash || "hero";
+  });
 
   useEffect(() => {
-    const scrollEl = document.querySelector(".fullpage-scroll");
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash) setActiveId(hash);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  useEffect(() => {
     const sectionIds = navLinks.map((l) => l.id);
     const observers = [];
-    const visibilityMap = {};
+
+    const observerOptions = {
+      root: null, // use viewport
+      rootMargin: "-10% 0px -40% 0px", // Focus on top-middle of the screen
+      threshold: 0,
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveId(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          visibilityMap[id] = entry.intersectionRatio;
-          const best = Object.entries(visibilityMap).sort((a, b) => b[1] - a[1])[0];
-          if (best && best[1] > 0) setActiveId(best[0]);
-        },
-        { root: scrollEl, threshold: [0, 0.2, 0.45, 0.7, 1] }
-      );
-      obs.observe(el);
-      observers.push(obs);
+      if (el) {
+        observer.observe(el);
+        observers.push(observer);
+      }
     });
+
     return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  // Handle initial refresh scroll
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "auto" });
+          setActiveId(hash);
+        }
+      }, 100);
+    }
   }, []);
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
     setMobileOpen(false);
+    setActiveId(id);
     window.history.pushState(null, "", `#${id}`);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
