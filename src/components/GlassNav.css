@@ -4,7 +4,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  width: min(96vw, 920px);
+  width: min(96vw, 1000px);
   pointer-events: none;
 }
 

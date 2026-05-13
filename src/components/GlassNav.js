@@ -5,7 +5,7 @@ const navLinks = [
   { id: "hero", label: null },
   { id: "summary", label: "About" },
   { id: "engineering", label: "Build" },
-  { id: "experience", label: "Work" },
+  { id: "experience", label: "Experience" },
   { id: "education", label: "Education" },
   { id: "skills", label: "Skills" },
   { id: "activity", label: "Stats" },
