@@ -89,6 +89,27 @@ export const resumeData = {
             "Microservices-based AI bookkeeping platform. Designed and built the Stripe payment microservice (subscriptions, billing, webhooks) and integrated it with the core Docyt platform for accounting and hospitality product lines.",
           image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
         },
+        {
+          name: "Monthend / Controllr",
+          url: "https://fly.controllr.app/",
+          description:
+            "Contributed to the Controllr SaaS application: authentication (email and Google OAuth), session management, user onboarding flows, and product features supporting month-end close and control workflows. Collaborated on API design and front-end components.",
+          image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=380&fit=crop",
+          tech: ["Ruby on Rails", "React.js", "OAuth", "PostgreSQL"],
+          problem: "Month-end close processes were manual and error-prone, lacking a unified control layer for finance teams to track and manage closing tasks.",
+          solution: "Built authentication, onboarding, and core product features for Controllr — a SaaS platform that centralizes and automates month-end close workflows for finance teams.",
+          metrics: [
+            "Delivered full Google OAuth + email auth flow end-to-end",
+            "Streamlined user onboarding reducing setup friction",
+            "Enabled finance teams to close books faster with automated controls"
+          ],
+          engineering: [
+            "Implemented secure Google OAuth 2.0 alongside email/password auth using Devise",
+            "Designed session management with token refresh and expiry handling",
+            "Built modular React components for onboarding multi-step flows",
+            "Collaborated on RESTful API design for control workflow endpoints"
+          ],
+        },
       ],
     },
     {
