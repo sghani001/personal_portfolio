@@ -63,7 +63,7 @@ const GitHubCalendar = ({ username }) => {
   const years = [2026, 2025, 2024, 2023, 2022];
 
   return (
-    <div className="github-calendar-root">
+    <div className="github-calendar-root glass-card">
       <div className="github-calendar-header">
         <h2 className="github-calendar-stats">
           {loading ? 'Fetching contributions...' : `${data?.totalContributions || 0} contributions in ${activeYear === 2026 ? 'the last year' : activeYear}`}
