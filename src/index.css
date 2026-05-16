@@ -114,6 +114,12 @@ body {
   margin: 0;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button, * {
+    cursor: none !important;
+  }
+}
+
 body::before,
 body::after {
   content: "";
@@ -168,8 +174,8 @@ body::after {
 }
 
 #root {
-  min-height: 100%;
-  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
 }
 
 .fullpage-scroll {
@@ -178,10 +184,11 @@ body::after {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 5.5rem;
-  scroll-padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 4rem;
+  scroll-padding-bottom: max(1rem, env(safe-area-inset-bottom));
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
   background:
     radial-gradient(ellipse 100% 55% at 50% -10%, rgba(124, 61, 255, 0.12) 0%, transparent 55%),
     radial-gradient(ellipse 80% 50% at 100% 40%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),

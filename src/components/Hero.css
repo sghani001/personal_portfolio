@@ -119,11 +119,40 @@
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.08;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   background: linear-gradient(120deg, #f4f6ff 0%, #d4d9ff 40%, #b79fff 95%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.hero__typewriter {
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hero__typewriter-text {
+  background: linear-gradient(90deg, var(--accent), #d4d9ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__typewriter-cursor {
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+  font-weight: 400;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .hero__headline {
@@ -243,6 +272,8 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(244, 246, 255, 0.88);
+  transition: transform 0.2s cubic-bezier(0.1, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .hero-scene__panel-label {
@@ -268,6 +299,7 @@
   width: 38%;
   color: #fecdd3;
   border-color: rgba(251, 113, 133, 0.35);
+  transform: translate3d(calc(var(--mx, 0) * 40px), calc(var(--my, 0) * 40px), 50px);
 }
 
 .hero-scene__panel--react {
@@ -276,6 +308,7 @@
   width: 34%;
   color: #bae6fd;
   border-color: rgba(56, 189, 248, 0.35);
+  transform: translate3d(calc(var(--mx, 0) * -30px), calc(var(--my, 0) * -30px), 80px);
 }
 
 .hero-scene__panel--python {
@@ -284,6 +317,7 @@
   width: 30%;
   color: #a7f3d0;
   border-color: rgba(167, 243, 208, 0.28);
+  transform: translate3d(calc(var(--mx, 0) * 60px), calc(var(--my, 0) * 60px), 30px);
 }
 
 .hero-scene__ruby-wrap {

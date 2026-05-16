@@ -15,12 +15,13 @@ export function useInView(options = {}) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const visible = entry.isIntersecting && entry.intersectionRatio > 0;
-        if (visible) setInView(true);
+        if (entry.isIntersecting) {
+          setInView(true);
+        }
       },
       {
         root: options.root !== undefined ? options.root : scrollEl,
-        rootMargin: options.rootMargin ?? "0px 0px 0px 0px",
+        rootMargin: options.rootMargin ?? "20% 0px 20% 0px",
         threshold: options.threshold ?? 0,
       }
     );

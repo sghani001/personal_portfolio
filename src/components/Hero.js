@@ -1,10 +1,61 @@
 import React from "react";
 import resumeData from "../utils/resumeData";
+import MagneticWrapper from "./MagneticWrapper";
 import "./Hero.css";
 
 const heroPhoto = process.env.PUBLIC_URL + "/hero-photo.png";
 
 export default function Hero() {
+  const [titleIndex, setTitleIndex] = React.useState(0);
+  const [displayText, setDisplayText] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [typingSpeed, setTypingSpeed] = React.useState(150);
+  const heroRef = React.useRef(null);
+
+  const roles = resumeData.titles || [resumeData.title];
+
+  React.useEffect(() => {
+    const handleTyping = () => {
+      const currentRole = roles[titleIndex];
+      const isFinishing = !isDeleting && displayText === currentRole;
+      const isStarting = isDeleting && displayText === "";
+
+      if (isFinishing) {
+        setTimeout(() => setIsDeleting(true), 2000);
+        return;
+      }
+
+      if (isStarting) {
+        setIsDeleting(false);
+        setTitleIndex((prev) => (prev + 1) % roles.length);
+        return;
+      }
+
+      const nextText = isDeleting
+        ? currentRole.substring(0, displayText.length - 1)
+        : currentRole.substring(0, displayText.length + 1);
+
+      setDisplayText(nextText);
+      setTypingSpeed(isDeleting ? 50 : 120);
+    };
+
+    const timer = setTimeout(handleTyping, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, titleIndex, roles, typingSpeed]);
+
+  const handleMouseMove = (e) => {
+    if (!heroRef.current) return;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = heroRef.current.getBoundingClientRect();
+    
+    // Calculate mouse position relative to center (-0.5 to 0.5)
+    const x = (clientX - left) / width - 0.5;
+    const y = (clientY - top) / height - 0.5;
+    
+    heroRef.current.style.setProperty("--mx", x.toFixed(3));
+    heroRef.current.style.setProperty("--my", y.toFixed(3));
+  };
+
   const scrollTo = (id) => (e) => {
     e.preventDefault();
     window.history.pushState(null, "", `#${id}`);
@@ -12,11 +63,20 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="hero hero--vision">
+    <section 
+      id="hero" 
+      className="hero hero--vision" 
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+    >
       <div className="hero__grid">
         <div className="hero__copy">
           <p className="hero__eyebrow">Software engineer · Lahore</p>
           <h1 className="hero__name">{resumeData.name}</h1>
+          <div className="hero__typewriter">
+            <span className="hero__typewriter-text">{displayText || roles[0]}</span>
+            <span className="hero__typewriter-cursor">|</span>
+          </div>
           <p className="hero__headline">{resumeData.headline}</p>
           <ul className="hero__bullets">
             {(resumeData.heroBullets || []).map((line) => (
@@ -24,12 +84,17 @@ export default function Hero() {
             ))}
           </ul>
           <div className="hero__actions">
-            <button type="button" className="hero__btn hero__btn--primary" onClick={scrollTo("experience")}>
-              View experience
-            </button>
-            <a href="#contact" className="hero__btn hero__btn--ghost" onClick={scrollTo("contact")}>
-              Contact
-            </a>
+            <MagneticWrapper strength={0.4}>
+              <button type="button" className="hero__btn hero__btn--primary" onClick={scrollTo("experience")}>
+                View experience
+              </button>
+            </MagneticWrapper>
+            
+            <MagneticWrapper strength={0.3}>
+              <a href="#contact" className="hero__btn hero__btn--ghost" onClick={scrollTo("contact")}>
+                Contact
+              </a>
+            </MagneticWrapper>
           </div>
         </div>
 

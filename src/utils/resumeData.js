@@ -3,6 +3,14 @@
 const resumeData = {
   name: "Syed Ghani",
   title: "Software Engineer",
+  titles: [
+    "Software Engineer",
+    "Ruby on Rails Developer",
+    "React.js Developer",
+    "Full Stack Engineer",
+    "API Specialist",
+    "Problem Solver"
+  ],
   tagline: "Rails · React · APIs that ship",
   headline:
     "Full-stack engineer building production web apps with Ruby on Rails and React — from schema and jobs to polished UI.",
@@ -37,8 +45,8 @@ const resumeData = {
       companyUrl: "https://www.linkedin.com/company/blackstack-software-solutions/posts/?feedView=all",
       location: "Lahore, Pakistan · Remote-friendly",
       roles: [
-        { title: "Software Engineer", duration: "Dec 2024 — Present" },
-        { title: "Associate Software Engineer", duration: "Aug 2024 — Dec 2024" },
+        { title: "Software Engineer", duration: "Aug 2025 — May 2026" },
+        { title: "Associate Software Engineer", duration: "Aug 2024 — Aug 2025" },
       ],
       projects: [
         {

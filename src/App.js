@@ -5,6 +5,8 @@ import ProjectModal from "./components/ProjectModal";
 import LeetcodeStats from "./components/LeetcodeStats";
 import TiltSurface from "./components/TiltSurface";
 import GitHubCalendar from "./components/GitHubCalendar";
+import SpotlightCard from "./components/SpotlightCard";
+import CustomCursor from "./components/CustomCursor";
 import resumeData from "./utils/resumeData";
 import { skillPillClass } from "./utils/skillTone";
 import { useInView } from "./hooks/useInView";
@@ -66,9 +68,10 @@ function App() {
     }
   }, []);
 
-  // Scroll progress → CSS variables for 3D parallax background (respects reduced motion)
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Scroll progress (respects reduced motion)
   useEffect(() => {
-    const root = document.documentElement;
     const scrollEl = document.querySelector(".fullpage-scroll");
     if (!scrollEl) return undefined;
 
@@ -76,12 +79,15 @@ function App() {
 
     const update = () => {
       if (reduced) {
-        root.style.setProperty("--scroll-t", "0");
-        root.style.setProperty("--scroll-sin", "0");
+        setScrollProgress(0);
         return;
       }
       const max = Math.max(1, scrollEl.scrollHeight - scrollEl.clientHeight);
       const t = Math.min(1, Math.max(0, scrollEl.scrollTop / max));
+      setScrollProgress(t);
+      
+      // Keep other variables for background parallax if needed
+      const root = document.documentElement;
       root.style.setProperty("--scroll-t", t.toFixed(4));
       root.style.setProperty("--scroll-sin", Math.sin(t * Math.PI).toFixed(4));
     };
@@ -118,6 +124,8 @@ function App() {
 
   return (
     <>
+      <CustomCursor />
+      <div className="scroll-progress-bar" style={{ width: `${scrollProgress * 100}%` }} />
       <GlassNav theme={theme} toggleTheme={toggleTheme} />
       <main className="fullpage-scroll">
         <div className="scroll-depth-bg" aria-hidden>
@@ -129,24 +137,24 @@ function App() {
         <Hero />
 
         <Section id="summary" title="About Me" subtitle="Brief" fullPage>
-          <div className="magic-card magic-card--text">
+          <SpotlightCard className="magic-card--text">
             <p className="magic-brief">{resumeData.summary}</p>
             {resumeData.aboutExtra && (
               <p className="magic-brief magic-brief--extra">{resumeData.aboutExtra}</p>
             )}
-          </div>
+          </SpotlightCard>
         </Section>
 
         <Section id="engineering" title="Engineering" subtitle="How I Build" fullPage>
           <div className="engineering-grid">
-            <div className="glass-card engineering-card">
+            <SpotlightCard className="engineering-card">
               <h3 className="engineering-card__title">Engineering Practices</h3>
               <ul className="engineering-practices-list">
                 {resumeData.engineeringPractices.map((practice, i) => (
                   <li key={i}>{practice}</li>
                 ))}
               </ul>
-            </div>
+            </SpotlightCard>
             <div className="engineering-highlights">
               {resumeData.technicalHighlights.map((highlight, i) => (
                 <div key={i} className="glass-card highlight-item" style={{ "--stagger-i": i }}>
