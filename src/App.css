@@ -1497,23 +1497,14 @@
 }
 
 .github-contribution {
-  padding: 2.5rem 2rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  border-radius: 22px;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.github-contribution-title {
-  align-self: flex-start;
-  margin-bottom: 2rem;
-  font-size: 1.25rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+/* Removed old chart styles */
 
 .github-calendar-container {
   width: 100%;
@@ -1531,35 +1522,11 @@
   margin: 0 auto;
 }
 
-.github-chart-wrapper {
-  width: 100%;
-  background: var(--bg-elevated);
-  padding: 2rem 1.5rem;
-  border-radius: 16px;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-}
+/* Removed old chart styles */
 
-.github-chart-img {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  transition: filter 0.3s ease, opacity 0.3s ease;
-}
+/* Removed old chart styles */
 
-/* Dark mode chart adjustments */
-[data-theme="dark"] .github-chart-img {
-  filter: brightness(1.2) contrast(1.1);
-  mix-blend-mode: screen;
-}
-
-/* Light mode chart adjustments */
-[data-theme="light"] .github-chart-img {
-  mix-blend-mode: multiply;
-  opacity: 0.85;
-}
+/* Removed obsolete filters */
 
 /* Fix for GitHub cards in light mode */
 [data-theme="light"] .github-card {

@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import ProjectModal from "./components/ProjectModal";
 import LeetcodeStats from "./components/LeetcodeStats";
 import TiltSurface from "./components/TiltSurface";
+import GitHubCalendar from "./components/GitHubCalendar";
 import resumeData from "./utils/resumeData";
 import { skillPillClass } from "./utils/skillTone";
 import { useInView } from "./hooks/useInView";
@@ -318,15 +319,8 @@ function App() {
                   />
                 </a>
               </div>
-              <div className="github-contribution glass-card fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <h3 className="github-contribution-title">Contributions</h3>
-                <div className="github-chart-wrapper">
-                  <img
-                    src={`https://ghchart.rshah.org/${theme === "dark" ? "7c3dff" : "6366f1"}/sghani001`}
-                    alt="sghani001's Github chart"
-                    className="github-chart-img"
-                  />
-                </div>
+              <div className="github-contribution fade-in-up" style={{ animationDelay: '0.2s', width: '100%' }}>
+                <GitHubCalendar username="sghani001" />
               </div>
             </div>
 
