@@ -339,7 +339,7 @@ function App() {
                 </a>
               </div>
               <div className="github-contribution fade-in-up" style={{ animationDelay: '0.2s', width: '100%' }}>
-                <GitHubCalendar username="sghani001" />
+                <GitHubCalendar username="sghani001" theme={theme} />
               </div>
             </div>
 
