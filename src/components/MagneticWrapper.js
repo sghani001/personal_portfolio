@@ -1,33 +1,37 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-const springConfig = { stiffness: 150, damping: 15, mass: 0.1 };
+// Snappy but not bouncy — feels like a physical button
+const springConfig = { stiffness: 320, damping: 30, mass: 0.5 };
 
 /**
- * MagneticWrapper - A component that adds a magnetic "attraction" effect to its children.
- * When the mouse is near, the child element subtly follows the cursor.
+ * MagneticWrapper — Adds a subtle magnetic attraction to its child element.
+ * The child moves toward the cursor when hovered. Uses Framer Motion springs
+ * for smooth, physics-based easing. Zero React re-renders during mouse move.
  */
-export default function MagneticWrapper({ children, strength = 0.35 }) {
+export default function MagneticWrapper({ children, strength = 0.3 }) {
   const ref = useRef(null);
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const x = useSpring(rawX, springConfig);
   const y = useSpring(rawY, springConfig);
 
-  const handleMouseMove = (e) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    rawX.set((clientX - centerX) * strength);
-    rawY.set((clientY - centerY) * strength);
-  };
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!ref.current) return;
+      const { left, top, width, height } = ref.current.getBoundingClientRect();
+      const centerX = left + width / 2;
+      const centerY = top + height / 2;
+      rawX.set((e.clientX - centerX) * strength);
+      rawY.set((e.clientY - centerY) * strength);
+    },
+    [rawX, rawY, strength]
+  );
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     rawX.set(0);
     rawY.set(0);
-  };
+  }, [rawX, rawY]);
 
   return (
     <motion.div

@@ -1,49 +1,80 @@
+/* ---- Custom Cursor ---- */
+/* NOTE: Framer Motion sets `transform: translateX(x) translateY(y)` on the element.
+   We use negative margin to center the element instead of CSS transform translate,
+   so there is no conflict with Framer Motion's transform. */
+
 .custom-cursor-dot,
 .custom-cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
-  background-color: var(--accent);
-  border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
-  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* Center via margin — avoids overriding Framer Motion's transform */
   will-change: transform;
+  /* Prevent any layout impact */
+  contain: strict;
 }
 
+/* ---- Dot (sharp, instant tracker) ---- */
 .custom-cursor-dot {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  background: var(--accent);
   z-index: 10001;
+  transition:
+    width 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
+/* ---- Ring (trailing, aura) ---- */
 .custom-cursor-ring {
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  border: 1px solid rgba(183, 159, 255, 0.4);
-  transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  background: transparent;
+  border: 1.5px solid rgba(183, 159, 255, 0.45);
+  z-index: 10000;
+  transition:
+    width 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    border-width 0.18s ease;
 }
 
+/* ---- Hover states (toggled via classList, no re-render) ---- */
 .custom-cursor-dot.hovering {
-  transform: translate(-50%, -50%) scale(2);
-  background-color: var(--accent);
-  box-shadow: 0 0 15px var(--accent-glow);
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  background: #fff;
+  box-shadow: 0 0 14px var(--accent-glow), 0 0 4px rgba(255,255,255,0.5);
 }
 
 .custom-cursor-ring.hovering {
-  width: 65px;
-  height: 65px;
-  background-color: rgba(183, 159, 255, 0.08);
+  width: 52px;
+  height: 52px;
+  margin-left: -26px;
+  margin-top: -26px;
+  background: rgba(124, 61, 255, 0.07);
   border-color: var(--accent);
   border-width: 1.5px;
 }
 
+/* ---- Hide on touch devices ---- */
 @media (hover: none) and (pointer: coarse) {
   .custom-cursor-dot,
   .custom-cursor-ring {
-    display: none;
+    display: none !important;
   }
 }

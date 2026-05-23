@@ -87,7 +87,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   height: 100%;
   --scroll-t: 0;
   --scroll-sin: 0;
@@ -125,12 +124,15 @@ body::after {
   content: "";
   position: fixed;
   border-radius: 50%;
-  filter: blur(80px);
+  /* Reduced from 80px — big GPU saving, visually imperceptible */
+  filter: blur(60px);
   z-index: -1;
   pointer-events: none;
   opacity: 0.3;
   animation: ambient-drift 30s ease-in-out infinite alternate;
   will-change: transform;
+  /* Force own GPU layer so blur doesn't repaint over content */
+  transform: translateZ(0);
 }
 
 body::before {
@@ -185,10 +187,14 @@ body::after {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  /* Smooth scrolling on the actual scroll container (not just html) */
+  scroll-behavior: smooth;
   scroll-padding-top: 4rem;
   scroll-padding-bottom: max(1rem, env(safe-area-inset-bottom));
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  /* Force GPU compositing layer for scroll */
+  transform: translateZ(0);
   background:
     radial-gradient(ellipse 100% 55% at 50% -10%, rgba(124, 61, 255, 0.12) 0%, transparent 55%),
     radial-gradient(ellipse 80% 50% at 100% 40%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),

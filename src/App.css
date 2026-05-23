@@ -31,7 +31,9 @@
     0 0 0 1px rgba(124, 61, 255, 0.1),
     0 20px 50px rgba(0, 0, 0, 0.42),
     0 0 80px rgba(124, 61, 255, 0.06);
-  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+  /* GPU compositing layer — prevents paint on hover */
+  will-change: transform;
+  transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   contain: layout;
 }
 
@@ -43,7 +45,7 @@
     0 0 0 1px rgba(56, 189, 248, 0.22),
     0 26px 70px rgba(0, 0, 0, 0.48),
     0 0 100px rgba(124, 61, 255, 0.12);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 [data-theme="light"] .glass-card {
@@ -193,11 +195,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(124, 61, 255, 0.08),
     0 20px 50px rgba(0, 0, 0, 0.45);
-  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  /* GPU compositing — prevents paint spike on hover */
+  will-change: transform;
+  transition: box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1), transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .magic-project-card:hover {
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-5px) scale(1.01);
   border-color: rgba(56, 189, 248, 0.35);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -398,7 +402,8 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 18px 48px rgba(0, 0, 0, 0.38);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  will-change: transform;
+  transition: box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1), transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .exp-item::before {
@@ -548,7 +553,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
     0 0 0 1px rgba(251, 191, 36, 0.06),
     0 16px 42px rgba(0, 0, 0, 0.42);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .exp-project-card:hover {
@@ -745,7 +751,8 @@
   border: 1px solid var(--glass-border);
   border-radius: 10px;
   margin: 0.25rem 0.25rem 0 0;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+  will-change: transform;
+  transition: background 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1), color 0.18s ease, box-shadow 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .skill-pill--react,
