@@ -1,8 +1,6 @@
 .hero--vision {
   min-height: 100vh;
   min-height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   justify-content: center;

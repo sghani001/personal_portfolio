@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, useMotionValue } from "framer-motion";
 import "./CustomCursor.css";
 
 /**
  * CustomCursor - A trailing cursor effect that follows the mouse.
  */
 export default function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+
+  const dotX = useMotionValue(-100);
+  const dotY = useMotionValue(-100);
 
   const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
   const cursorX = useSpring(0, springConfig);
@@ -15,9 +17,10 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const moveMouse = (e) => {
+      dotX.set(e.clientX);
+      dotY.set(e.clientY);
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleHover = (e) => {
@@ -39,15 +42,15 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", moveMouse);
       window.removeEventListener("mouseover", handleHover);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, dotX, dotY]);
 
   return (
     <>
       <motion.div
         className={`custom-cursor-dot ${isHovering ? 'hovering' : ''}`}
         style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
+          x: dotX,
+          y: dotY,
         }}
       />
       <motion.div

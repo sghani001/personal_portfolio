@@ -4,6 +4,7 @@ import MagneticWrapper from "./MagneticWrapper";
 import "./Hero.css";
 
 const heroPhoto = process.env.PUBLIC_URL + "/hero-photo.png";
+const roles = resumeData.titles || [resumeData.title];
 
 export default function Hero() {
   const [titleIndex, setTitleIndex] = React.useState(0);
@@ -11,8 +12,6 @@ export default function Hero() {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [typingSpeed, setTypingSpeed] = React.useState(150);
   const heroRef = React.useRef(null);
-
-  const roles = resumeData.titles || [resumeData.title];
 
   React.useEffect(() => {
     const handleTyping = () => {

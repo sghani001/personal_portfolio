@@ -68,8 +68,6 @@ function App() {
     }
   }, []);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
-
   // Scroll progress (respects reduced motion)
   useEffect(() => {
     const scrollEl = document.querySelector(".fullpage-scroll");
@@ -77,19 +75,32 @@ function App() {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    let ticking = false;
+
     const update = () => {
-      if (reduced) {
-        setScrollProgress(0);
-        return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (reduced) {
+            ticking = false;
+            return;
+          }
+          const max = Math.max(1, scrollEl.scrollHeight - scrollEl.clientHeight);
+          const t = Math.min(1, Math.max(0, scrollEl.scrollTop / max));
+          
+          const progressBar = document.querySelector(".scroll-progress-bar");
+          if (progressBar) {
+            progressBar.style.width = `${t * 100}%`;
+          }
+          
+          // Keep other variables for background parallax if needed
+          const root = document.documentElement;
+          root.style.setProperty("--scroll-t", t.toFixed(4));
+          root.style.setProperty("--scroll-sin", Math.sin(t * Math.PI).toFixed(4));
+          
+          ticking = false;
+        });
+        ticking = true;
       }
-      const max = Math.max(1, scrollEl.scrollHeight - scrollEl.clientHeight);
-      const t = Math.min(1, Math.max(0, scrollEl.scrollTop / max));
-      setScrollProgress(t);
-      
-      // Keep other variables for background parallax if needed
-      const root = document.documentElement;
-      root.style.setProperty("--scroll-t", t.toFixed(4));
-      root.style.setProperty("--scroll-sin", Math.sin(t * Math.PI).toFixed(4));
     };
 
     update();
@@ -125,7 +136,7 @@ function App() {
   return (
     <>
       <CustomCursor />
-      <div className="scroll-progress-bar" style={{ width: `${scrollProgress * 100}%` }} />
+      <div className="scroll-progress-bar" style={{ width: "0%" }} />
       <GlassNav theme={theme} toggleTheme={toggleTheme} />
       <main className="fullpage-scroll">
         <div className="scroll-depth-bg" aria-hidden>
