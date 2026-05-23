@@ -120,6 +120,20 @@ export default function Hero() {
             <span className="hero__typewriter-cursor">|</span>
           </div>
           <p className="hero__headline">{resumeData.headline}</p>
+          <div className="hero__badge-row" style={{ marginBottom: "1.5rem" }}>
+            <a 
+              href="https://github.com/sghani001" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="hero__badge-link"
+            >
+              <img 
+                src="https://img.shields.io/badge/GitHub-sghani001-181717?style=for-the-badge&logo=github" 
+                alt="GitHub Profile" 
+                style={{ height: "26px", borderRadius: "5px" }} 
+              />
+            </a>
+          </div>
           <ul className="hero__bullets">
             {(resumeData.heroBullets || []).map((line) => (
               <li key={line}>{line}</li>

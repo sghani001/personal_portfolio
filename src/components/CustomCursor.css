@@ -78,3 +78,12 @@
     display: none !important;
   }
 }
+
+/* ---- Hide custom cursor over secure cross-origin widgets (iframes) ---- */
+body.hide-custom-cursor .custom-cursor-dot,
+body.hide-custom-cursor .custom-cursor-ring {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: scale(0) !important;
+}
+

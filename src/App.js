@@ -7,10 +7,13 @@ import TiltSurface from "./components/TiltSurface";
 import GitHubCalendar from "./components/GitHubCalendar";
 import SpotlightCard from "./components/SpotlightCard";
 import CustomCursor from "./components/CustomCursor";
+import LinkedInBadge from "./components/LinkedInBadge";
 import resumeData from "./utils/resumeData";
 import { skillPillClass } from "./utils/skillTone";
 import { useInView } from "./hooks/useInView";
 import "./App.css";
+import GitHubBadge from "./components/GitHubBadge";
+import LeetCodeBadge from "./components/LeetCodeBadge";
 
 function Section({ id, title, subtitle, children, fullPage }) {
   const [ref, inView] = useInView();
@@ -148,12 +151,20 @@ function App() {
         <Hero />
 
         <Section id="summary" title="About Me" subtitle="Brief" fullPage>
-          <SpotlightCard className="magic-card--text">
+          {/* Full width about card */}
+          <SpotlightCard className="magic-card--text" style={{ width: "100%", marginBottom: "2rem" }}>
             <p className="magic-brief">{resumeData.summary}</p>
             {resumeData.aboutExtra && (
               <p className="magic-brief magic-brief--extra">{resumeData.aboutExtra}</p>
             )}
           </SpotlightCard>
+
+          {/* Badges row */}
+          <div className="about-badges-row">
+            <LinkedInBadge theme={theme} />
+            <GitHubBadge username="sghani001" theme={theme} />
+            <LeetCodeBadge username="syedghani" />
+          </div>
         </Section>
 
         <Section id="engineering" title="Engineering" subtitle="How I Build" fullPage>
@@ -170,7 +181,6 @@ function App() {
               {resumeData.technicalHighlights.map((highlight, i) => (
                 <div key={i} className="glass-card highlight-item" style={{ "--stagger-i": i }}>
                   <h4 className="highlight-item__title">
-                    <span className="highlight-item__icon" aria-hidden>⚡</span>
                     {highlight.title}
                   </h4>
                   <p className="highlight-item__desc">{highlight.desc}</p>
