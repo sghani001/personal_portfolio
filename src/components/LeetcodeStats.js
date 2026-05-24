@@ -4,7 +4,6 @@ import "./LeetcodeStats.css";
 // ── GraphQL helpers ───────────────────────────────────────────────────────────
 
 async function lcQuery(query, variables) {
-  // Calls our Vercel proxy at /api/leetcode — server-side, no CORS issues
   const res = await fetch("https://leetcode-proxy-2.vercel.app/api/leetcode", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -41,6 +40,11 @@ const STATS_QUERY = `
         difficulty
         percentage
       }
+      tagProblemCounts {
+        advanced { tagName problemsSolved }
+        intermediate { tagName problemsSolved }
+        fundamental { tagName problemsSolved }
+      }
     }
     allQuestionsCount {
       difficulty
@@ -62,12 +66,202 @@ const CALENDAR_QUERY = `
   }
 `;
 
-// ── Component ─────────────────────────────────────────────────────────────────
+const TOPICS_QUERY = `
+  query getAllTagTotals {
+    arrayTotal: questionList(categorySlug: "", filters: {tags: ["array"]}, limit: 1) { totalNum }
+    stringTotal: questionList(categorySlug: "", filters: {tags: ["string"]}, limit: 1) { totalNum }
+    twopointersTotal: questionList(categorySlug: "", filters: {tags: ["two-pointers"]}, limit: 1) { totalNum }
+    sortingTotal: questionList(categorySlug: "", filters: {tags: ["sorting"]}, limit: 1) { totalNum }
+    linkedlistTotal: questionList(categorySlug: "", filters: {tags: ["linked-list"]}, limit: 1) { totalNum }
+    matrixTotal: questionList(categorySlug: "", filters: {tags: ["matrix"]}, limit: 1) { totalNum }
+    stackTotal: questionList(categorySlug: "", filters: {tags: ["stack"]}, limit: 1) { totalNum }
+    simulationTotal: questionList(categorySlug: "", filters: {tags: ["simulation"]}, limit: 1) { totalNum }
+    hashtableTotal: questionList(categorySlug: "", filters: {tags: ["hash-table"]}, limit: 1) { totalNum }
+    mathTotal: questionList(categorySlug: "", filters: {tags: ["math"]}, limit: 1) { totalNum }
+    recursionTotal: questionList(categorySlug: "", filters: {tags: ["recursion"]}, limit: 1) { totalNum }
+    slidingwindowTotal: questionList(categorySlug: "", filters: {tags: ["sliding-window"]}, limit: 1) { totalNum }
+    binarysearchTotal: questionList(categorySlug: "", filters: {tags: ["binary-search"]}, limit: 1) { totalNum }
+    bitmanipulationTotal: questionList(categorySlug: "", filters: {tags: ["bit-manipulation"]}, limit: 1) { totalNum }
+    greedyTotal: questionList(categorySlug: "", filters: {tags: ["greedy"]}, limit: 1) { totalNum }
+    databaseTotal: questionList(categorySlug: "", filters: {tags: ["database"]}, limit: 1) { totalNum }
+    dpTotal: questionList(categorySlug: "", filters: {tags: ["dynamic-programming"]}, limit: 1) { totalNum }
+    divideandconquerTotal: questionList(categorySlug: "", filters: {tags: ["divide-and-conquer"]}, limit: 1) { totalNum }
+    backtrackingTotal: questionList(categorySlug: "", filters: {tags: ["backtracking"]}, limit: 1) { totalNum }
+    trieTotal: questionList(categorySlug: "", filters: {tags: ["trie"]}, limit: 1) { totalNum }
+  }
+`;
+
+// ── Bubble helpers ────────────────────────────────────────────────────────────
+
+const BUBBLE_COLORS = [
+  '#a78bfa','#3b82f6','#ef4743','#ffc01e','#22c55e','#00b8a3',
+  '#f97316','#ec4899','#14b8a6','#f59e0b','#6366f1','#10b981',
+  '#8b5cf6','#06b6d4','#f43f5e','#84cc16','#e879f9','#38bdf8',
+  '#fb923c','#a3e635',
+];
+
+/**
+ * Compute bubble diameter so the longest word in the tag name always fits.
+ * Each character is ~8px wide at the label font-size; we add generous padding.
+ * Minimum is 82px so even "Trie" has breathing room.
+ */
+function getBubbleSize(name) {
+  const words = name.split(/\s+/);
+  const longestWordChars = Math.max(...words.map(w => w.length));
+  const hasMultipleWords = words.length > 1;
+  // width = chars * ~8.5px + horizontal padding (24px)
+  const widthNeeded = longestWordChars * 8.5 + 24;
+  // if two-line label, add extra vertical room
+  const extraForLines = hasMultipleWords ? 18 : 0;
+  return Math.max(Math.ceil(widthNeeded) + extraForLines, 82);
+}
+
+// ── BubbleField ───────────────────────────────────────────────────────────────
+
+const BubbleField = ({ topics }) => {
+  const containerRef = useRef(null);
+  const bubbleRefs   = useRef([]);
+  const posRef       = useRef([]);
+
+  const W = 620, H = 480;
+
+  // Sort by solved count descending so biggest bubbles pack first
+  const sorted = [...topics].sort((a, b) => b.problemsSolved - a.problemsSolved);
+
+  // Pack bubbles using computed sizes
+  const positions = [];
+  sorted.forEach(topic => {
+    const r = getBubbleSize(topic.name) / 2;
+    let x = r + 10, y = r + 10, ok = false;
+    let attempts = 0;
+    while (attempts++ < 500) {
+      x = r + 10 + Math.random() * (W - 2 * r - 20);
+      y = r + 10 + Math.random() * (H - 2 * r - 20);
+      ok = positions.every(p => {
+        const dx = p.x - x, dy = p.y - y;
+        return Math.sqrt(dx * dx + dy * dy) >= p.r + r + 5;
+      });
+      if (ok) break;
+    }
+    positions.push({ x, y, r });
+  });
+  posRef.current = positions;
+
+  // Magnetic pull effect
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Max translation as a fraction of bubble radius
+    const STRENGTH = 0.28;
+    // Distance (px) at which pull begins
+    const PULL_RADIUS = 170;
+
+    const onMove = (e) => {
+      const rect = container.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      bubbleRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const pos = posRef.current[i];
+        if (!pos) return;
+        const { x, y, r } = pos;
+        const dx = mx - x;
+        const dy = my - y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < PULL_RADIUS && dist > 0) {
+          // Pull magnitude: strongest at center, zero at PULL_RADIUS
+          const pull = (1 - dist / PULL_RADIUS) * STRENGTH * r;
+          const tx = (dx / dist) * pull;
+          const ty = (dy / dist) * pull;
+          el.style.transition = 'transform 0.12s ease-out';
+          el.style.transform  = `translate(${tx}px, ${ty}px)`;
+        } else {
+          el.style.transition = 'transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          el.style.transform  = '';
+        }
+      });
+    };
+
+    const onLeave = () => {
+      bubbleRefs.current.forEach(el => {
+        if (!el) return;
+        // Spring-back with a slight overshoot feel
+        el.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        el.style.transform  = '';
+      });
+    };
+
+    container.addEventListener('mousemove', onMove);
+    container.addEventListener('mouseleave', onLeave);
+    return () => {
+      container.removeEventListener('mousemove', onMove);
+      container.removeEventListener('mouseleave', onLeave);
+    };
+  }, [topics]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="leetcode-bubble-container"
+      style={{ position: 'relative', width: '100%', height: H }}
+    >
+      {sorted.map((topic, i) => {
+        const pos = positions[i] || { x: 50, y: 50, r: 41 };
+        const { x, y, r } = pos;
+        const size = r * 2;
+        const fillPct = topic.total > 0
+          ? parseFloat(((topic.problemsSolved / topic.total) * 100).toFixed(2))
+          : 1;
+        const color = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
+        // Font size scales with bubble, capped for readability
+        const fontSize = size < 90 ? '0.7rem' : size < 110 ? '0.8rem' : '0.9rem';
+
+        return (
+          <div
+            key={topic.name}
+            ref={el => { bubbleRefs.current[i] = el; }}
+            className="leetcode-bubble"
+            style={{
+              position: 'absolute',
+              left: `calc(50% - ${W / 2}px + ${x - r}px)`,
+              top: y - r,
+              width: size,
+              height: size,
+              '--i': i,
+              '--color': color,
+              '--fill': `${fillPct}%`,
+              willChange: 'transform',
+            }}
+          >
+            <div className="bubble-liquid" />
+            <span className="bubble-label" style={{ fontSize }}>
+              {topic.name}
+            </span>
+            <div className="bubble-tooltip">
+              <strong>{topic.name}</strong>
+              <span>
+                {topic.problemsSolved}
+                {topic.total > 0 ? ` / ${topic.total}` : ''} solved
+              </span>
+            </div>
+            <div className="bubble-glow" />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// ── Main Component ────────────────────────────────────────────────────────────
 
 const LeetcodeStats = ({ username = "syedghani" }) => {
-  const [data, setData]       = useState(null);
+  const [data, setData]         = useState(null);
   const [calendar, setCalendar] = useState({});
   const [calMeta, setCalMeta]   = useState({ totalActiveDays: 0, streak: 0 });
+  const [topics, setTopics]     = useState([]);
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
 
@@ -79,9 +273,10 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
 
     const fetchAll = async () => {
       try {
-        const [statsRes, calRes] = await Promise.all([
+        const [statsRes, calRes, topicsRes] = await Promise.all([
           lcQuery(STATS_QUERY, { username }),
           lcQuery(CALENDAR_QUERY, { username, year: currentYear }),
+          lcQuery(TOPICS_QUERY, {}),
         ]);
 
         // ── Stats ──────────────────────────────────────────────────────────
@@ -93,7 +288,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
         const acByDiff    = Object.fromEntries(acNums.map(d => [d.difficulty, d]));
         const totalByDiff = Object.fromEntries(totalNums.map(d => [d.difficulty, d]));
         const countByDiff = Object.fromEntries(allQ.map(d => [d.difficulty, d.count]));
-        const beatsStats = statsRes.data?.matchedUser?.problemsSolvedBeatsStats || [];
+        const beatsStats  = user?.problemsSolvedBeatsStats || [];
         const beatsByDiff = Object.fromEntries(beatsStats.map(d => [d.difficulty, d.percentage]));
 
         const allAcSubs   = acByDiff["All"]?.submissions    || 0;
@@ -116,9 +311,9 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
           totalHard:        countByDiff["Hard"]        || 0,
           totalSubmissions: allTotSubs,
           acceptanceRate,
-          beatsEasy: beatsByDiff["Easy"] ?? null,
-          beatsMedium: beatsByDiff["Medium"] ?? null,
-          beatsHard: beatsByDiff["Hard"] ?? null,
+          beatsEasy:        beatsByDiff["Easy"]   ?? null,
+          beatsMedium:      beatsByDiff["Medium"] ?? null,
+          beatsHard:        beatsByDiff["Hard"]   ?? null,
         });
 
         // ── Calendar ───────────────────────────────────────────────────────
@@ -133,6 +328,32 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
             streak:          cal.streak          || 0,
           });
         }
+
+        // ── Topics ─────────────────────────────────────────────────────────
+        const tagSlugMap = {
+          'Array': 'arrayTotal', 'String': 'stringTotal', 'Two Pointers': 'twopointersTotal',
+          'Sorting': 'sortingTotal', 'Linked List': 'linkedlistTotal', 'Matrix': 'matrixTotal',
+          'Stack': 'stackTotal', 'Simulation': 'simulationTotal', 'Hash Table': 'hashtableTotal',
+          'Math': 'mathTotal', 'Recursion': 'recursionTotal', 'Sliding Window': 'slidingwindowTotal',
+          'Binary Search': 'binarysearchTotal', 'Bit Manipulation': 'bitmanipulationTotal',
+          'Greedy': 'greedyTotal', 'Database': 'databaseTotal', 'Dynamic Programming': 'dpTotal',
+          'Divide and Conquer': 'divideandconquerTotal', 'Backtracking': 'backtrackingTotal',
+          'Trie': 'trieTotal',
+        };
+        const totalsData = topicsRes?.data || {};
+        const allTags = [
+          ...(user?.tagProblemCounts?.advanced     || []),
+          ...(user?.tagProblemCounts?.intermediate || []),
+          ...(user?.tagProblemCounts?.fundamental  || []),
+        ];
+        const builtTopics = allTags
+          .sort((a, b) => b.problemsSolved - a.problemsSolved)
+          .map(t => {
+            const alias = tagSlugMap[t.tagName];
+            const total = alias ? (totalsData[alias]?.totalNum || 0) : 0;
+            return { name: t.tagName, solved: t.problemsSolved, problemsSolved: t.problemsSolved, total };
+          });
+        setTopics(builtTopics);
 
         setError(null);
       } catch (err) {
@@ -214,7 +435,7 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
     return () => { if (chartInstanceRef.current) chartInstanceRef.current.destroy(); };
   }, [data]);
 
-  // ── Loading / Error states ─────────────────────────────────────────────────
+  // ── Loading / Error ────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="lcs-loading glass-card">
@@ -232,17 +453,16 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
     );
   }
 
-  // ── Heatmap build ──────────────────────────────────────────────────────────
+  // ── Heatmap ────────────────────────────────────────────────────────────────
   const WEEKS      = 26;
   const DAYS_TOTAL = WEEKS * 7;
   const nowTs      = Math.floor(Date.now() / 1000);
 
-  // LeetCode keys are already UTC midnight timestamps — use them directly
   const cells = Array.from({ length: DAYS_TOTAL }, (_, i) => {
-    const offsetDays = DAYS_TOTAL - 1 - i;
-    const midnight   = nowTs - offsetDays * 86400;
+    const offsetDays  = DAYS_TOTAL - 1 - i;
+    const midnight    = nowTs - offsetDays * 86400;
     const dayMidnight = midnight - (midnight % 86400);
-    const count      = calendar[String(dayMidnight)] || 0;
+    const count       = calendar[String(dayMidnight)] || 0;
     return { ts: dayMidnight, count, date: new Date(dayMidnight * 1000) };
   });
 
@@ -297,9 +517,9 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
 
         <div className="lcs-diff-bars">
           {[
-            { label: "Easy", solved: s.easySolved,   total: s.totalEasy,   cls: "easy" },
-            { label: "Med.", solved: s.mediumSolved,  total: s.totalMedium, cls: "med"  },
-            { label: "Hard", solved: s.hardSolved,    total: s.totalHard,   cls: "hard" },
+            { label: "Easy", solved: s.easySolved,  total: s.totalEasy,   cls: "easy" },
+            { label: "Med.", solved: s.mediumSolved, total: s.totalMedium, cls: "med"  },
+            { label: "Hard", solved: s.hardSolved,   total: s.totalHard,   cls: "hard" },
           ].map(({ label, solved, total, cls }) => (
             <div className="lcs-diff-row" key={label}>
               <span className={`lcs-diff-label ${cls}`}>{label}</span>
@@ -332,15 +552,21 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
           <span className="lcs-stat-lbl">Global rank</span>
         </div>
         <div className="lcs-stat-card glass-card">
-          <span className="lcs-stat-val beats easy">🔥 {s.beatsEasy !== null ? s.beatsEasy.toFixed(1) : "--"}%</span>
+          <span className="lcs-stat-val beats easy">
+            🔥 {s.beatsEasy !== null ? s.beatsEasy.toFixed(1) : "--"}%
+          </span>
           <span className="lcs-stat-lbl">Beats Easy</span>
         </div>
         <div className="lcs-stat-card glass-card">
-          <span className="lcs-stat-val beats med">🔥 {s.beatsMedium !== null ? s.beatsMedium.toFixed(1) : "--"}%</span>
+          <span className="lcs-stat-val beats med">
+            🔥 {s.beatsMedium !== null ? s.beatsMedium.toFixed(1) : "--"}%
+          </span>
           <span className="lcs-stat-lbl">Beats Med.</span>
         </div>
         <div className="lcs-stat-card glass-card">
-          <span className="lcs-stat-val beats hard">🔥 {s.beatsHard !== null ? s.beatsHard.toFixed(1) : "--"}%</span>
+          <span className="lcs-stat-val beats hard">
+            🔥 {s.beatsHard !== null ? s.beatsHard.toFixed(1) : "--"}%
+          </span>
           <span className="lcs-stat-lbl">Beats Hard</span>
         </div>
       </div>
@@ -423,6 +649,17 @@ const LeetcodeStats = ({ username = "syedghani" }) => {
           </canvas>
         </div>
       </div>
+
+      {/* Solved Topics — BubbleField */}
+      {topics && topics.length > 0 && (
+        <div className="lcs-chart-card glass-card">
+          <div className="lcs-section-title">
+            Solved Topics
+            <span className="lcs-section-sub">Dominant skills &amp; focus areas</span>
+          </div>
+          <BubbleField topics={topics} />
+        </div>
+      )}
 
     </div>
   );
