@@ -36,7 +36,8 @@ The site leverages a streamlined, modern frontend stack focused on performance, 
 
 * **Core Framework:** `React.js` for handling dynamic components and state management.
 * **3D Interactive Assets:** `Spline 3D` integration for fluid, real-time spatial visuals.
-* **Hosting & Deployment:** Automated and securely deployed on `GitHub Pages`.
+* **Hosting & Deployment:** Automated and securely deployed using `GitHub Pages`.
+* **Custom Domain Networking:** Routed via a custom subdomain managed through the open-source `is-a.dev` ecosystem, configuring DNS records directly within their repository workspace.
 
 ---
 
