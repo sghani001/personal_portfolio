@@ -390,3 +390,1052 @@
     transform: rotate(360deg);
   }
 }
+
+/* LeetcodeStats.css */
+
+/* ── Loading ─────────────────────────────────────────────── */
+.lcs-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 1.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.lcs-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #ffa116;
+  border-radius: 50%;
+  animation: lcs-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes lcs-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.lcs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0.5rem 0;
+}
+
+/* ── Profile card ────────────────────────────────────────── */
+.lcs-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.lcs-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 161, 22, 0.3);
+}
+
+.lcs-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lcs-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.lcs-bio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-rank {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.lcs-rank strong {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* ── Main solved card ────────────────────────────────────── */
+.lcs-main-card {
+  padding: 16px;
+}
+
+.lcs-solved-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.lcs-card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 4px;
+}
+
+.lcs-solved-big {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.lcs-solved-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
+.lcs-beats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 161, 22, 0.12);
+  color: #ffa116;
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 161, 22, 0.2);
+}
+
+.lcs-diff-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.lcs-diff-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.lcs-diff-tag.easy  { background: rgba(0, 184, 163, 0.12); color: #00b8a3; }
+.lcs-diff-tag.med   { background: rgba(255, 192, 30, 0.12); color: #ffc01e; }
+.lcs-diff-tag.hard  { background: rgba(255, 55, 95, 0.12);  color: #ff375f; }
+
+/* ── Difficulty bars ─────────────────────────────────────── */
+.lcs-diff-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.lcs-diff-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lcs-diff-label {
+  font-size: 12px;
+  font-weight: 600;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.lcs-diff-label.easy  { color: #00b8a3; }
+.lcs-diff-label.med   { color: #ffc01e; }
+.lcs-diff-label.hard  { color: #ff375f; }
+
+.lcs-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.lcs-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lcs-bar.easy  { background: #00b8a3; }
+.lcs-bar.med   { background: #ffc01e; }
+.lcs-bar.hard  { background: #ff375f; }
+
+.lcs-diff-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 32px;
+  text-align: right;
+}
+
+.lcs-diff-total {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+}
+
+/* ── Stats row ───────────────────────────────────────────── */
+.lcs-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.lcs-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.lcs-stat-val {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lcs-stat-val.acceptance  { color: #22c55e; }
+.lcs-stat-val.submissions { color: #60a5fa; }
+.lcs-stat-val.ranking     { color: rgba(255, 255, 255, 0.85); font-size: 14px; }
+
+.lcs-stat-lbl {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section title ───────────────────────────────────────── */
+.lcs-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lcs-section-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Heatmap ─────────────────────────────────────────────── */
+.lcs-heatmap-card {
+  padding: 16px;
+}
+
+.lcs-month-row {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.lcs-month-cell {
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.lcs-month-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.lcs-heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 2px;
+}
+
+.lcs-heatmap-cell {
+  width: 100%;
+  height: 10px;
+  border-radius: 2px;
+  cursor: default;
+  transition: opacity 0.15s;
+}
+
+.lcs-heatmap-cell:hover {
+  opacity: 0.75;
+}
+
+.lcs-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.lcs-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* ── Chart ───────────────────────────────────────────────── */
+.lcs-chart-card {
+  padding: 16px;
+}
+
+.lcs-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lcs-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.lcs-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+/* LeetcodeStats.css */
+
+/* ── Loading ─────────────────────────────────────────────── */
+.lcs-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 1.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.lcs-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #ffa116;
+  border-radius: 50%;
+  animation: lcs-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes lcs-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.lcs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0.5rem 0;
+}
+
+/* ── Profile card ────────────────────────────────────────── */
+.lcs-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.lcs-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 161, 22, 0.3);
+}
+
+.lcs-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lcs-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.lcs-bio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-rank {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.lcs-rank strong {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* ── Main solved card ────────────────────────────────────── */
+.lcs-main-card {
+  padding: 16px;
+}
+
+.lcs-solved-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.lcs-card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 4px;
+}
+
+.lcs-solved-big {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.lcs-solved-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
+.lcs-beats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 161, 22, 0.12);
+  color: #ffa116;
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 161, 22, 0.2);
+}
+
+.lcs-diff-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.lcs-diff-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.lcs-diff-tag.easy  { background: rgba(0, 184, 163, 0.12); color: #00b8a3; }
+.lcs-diff-tag.med   { background: rgba(255, 192, 30, 0.12); color: #ffc01e; }
+.lcs-diff-tag.hard  { background: rgba(255, 55, 95, 0.12);  color: #ff375f; }
+
+/* ── Difficulty bars ─────────────────────────────────────── */
+.lcs-diff-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.lcs-diff-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lcs-diff-label {
+  font-size: 12px;
+  font-weight: 600;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.lcs-diff-label.easy  { color: #00b8a3; }
+.lcs-diff-label.med   { color: #ffc01e; }
+.lcs-diff-label.hard  { color: #ff375f; }
+
+.lcs-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.lcs-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lcs-bar.easy  { background: #00b8a3; }
+.lcs-bar.med   { background: #ffc01e; }
+.lcs-bar.hard  { background: #ff375f; }
+
+.lcs-diff-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 32px;
+  text-align: right;
+}
+
+.lcs-diff-total {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+}
+
+/* ── Stats row ───────────────────────────────────────────── */
+.lcs-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.lcs-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.lcs-stat-val {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lcs-stat-val.acceptance  { color: #22c55e; }
+.lcs-stat-val.submissions { color: #60a5fa; }
+.lcs-stat-val.ranking     { color: rgba(255, 255, 255, 0.85); font-size: 14px; }
+
+.lcs-stat-lbl {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section title ───────────────────────────────────────── */
+.lcs-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lcs-section-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Heatmap ─────────────────────────────────────────────── */
+.lcs-heatmap-card {
+  padding: 16px;
+}
+
+.lcs-month-row {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.lcs-month-cell {
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.lcs-month-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.lcs-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.lcs-heatmap-cell {
+  width: 100%;
+  height: 10px;
+  border-radius: 2px;
+  cursor: default;
+  transition: opacity 0.15s;
+}
+
+.lcs-heatmap-cell:hover {
+  opacity: 0.75;
+}
+
+.lcs-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.lcs-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* ── Chart ───────────────────────────────────────────────── */
+.lcs-chart-card {
+  padding: 16px;
+}
+
+.lcs-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lcs-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.lcs-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+
+/* LeetcodeStats.css */
+
+/* ── Loading ─────────────────────────────────────────────── */
+.lcs-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 1.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.lcs-error {
+  padding: 1.5rem;
+  color: rgba(255, 100, 100, 0.85);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.lcs-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #ffa116;
+  border-radius: 50%;
+  animation: lcs-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes lcs-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.lcs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0.5rem 0;
+}
+
+/* ── Profile card ────────────────────────────────────────── */
+.lcs-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.lcs-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 161, 22, 0.3);
+}
+
+.lcs-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lcs-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.lcs-bio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-rank {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.lcs-rank strong {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* ── Main solved card ────────────────────────────────────── */
+.lcs-main-card {
+  padding: 16px;
+}
+
+.lcs-solved-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.lcs-card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 4px;
+}
+
+.lcs-solved-big {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.lcs-solved-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
+.lcs-beats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 161, 22, 0.12);
+  color: #ffa116;
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 161, 22, 0.2);
+}
+
+.lcs-diff-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.lcs-diff-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.lcs-diff-tag.easy  { background: rgba(0, 184, 163, 0.12); color: #00b8a3; }
+.lcs-diff-tag.med   { background: rgba(255, 192, 30, 0.12); color: #ffc01e; }
+.lcs-diff-tag.hard  { background: rgba(255, 55, 95, 0.12);  color: #ff375f; }
+
+/* ── Difficulty bars ─────────────────────────────────────── */
+.lcs-diff-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.lcs-diff-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lcs-diff-label {
+  font-size: 12px;
+  font-weight: 600;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.lcs-diff-label.easy  { color: #00b8a3; }
+.lcs-diff-label.med   { color: #ffc01e; }
+.lcs-diff-label.hard  { color: #ff375f; }
+
+.lcs-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.lcs-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lcs-bar.easy  { background: #00b8a3; }
+.lcs-bar.med   { background: #ffc01e; }
+.lcs-bar.hard  { background: #ff375f; }
+
+.lcs-diff-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 32px;
+  text-align: right;
+}
+
+.lcs-diff-total {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+}
+
+/* ── Stats row ───────────────────────────────────────────── */
+.lcs-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.lcs-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.lcs-stat-val {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lcs-stat-val.acceptance  { color: #22c55e; }
+.lcs-stat-val.submissions { color: #60a5fa; }
+.lcs-stat-val.ranking     { color: rgba(255, 255, 255, 0.85); font-size: 14px; }
+
+.lcs-stat-lbl {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section title ───────────────────────────────────────── */
+.lcs-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lcs-section-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Heatmap ─────────────────────────────────────────────── */
+.lcs-heatmap-card {
+  padding: 16px;
+}
+
+.lcs-month-row {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.lcs-month-cell {
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.lcs-month-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.lcs-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.lcs-heatmap-cell {
+  width: 100%;
+  height: 10px;
+  border-radius: 2px;
+  cursor: default;
+  transition: opacity 0.15s;
+}
+
+.lcs-heatmap-cell:hover {
+  opacity: 0.75;
+}
+
+.lcs-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.lcs-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* ── Chart ───────────────────────────────────────────────── */
+.lcs-chart-card {
+  padding: 16px;
+}
+
+.lcs-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lcs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lcs-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.lcs-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+.lcs-stat-val.beats {
+  color: #ffa116;
+  font-size: 1.1rem;
+}
+
+.lcs-stat-val.beats.easy { color: #00b8a3; }
+.lcs-stat-val.beats.med  { color: #ffc01e; }
+.lcs-stat-val.beats.hard { color: #ff375f; }
