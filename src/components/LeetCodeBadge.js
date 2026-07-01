@@ -1,72 +1,57 @@
 import React, { useEffect, useState } from "react";
+import resumeData from "../utils/resumeData";
 
 export default function LeetCodeBadge({ username }) {
-  const [stats, setStats] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(resumeData.cachedStats.leetcode);
+  const [profile, setProfile] = useState({
+    avatar: null,
+    name: username,
+    aboutMe: "Full-Stack Engineer | Ruby on Rails & React.js",
+    ranking: resumeData.cachedStats.leetcode.ranking,
+  });
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [res1, res2, calRes] = await Promise.all([
+        const [res1, res2] = await Promise.all([
           fetch(`https://leetcode-api-faisalshohag.vercel.app/${username}`).then(r => r.json()).catch(() => null),
           fetch(`https://alfa-leetcode-api.onrender.com/${username}`).then(r => r.json()).catch(() => null),
-          fetch(`https://alfa-leetcode-api.onrender.com/${username}/calendar`).then(r => r.json()).catch(() => null),
         ]);
 
         const combined = res1 || res2 || {};
         const profileData = res2 || res1 || {};
 
-        // Real acceptance rate from submission data
-        const submissionNum = combined.matchedUserStats?.totalSubmissionNum || combined.totalSubmissions || [];
-        const acSubmissionNum = combined.matchedUserStats?.acSubmissionNum || combined.acSubmissions || [];
-        const totalSubs = submissionNum.length > 0 ? submissionNum[0].submissions : 0;
-        const acceptedSubs = acSubmissionNum.length > 0 ? acSubmissionNum[0].submissions : 0;
-        const acceptanceRate =
-          totalSubs > 0
-            ? ((acceptedSubs / totalSubs) * 100).toFixed(1)
-            : combined.acceptanceRate || "74.6";
+        if (combined.totalSolved || profileData.ranking) {
+          const submissionNum = combined.matchedUserStats?.totalSubmissionNum || combined.totalSubmissions || [];
+          const acSubmissionNum = combined.matchedUserStats?.acSubmissionNum || combined.acSubmissions || [];
+          const totalSubs = submissionNum.length > 0 ? submissionNum[0].submissions : 0;
+          const acceptedSubs = acSubmissionNum.length > 0 ? acSubmissionNum[0].submissions : 0;
+          const acceptanceRate =
+            totalSubs > 0
+              ? ((acceptedSubs / totalSubs) * 100).toFixed(1)
+              : combined.acceptanceRate || stats.acceptanceRate;
 
-        setStats({
-          solvedProblem: combined.totalSolved || 35,
-          easySolved: combined.easySolved || 18,
-          mediumSolved: combined.mediumSolved || 12,
-          hardSolved: combined.hardSolved || 5,
-          totalEasy: combined.totalEasy || 946,
-          totalMedium: combined.totalMedium || 2061,
-          totalHard: combined.totalHard || 936,
-          acceptanceRate,
-          // Real beats % from API, fallback to actual known value
-          beatsPercentage: combined.beatsPercentage || profileData.beatsPercentage || "50.2",
-        });
-        setProfile({
-          avatar: profileData.avatar || null,
-          name: profileData.name || username,
-          aboutMe: profileData.aboutMe || "Full-Stack Engineer | Ruby on Rails & React.js",
-          ranking: profileData.ranking || combined.ranking || 3174284,
-        });
+          setStats({
+            solvedProblem: combined.totalSolved || stats.solvedProblem,
+            easySolved: combined.easySolved || stats.easySolved,
+            mediumSolved: combined.mediumSolved || stats.mediumSolved,
+            hardSolved: combined.hardSolved || stats.hardSolved,
+            totalEasy: combined.totalEasy || stats.totalEasy,
+            totalMedium: combined.totalMedium || stats.totalMedium,
+            totalHard: combined.totalHard || stats.totalHard,
+            acceptanceRate,
+            beatsPercentage: combined.beatsPercentage || profileData.beatsPercentage || stats.beatsPercentage,
+          });
 
-        setLoading(false);
-      } catch {
-        // Accurate fallback values from actual LeetCode profile
-        setStats({
-          solvedProblem: 35,
-          easySolved: 18,
-          mediumSolved: 12,
-          hardSolved: 5,
-          totalEasy: 946,
-          totalMedium: 2061,
-          totalHard: 936,
-          acceptanceRate: "74.6",
-          beatsPercentage: "50.2",
-        });
-        setProfile({
-          avatar: null,
-          name: username,
-          aboutMe: "Full-Stack Engineer | Ruby on Rails & React.js",
-          ranking: 3174284,
-        });
-        setLoading(false);
+          setProfile({
+            avatar: profileData.avatar || null,
+            name: profileData.name || username,
+            aboutMe: profileData.aboutMe || "Full-Stack Engineer | Ruby on Rails & React.js",
+            ranking: profileData.ranking || combined.ranking || stats.ranking,
+          });
+        }
+      } catch (err) {
+        // Silently fail, keeping cached data
       }
     };
     fetchAll();
@@ -78,22 +63,8 @@ export default function LeetCodeBadge({ username }) {
     </svg>
   );
 
-  if (loading) {
-    return (
-      <div className="leetcode-badge-wrapper">
-        <div className="leetcode-badge__header">
-          <LeetCodeIcon />
-          <span className="leetcode-badge__header-title">LeetCode</span>
-        </div>
-        <div className="github-badge__body">
-          <div className="leetcode-badge__loading-spinner" />
-          <div className="github-badge__username">Loading...</div>
-        </div>
-      </div>
-    );
-  }
 
-  const totalSolved   = stats?.solvedProblem  || 0;
+
   const easySolved    = stats?.easySolved      || 0;
   const mediumSolved  = stats?.mediumSolved    || 0;
   const hardSolved    = stats?.hardSolved      || 0;
@@ -130,7 +101,8 @@ export default function LeetCodeBadge({ username }) {
 
         {/* Beats pill */}
         <div className="leetcode-badge__beats-pill">
-          🔥 Beats {beats}%
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: 3 }}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          {beats}%
         </div>
 
         {/* Easy / Medium / Hard */}

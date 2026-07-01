@@ -1,47 +1,46 @@
 import React, { useCallback, memo } from "react";
 import resumeData from "../utils/resumeData";
-import MagneticWrapper from "./MagneticWrapper";
 import "./Hero.css";
 
-const heroPhoto = process.env.PUBLIC_URL + "/hero-photo.png";
-const roles = resumeData.titles || [resumeData.title];
-
 /**
- * HeroVisual — Memoized so the 3D scene never re-renders during
- * typewriter state changes in the parent Hero component.
+ * HeroVisual — Sleek code editor mockup showcasing Syed's tech profile.
+ * High-end professional visual replacing floating orbit elements.
  */
 const HeroVisual = memo(function HeroVisual() {
   return (
     <div className="hero__visual" aria-hidden>
-      <div className="hero-scene">
-        <div className="hero-scene__depth">
-          <div className="hero-scene__panel hero-scene__panel--rails">
-            <span className="hero-scene__panel-label">Rails</span>
-            <span className="hero-scene__panel-lines" />
+      <div className="code-editor-mockup glass-card">
+        {/* Editor Tab bar */}
+        <div className="editor-header">
+          <div className="editor-dots">
+            <span className="dot dot--red" />
+            <span className="dot dot--yellow" />
+            <span className="dot dot--green" />
           </div>
-          <div className="hero-scene__panel hero-scene__panel--react">
-            <span className="hero-scene__panel-label">React</span>
-          </div>
-          <div className="hero-scene__panel hero-scene__panel--python">
-            <span className="hero-scene__panel-label">Python</span>
-          </div>
-
-          <div className="hero-scene__ruby-wrap">
-            <div className="hero-scene__ruby" />
-          </div>
-          <div className="hero-scene__orbit">
-            <span className="hero-scene__electron" />
-          </div>
-
-          <div className="hero-scene__pillars">
-            <span className="hero-scene__pillar" />
-            <span className="hero-scene__pillar hero-scene__pillar--mid" />
-            <span className="hero-scene__pillar" />
-          </div>
+          <span className="editor-file">ghani.rb</span>
         </div>
+        
+        {/* Code Content */}
+        <div className="editor-body">
+          <pre className="code-block">
+            <code>
+<span className="code-keyword">class</span> <span className="code-class">Developer</span>
+  attr_reader <span className="code-symbol">:name</span>, <span className="code-symbol">:stack</span>
 
-        <div className="hero-scene__photo glass-hero-photo">
-          <img src={heroPhoto} alt="" className="hero-scene__photo-img" />
+  <span className="code-keyword">def</span> <span className="code-method">initialize</span>
+    <span className="code-variable">@name</span>  = <span className="code-string">"Syed Ghani"</span>
+    <span className="code-variable">@stack</span> = [<span className="code-string">"Rails"</span>, <span className="code-string">"React"</span>, <span className="code-string">"PostgreSQL"</span>]
+  <span className="code-keyword">end</span>
+
+  <span className="code-keyword">def</span> <span className="code-method">build_saas</span>(<span className="code-variable">client</span>)
+    puts <span className="code-string">"Designing secure APIs..."</span>
+    <span className="code-variable">client</span>.integrate_stripe!
+    <span className="code-variable">client</span>.sync_hubspot!
+    <span className="code-variable">client</span>.deploy_features!
+  <span className="code-keyword">end</span>
+<span className="code-keyword">end</span>
+            </code>
+          </pre>
         </div>
       </div>
     </div>
@@ -49,42 +48,8 @@ const HeroVisual = memo(function HeroVisual() {
 });
 
 export default function Hero() {
-  const [titleIndex, setTitleIndex] = React.useState(0);
-  const [displayText, setDisplayText] = React.useState("");
-  const [isDeleting, setIsDeleting] = React.useState(false);
-  const [typingSpeed, setTypingSpeed] = React.useState(150);
   const heroRef = React.useRef(null);
 
-  React.useEffect(() => {
-    const handleTyping = () => {
-      const currentRole = roles[titleIndex];
-      const isFinishing = !isDeleting && displayText === currentRole;
-      const isStarting = isDeleting && displayText === "";
-
-      if (isFinishing) {
-        setTimeout(() => setIsDeleting(true), 2000);
-        return;
-      }
-
-      if (isStarting) {
-        setIsDeleting(false);
-        setTitleIndex((prev) => (prev + 1) % roles.length);
-        return;
-      }
-
-      const nextText = isDeleting
-        ? currentRole.substring(0, displayText.length - 1)
-        : currentRole.substring(0, displayText.length + 1);
-
-      setDisplayText(nextText);
-      setTypingSpeed(isDeleting ? 50 : 120);
-    };
-
-    const timer = setTimeout(handleTyping, typingSpeed);
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, titleIndex, typingSpeed]);
-
-  // Stable ref — doesn't change across typewriter re-renders
   const handleMouseMove = useCallback((e) => {
     if (!heroRef.current) return;
     const { clientX, clientY } = e;
@@ -113,13 +78,20 @@ export default function Hero() {
     >
       <div className="hero__grid">
         <div className="hero__copy">
-          <p className="hero__eyebrow">Software engineer · Lahore</p>
+          <p className="hero__eyebrow">Software Engineer · Lahore</p>
           <h1 className="hero__name">{resumeData.name}</h1>
           <div className="hero__typewriter">
-            <span className="hero__typewriter-text">{displayText || roles[0]}</span>
-            <span className="hero__typewriter-cursor">|</span>
+            <span className="hero__typewriter-text">{resumeData.tagline}</span>
           </div>
           <p className="hero__headline">{resumeData.headline}</p>
+          <div className="hero__metrics">
+            {resumeData.metrics.map((m, i) => (
+              <div key={i} className="hero__metric">
+                <span className="hero__metric-value">{m.value}</span>
+                <span className="hero__metric-label">{m.label}</span>
+              </div>
+            ))}
+          </div>
           <div className="hero__badge-row" style={{ marginBottom: "1.5rem" }}>
             <a 
               href="https://github.com/sghani001" 
@@ -140,7 +112,6 @@ export default function Hero() {
             ))}
           </ul>
           <div className="hero__actions">
-            <MagneticWrapper strength={0.35}>
               <button
                 type="button"
                 className="hero__btn hero__btn--primary"
@@ -148,9 +119,7 @@ export default function Hero() {
               >
                 View experience
               </button>
-            </MagneticWrapper>
 
-            <MagneticWrapper strength={0.25}>
               <a
                 href="#contact"
                 className="hero__btn hero__btn--ghost"
@@ -158,7 +127,6 @@ export default function Hero() {
               >
                 Contact
               </a>
-            </MagneticWrapper>
           </div>
         </div>
 
@@ -168,7 +136,7 @@ export default function Hero() {
       <button
         type="button"
         className="hero__scroll-hint"
-        onClick={scrollTo("summary")}
+        onClick={scrollTo("about")}
         aria-label="Scroll to about"
       >
         <span className="hero__scroll-line" />

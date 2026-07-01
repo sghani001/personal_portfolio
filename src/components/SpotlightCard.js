@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import "./SpotlightCard.css";
 
 /**
@@ -13,7 +13,7 @@ export default function SpotlightCard({ children, className = "" }) {
     if (glowRef.current) {
       glowRef.current.style.opacity = opacity;
       if (x !== undefined && y !== undefined) {
-        glowRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(124, 61, 255, 0.15), transparent 40%)`;
+        glowRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(20, 184, 166, 0.12), transparent 40%)`;
       }
     }
   };

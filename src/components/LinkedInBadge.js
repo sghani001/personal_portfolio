@@ -48,8 +48,8 @@ export default function LinkedInBadge({ theme }) {
         <div className="github-badge__name">{profile.name}</div>
         <div className="github-badge__username">{profile.company}</div>
         <div className="github-badge__bio">{profile.headline}</div>
-        <div className="github-badge__meta">🎓 {profile.education}</div>
-        <div className="github-badge__meta">📍 {profile.location}</div>
+        <div className="github-badge__meta">{profile.education}</div>
+        <div className="github-badge__meta">{profile.location}</div>
 
         {/* Stats */}
         <div className="github-badge__stats">

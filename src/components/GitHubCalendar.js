@@ -26,8 +26,7 @@ const GitHubSnake = ({ username, theme = 'dark' }) => {
       {/* Header */}
       <div className="github-snake-header">
         <div className="github-snake-title-row">
-          <span className="github-snake-icon" aria-hidden>🐍</span>
-          <h3 className="github-snake-title">Github Magic Game</h3>
+          <h3 className="github-snake-title">Developer Activity</h3>
         </div>
         <a
           href={`https://github.com/${username}`}

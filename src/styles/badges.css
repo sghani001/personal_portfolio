@@ -135,8 +135,7 @@
 
 .github-badge-wrapper:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(2, 172, 47, 0.922);
+  border-color: rgba(20, 184, 166, 0.25);
 }
 
 [data-theme="light"] .github-badge-wrapper {
@@ -150,8 +149,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(45, 133, 4, 0.532);
-  border-bottom: 1px solid rgba(14, 194, 35, 0.897);
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--glass-border);
   color: var(--text-primary);
 }
 
@@ -212,8 +211,7 @@
 
 .linkedin-badge-wrapper:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(2, 148, 245, 0.888);
+  border-color: rgba(20, 184, 166, 0.25);
 }
 
 [data-theme="light"] .linkedin-badge-wrapper {
@@ -227,22 +225,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(10, 102, 194, 0.2);
-  border-bottom: 1px solid rgb(2, 123, 252);
+  background: rgba(20, 184, 166, 0.08);
+  border-bottom: 1px solid rgba(20, 184, 166, 0.15);
 }
 
 [data-theme="light"] .linkedin-badge__header {
-  background: rgba(10, 102, 194, 0.08);
-  border-bottom-color: rgba(10, 102, 194, 0.15);
+  background: rgba(20, 184, 166, 0.06);
+  border-bottom-color: rgba(20, 184, 166, 0.1);
 }
 
-.linkedin-badge__logo { color: #0a66c2; }
+.linkedin-badge__logo { color: var(--accent); }
 
 .linkedin-badge__header-title {
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #0a66c2;
+  color: var(--accent);
 }
 
 /* ===== LeetCode Badge ===== */
@@ -264,8 +262,7 @@
 
 .leetcode-badge-wrapper:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 161, 22, 0.35);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 161, 22, 0.2);
+  border-color: rgba(20, 184, 166, 0.25);
 }
 
 [data-theme="light"] .leetcode-badge-wrapper {
@@ -279,22 +276,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(255, 161, 22, 0.12);
-  border-bottom: 1px solid rgba(255, 161, 22, 0.2);
+  background: rgba(20, 184, 166, 0.08);
+  border-bottom: 1px solid rgba(20, 184, 166, 0.15);
 }
 
 [data-theme="light"] .leetcode-badge__header {
-  background: rgba(255, 161, 22, 0.08);
-  border-bottom-color: rgba(255, 161, 22, 0.15);
+  background: rgba(20, 184, 166, 0.06);
+  border-bottom-color: rgba(20, 184, 166, 0.1);
 }
 
-.leetcode-badge__logo { color: #ffa116; }
+.leetcode-badge__logo { color: var(--accent); }
 
 .leetcode-badge__header-title {
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #ffa116;
+  color: var(--accent);
 }
 
 .leetcode-badge__circle-wrap {

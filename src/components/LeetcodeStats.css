@@ -1,47 +1,12 @@
-/* ══════════════════════════════════════════════════════════════
-   LeetcodeStats.css
-   ══════════════════════════════════════════════════════════════ */
+/* LeetcodeStats — clean slate theme */
 
-/* ── Loading ─────────────────────────────────────────────────── */
-.lcs-loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 2rem 1.5rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
-}
-
-.lcs-error {
-  padding: 1.5rem;
-  color: rgba(255, 100, 100, 0.85);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.lcs-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #ffa116;
-  border-radius: 50%;
-  animation: lcs-spin 0.8s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes lcs-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ── Container ───────────────────────────────────────────────── */
 .lcs-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   padding: 0.5rem 0;
 }
 
-/* ── Profile card ────────────────────────────────────────────── */
 .lcs-profile {
   display: flex;
   align-items: center;
@@ -50,12 +15,12 @@
 }
 
 .lcs-avatar {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 2px solid rgba(255, 161, 22, 0.3);
+  border: 2px solid var(--glass-border);
 }
 
 .lcs-profile-info {
@@ -65,28 +30,26 @@
 }
 
 .lcs-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .lcs-bio {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
 }
 
 .lcs-rank {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 .lcs-rank strong {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
-/* ── Main solved card ────────────────────────────────────────── */
 .lcs-main-card {
   padding: 16px;
 }
@@ -95,67 +58,53 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .lcs-card-label {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
   margin-bottom: 4px;
 }
 
 .lcs-solved-big {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .lcs-solved-sub {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   margin-top: 4px;
-}
-
-.lcs-beats-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255, 161, 22, 0.12);
-  color: #ffa116;
-  border-radius: 20px;
-  padding: 4px 11px;
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 10px;
-  border: 1px solid rgba(255, 161, 22, 0.2);
 }
 
 .lcs-diff-summary {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   align-items: flex-end;
 }
 
 .lcs-diff-tag {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
-.lcs-diff-tag.easy { background: rgba(0,  184, 163, 0.12); color: #00b8a3; }
-.lcs-diff-tag.med  { background: rgba(255, 192,  30, 0.12); color: #ffc01e; }
-.lcs-diff-tag.hard { background: rgba(255,  55,  95, 0.12); color: #ff375f; }
+.lcs-diff-tag.easy { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.lcs-diff-tag.med  { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.lcs-diff-tag.hard { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
-/* ── Difficulty bars ─────────────────────────────────────────── */
 .lcs-diff-bars {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 
 .lcs-diff-row {
@@ -165,93 +114,86 @@
 }
 
 .lcs-diff-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  width: 36px;
+  width: 34px;
   flex-shrink: 0;
 }
 
-.lcs-diff-label.easy { color: #00b8a3; }
-.lcs-diff-label.med  { color: #ffc01e; }
-.lcs-diff-label.hard { color: #ff375f; }
+.lcs-diff-label.easy { color: var(--success); }
+.lcs-diff-label.med  { color: var(--warning); }
+.lcs-diff-label.hard { color: var(--danger); }
 
 .lcs-bar-wrap {
   flex: 1;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 3px;
+  height: 4px;
+  background: var(--glass-border);
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .lcs-bar {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 2px;
   transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lcs-bar.easy { background: #00b8a3; }
-.lcs-bar.med  { background: #ffc01e; }
-.lcs-bar.hard { background: #ff375f; }
+.lcs-bar.easy { background: var(--success); }
+.lcs-bar.med  { background: var(--warning); }
+.lcs-bar.hard { background: var(--danger); }
 
 .lcs-diff-count {
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
   min-width: 32px;
   text-align: right;
 }
 
 .lcs-diff-total {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
   font-weight: 400;
 }
 
-/* ── Stats row ───────────────────────────────────────────────── */
 .lcs-stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .lcs-stat-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 12px 8px;
+  gap: 3px;
+  padding: 10px 8px;
   text-align: center;
 }
 
 .lcs-stat-val {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1;
+  color: var(--text-primary);
 }
 
-.lcs-stat-val.acceptance  { color: #22c55e; }
-.lcs-stat-val.submissions { color: #60a5fa; }
-.lcs-stat-val.ranking     { color: rgba(255, 255, 255, 0.85); font-size: 14px; }
-
-/* Beats % cells */
-.lcs-stat-val.beats      { font-size: 1rem; }
-.lcs-stat-val.beats.easy { color: #00b8a3; }
-.lcs-stat-val.beats.med  { color: #ffc01e; }
-.lcs-stat-val.beats.hard { color: #ff375f; }
+.lcs-stat-val.acceptance  { color: var(--success); }
+.lcs-stat-val.submissions { color: var(--accent); }
+.lcs-stat-val.ranking     { color: var(--text-secondary); font-size: 13px; }
 
 .lcs-stat-lbl {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-/* ── Section title ───────────────────────────────────────────── */
 .lcs-section-title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -260,10 +202,9 @@
 .lcs-section-sub {
   font-size: 11px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-muted);
 }
 
-/* ── Heatmap ─────────────────────────────────────────────────── */
 .lcs-heatmap-card {
   padding: 16px;
 }
@@ -283,14 +224,14 @@
 
 .lcs-month-label {
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .lcs-heatmap-grid {
   display: grid;
   grid-template-columns: repeat(26, 1fr);
-  grid-template-rows: repeat(7, 10px);
+  grid-template-rows: repeat(7, 8px);
   grid-auto-flow: column;
   gap: 2px;
   width: 100%;
@@ -298,33 +239,31 @@
 
 .lcs-heatmap-cell {
   width: 100%;
-  height: 10px;
-  border-radius: 2px;
+  height: 8px;
+  border-radius: 1px;
   cursor: default;
-  transition: opacity 0.15s;
 }
 
 .lcs-heatmap-cell:hover {
-  opacity: 0.75;
+  opacity: 0.7;
 }
 
 .lcs-heatmap-legend {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 10px;
+  gap: 3px;
+  margin-top: 8px;
   justify-content: flex-end;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 9px;
+  color: var(--text-muted);
 }
 
 .lcs-legend-cell {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
 }
 
-/* ── Chart ───────────────────────────────────────────────────── */
 .lcs-chart-card {
   padding: 16px;
 }
@@ -332,21 +271,21 @@
 .lcs-chart-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 14px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
 }
 
 .lcs-legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .lcs-legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 2px;
   display: inline-block;
   flex-shrink: 0;
@@ -355,13 +294,10 @@
 .lcs-chart-wrap {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 160px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Bubble field
-   ══════════════════════════════════════════════════════════════ */
-
+/* Bubble field — clean stat bubbles */
 .leetcode-bubble-container {
   position: relative;
   width: 100%;
@@ -370,142 +306,54 @@
 }
 
 .leetcode-bubble {
-  /* size set inline via JS */
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   cursor: default;
   overflow: hidden;
-
-  /* floating animation — JS magnetic effect overrides transform */
-  animation: bubble-float 10s ease-in-out infinite both;
-  animation-delay: calc(var(--i, 0) * -1.2s);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-
-  /* magnetic transition set dynamically; fallback */
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  will-change: transform;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .leetcode-bubble:hover {
-  background: rgba(255, 255, 255, 0.09);
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 22px var(--color);
-  border-color: var(--color);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
   z-index: 10;
 }
 
-@keyframes bubble-float {
-  0%,  100% { translate: 0px  0px;   rotate:  0deg; }
-  25%        { translate: 5px -11px; rotate:  1deg; }
-  50%        { translate: -4px -17px; rotate: -1deg; }
-  75%        { translate: -7px -8px;  rotate:  0.5deg; }
-}
-
-/* Label — text always centred, wraps gracefully */
 .bubble-label {
   position: relative;
   z-index: 2;
-  color: var(--color);
-  font-weight: 600;
+  color: var(--text-secondary);
+  font-weight: 500;
   text-align: center;
-  line-height: 1.25;
-  padding: 0 8px;
+  line-height: 1.2;
+  padding: 0 6px;
   pointer-events: none;
-  /* font-size set inline per bubble */
+  font-size: 0.7rem;
   word-break: break-word;
-  hyphens: auto;
 }
 
-/* Liquid fill */
-.bubble-liquid {
-  position: absolute;
-  bottom: 0;
-  left: -50%;
-  width: 200%;
-  height: var(--fill, 20%);
-  background: var(--color);
-  opacity: 0.18;
-  border-radius: 40% 60% 0 0;
-  animation:
-    liq-rise  1s   ease-out  forwards,
-    liq-wave  4s   ease-in-out infinite calc(var(--i, 0) * 0.06s + 1s);
-  animation-delay: calc(var(--i, 0) * 0.06s), calc(var(--i, 0) * 0.06s + 1s);
-  pointer-events: none;
-}
-
-@keyframes liq-rise {
-  from { height: 0;               opacity: 0;    }
-  to   { height: var(--fill, 20%); opacity: 0.18; }
-}
-
-@keyframes liq-wave {
-  0%   { border-radius: 40% 60% 0 0; transform: translateX(0);   }
-  33%  { border-radius: 55% 45% 0 0; transform: translateX(7%);  }
-  66%  { border-radius: 45% 55% 0 0; transform: translateX(-7%); }
-  100% { border-radius: 40% 60% 0 0; transform: translateX(0);   }
-}
-
-.leetcode-bubble:hover .bubble-liquid {
-  opacity: 0.38;
-}
-
-/* Radial glow overlay */
-.bubble-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--color), transparent 80%);
-  opacity: 0.07;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.leetcode-bubble:hover .bubble-glow {
-  opacity: 0.22;
-}
-
-/* Tooltip on hover */
+.bubble-liquid,
+.bubble-glow,
 .bubble-tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) scale(0.92);
-  background: rgba(6, 6, 18, 0.97);
-  border: 1px solid var(--color);
-  border-radius: 10px;
-  padding: 8px 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 30;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: none;
 }
 
-.bubble-tooltip strong {
-  color: var(--color);
+.lcs-error {
+  padding: 1.5rem;
+  color: var(--text-muted);
   font-size: 13px;
-  font-weight: 700;
+  line-height: 1.6;
 }
 
-.bubble-tooltip span {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 11px;
-}
-
-.leetcode-bubble:hover .bubble-tooltip {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
+.lcs-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 1.5rem;
+  color: var(--text-muted);
+  font-size: 14px;
 }

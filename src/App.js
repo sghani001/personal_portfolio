@@ -3,10 +3,8 @@ import GlassNav from "./components/GlassNav";
 import Hero from "./components/Hero";
 import ProjectModal from "./components/ProjectModal";
 import LeetcodeStats from "./components/LeetcodeStats";
-import TiltSurface from "./components/TiltSurface";
 import GitHubCalendar from "./components/GitHubCalendar";
 import SpotlightCard from "./components/SpotlightCard";
-import CustomCursor from "./components/CustomCursor";
 import LinkedInBadge from "./components/LinkedInBadge";
 import resumeData from "./utils/resumeData";
 import { skillPillClass } from "./utils/skillTone";
@@ -71,50 +69,7 @@ function App() {
     }
   }, []);
 
-  // Scroll progress (respects reduced motion)
-  useEffect(() => {
-    const scrollEl = document.querySelector(".fullpage-scroll");
-    if (!scrollEl) return undefined;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let ticking = false;
-
-    const update = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (reduced) {
-            ticking = false;
-            return;
-          }
-          const max = Math.max(1, scrollEl.scrollHeight - scrollEl.clientHeight);
-          const t = Math.min(1, Math.max(0, scrollEl.scrollTop / max));
-          
-          const progressBar = document.querySelector(".scroll-progress-bar");
-          if (progressBar) {
-            progressBar.style.width = `${t * 100}%`;
-          }
-          
-          // Keep other variables for background parallax if needed
-          const root = document.documentElement;
-          root.style.setProperty("--scroll-t", t.toFixed(4));
-          root.style.setProperty("--scroll-sin", Math.sin(t * Math.PI).toFixed(4));
-          
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    update();
-    scrollEl.addEventListener("scroll", update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(scrollEl);
-    return () => {
-      scrollEl.removeEventListener("scroll", update);
-      ro.disconnect();
-    };
-  }, []);
 
   const handleContactSubmit = (e) => {
     e.preventDefault();
@@ -138,19 +93,12 @@ function App() {
 
   return (
     <>
-      <CustomCursor />
-      <div className="scroll-progress-bar" style={{ width: "0%" }} />
       <GlassNav theme={theme} toggleTheme={toggleTheme} />
       <main className="fullpage-scroll">
-        <div className="scroll-depth-bg" aria-hidden>
-          <span className="scroll-depth-bg__plane scroll-depth-bg__plane--a" />
-          <span className="scroll-depth-bg__plane scroll-depth-bg__plane--b" />
-          <span className="scroll-depth-bg__mesh" />
-          <span className="scroll-depth-bg__glow" />
-        </div>
         <Hero />
 
-        <Section id="summary" title="About Me" subtitle="Brief" fullPage>
+        {/* SECTION 1: ABOUT */}
+        <Section id="about" title="About Me" subtitle="Brief" fullPage>
           {/* Full width about card */}
           <SpotlightCard className="magic-card--text" style={{ width: "100%", marginBottom: "2rem" }}>
             <p className="magic-brief">{resumeData.summary}</p>
@@ -160,14 +108,13 @@ function App() {
           </SpotlightCard>
 
           {/* Badges row */}
-          <div className="about-badges-row">
+          <div className="about-badges-row" style={{ marginBottom: "3rem" }}>
             <LinkedInBadge theme={theme} />
             <GitHubBadge username="sghani001" theme={theme} />
             <LeetCodeBadge username="syedghani" />
           </div>
-        </Section>
 
-        <Section id="engineering" title="Engineering" subtitle="How I Build" fullPage>
+          {/* Engineering Practices & Highlights */}
           <div className="engineering-grid">
             <SpotlightCard className="engineering-card">
               <h3 className="engineering-card__title">Engineering Practices</h3>
@@ -190,7 +137,8 @@ function App() {
           </div>
         </Section>
 
-        <Section id="experience" title="Experience" fullPage>
+        {/* SECTION 2: EXPERIENCE */}
+        <Section id="experience" title="Experience & Journey" fullPage>
           <div className="exp-list">
             {resumeData.experience.map((job, i) => (
               <div key={i} className="exp-item glass-card" style={{ "--stagger-i": i }}>
@@ -243,7 +191,7 @@ function App() {
                 {job.projects && (
                   <div className="exp-item__projects exp-item__projects--cards">
                     {job.projects.map((proj, j) => (
-                      <TiltSurface key={j} as="button" fill className="exp-project-card" onClick={() => setSelectedProject(proj)}>
+                      <div key={j} className="exp-project-card" onClick={() => setSelectedProject(proj)}>
                         <div className="exp-project-card__img-wrap">
                           {proj.image ? (
                             <img src={proj.image} alt="" className="exp-project-card__img exp-project-card__img--photo" />
@@ -253,7 +201,7 @@ function App() {
                         </div>
                         <span className="exp-project-card__label">{proj.name}</span>
                         <p className="exp-project-card__desc">{proj.description}</p>
-                      </TiltSurface>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -267,24 +215,69 @@ function App() {
               </div>
             ))}
           </div>
+
+          <div className="experience-footer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem", marginTop: "3rem" }}>
+            {/* Career Journey Timeline */}
+            <div className="journey-block">
+              <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Career Timeline</h3>
+              <div className="journey-timeline journey-timeline--compact">
+                {resumeData.journey.map((item, i) => (
+                  <div key={i} className="journey-item" style={{ "--stagger-i": i }}>
+                    <div className="journey-item__dot"></div>
+                    <div className="journey-item__content glass-card">
+                      <div className="journey-item__year">{item.year}</div>
+                      <h4 className="journey-item__title" style={{ fontSize: "0.95rem", margin: "0.2rem 0" }}>{item.title}</h4>
+                      <p className="journey-item__desc" style={{ fontSize: "0.85rem", margin: 0 }}>{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Education Block */}
+            <div className="education-block">
+              <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Education</h3>
+              <div className="edu-list">
+                {resumeData.education.map((edu, i) => (
+                  <div key={i} className="edu-item glass-card" style={{ "--stagger-i": i }}>
+                    <div className="edu-item__degree" style={{ fontWeight: "600" }}>{edu.degree}</div>
+                    <div className="edu-item__meta" style={{ fontSize: "0.9rem" }}>
+                      {edu.institution}
+                    </div>
+                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                      {edu.duration} {edu.gpa && `· GPA: ${edu.gpa}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </Section>
 
-        <Section id="education" title="Education" fullPage>
-          <div className="edu-list">
-            {resumeData.education.map((edu, i) => (
-              <div key={i} className="edu-item glass-card" style={{ "--stagger-i": i }}>
-                <div className="edu-item__degree">{edu.degree}</div>
-                <div className="edu-item__meta">
-                  {edu.institution} · {edu.duration}
+        {/* SECTION 3: PROJECTS */}
+        <Section id="projects" title="Personal Projects" fullPage>
+          <div className="magic-projects">
+            {resumeData.projects.map((proj, i) => (
+              <div key={i} className="magic-project-card" onClick={() => setSelectedProject(proj)}>
+                <div className="magic-project-card__img-wrap">
+                  {proj.image ? (
+                    <img src={proj.image} alt="" className="magic-project-card__img magic-project-card__img--photo" />
+                  ) : (
+                    <div className={`magic-project-card__img magic-project-card__img--${(i % 3) + 1}`} aria-hidden />
+                  )}
                 </div>
-                {edu.gpa && <div className="edu-item__gpa">GPA: {edu.gpa}</div>}
+                <span className="magic-project-card__label">{proj.name}</span>
+                {proj.description && <span className="magic-project-card__desc">{proj.description}</span>}
               </div>
             ))}
           </div>
         </Section>
 
-        <Section id="skills" title="Skills" fullPage>
-          <div className="glass-card" style={{ padding: "1.5rem 1.75rem" }}>
+        {/* SECTION 4: SKILLS & STATS */}
+        <Section id="activity" title="Skills & Stats" subtitle="Technical Prowess" fullPage>
+          {/* Skills Grid Card */}
+          <div className="glass-card" style={{ padding: "1.5rem 1.75rem", marginBottom: "2.5rem" }}>
+            <h3 style={{ fontSize: "1.15rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Skills Profile</h3>
             <div className="skills-group">
               <div className="skills-group__label">Core</div>
               <div className="skills-grid">
@@ -326,23 +319,21 @@ function App() {
               </div>
             </div>
           </div>
-        </Section>
 
-        <Section id="activity" title="Technical Prowess" subtitle="Stats & Activity" fullPage>
           <div className="activity-grid">
             <div className="github-activity">
               <h3 className="activity-group-title">GitHub Activity</h3>
               <div className="github-stats-grid">
                 <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
                   <img
-                    src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === "dark" ? "b79fff" : "5b21b6"}&text_color=${theme === "dark" ? "f4f6ff" : "111118"}&icon_color=${theme === "dark" ? "7c3dff" : "6366f1"}&hide_border=true&bg_color=00000000`}
+                    src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === "dark" ? "3b82f6" : "2563eb"}&text_color=${theme === "dark" ? "fafafa" : "09090b"}&icon_color=${theme === "dark" ? "4f46e5" : "2563eb"}&hide_border=true&bg_color=00000000`}
                     alt="Syed Ghani's GitHub Stats"
                     className="github-stat-img"
                   />
                 </a>
                 <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
                   <img
-                    src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === "dark" ? "b79fff" : "5b21b6"}&text_color=${theme === "dark" ? "f4f6ff" : "111118"}&hide_border=true&bg_color=00000000`}
+                    src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === "dark" ? "3b82f6" : "2563eb"}&text_color=${theme === "dark" ? "fafafa" : "09090b"}&hide_border=true&bg_color=00000000`}
                     alt="Top Languages"
                     className="github-stat-img"
                   />
@@ -362,68 +353,38 @@ function App() {
           </div>
         </Section>
 
-        <Section id="projects" title="Personal Projects" fullPage>
-          <div className="magic-projects">
-            {resumeData.projects.map((proj, i) => (
-              <TiltSurface key={i} as="button" fill className="magic-project-card" onClick={() => setSelectedProject(proj)}>
-                <div className="magic-project-card__img-wrap">
-                  {proj.image ? (
-                    <img src={proj.image} alt="" className="magic-project-card__img magic-project-card__img--photo" />
-                  ) : (
-                    <div className={`magic-project-card__img magic-project-card__img--${(i % 3) + 1}`} aria-hidden />
-                  )}
-                </div>
-                <span className="magic-project-card__label">{proj.name}</span>
-                {proj.description && <span className="magic-project-card__desc">{proj.description}</span>}
-              </TiltSurface>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="journey" title="My Journey" subtitle="Timeline" fullPage>
-          <div className="journey-timeline">
-            {resumeData.journey.map((item, i) => (
-              <div key={i} className="journey-item" style={{ "--stagger-i": i }}>
-                <div className="journey-item__dot"></div>
-                <div className="journey-item__content glass-card">
-                  <div className="journey-item__year">{item.year}</div>
-                  <h3 className="journey-item__title">{item.title}</h3>
-                  <p className="journey-item__desc">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="testimonials" title="Testimonials" subtitle="What They Say" fullPage>
-          <div className="testimonials-grid">
-            {resumeData.testimonials.map((test, i) => (
-              <div key={i} className="testimonial-card glass-card" style={{ "--stagger-i": i }}>
-                <svg className="testimonial-quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-                <p className="testimonial-text">"{test.quote}"</p>
-                <div className="testimonial-author-wrap">
-                  <div className="testimonial-author-info">
-                    <h4 className="testimonial-author">{test.author}</h4>
-                    <span className="testimonial-role">{test.title}</span>
+        {/* SECTION 5: CONTACT */}
+        <Section id="contact" title="Contact & Testimonials" fullPage>
+          {/* Testimonials Grid */}
+          <div className="testimonials-wrap" style={{ marginBottom: "3rem" }}>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Testimonials</h3>
+            <div className="testimonials-grid">
+              {resumeData.testimonials.map((test, i) => (
+                <div key={i} className="testimonial-card glass-card" style={{ "--stagger-i": i }}>
+                  <svg className="testimonial-quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                  <p className="testimonial-text">"{test.quote}"</p>
+                  <div className="testimonial-author-wrap">
+                    <div className="testimonial-author-info">
+                      <h4 className="testimonial-author">{test.author}</h4>
+                      <span className="testimonial-role">{test.title}</span>
+                    </div>
+                    {test.url && (
+                      <a href={test.url} target="_blank" rel="noreferrer" className="testimonial-link" aria-label="View original post">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                    )}
                   </div>
-                  {test.url && (
-                    <a href={test.url} target="_blank" rel="noreferrer" className="testimonial-link" aria-label="View original post">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                      </svg>
-                    </a>
-                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </Section>
 
-        <Section id="contact" title="Contact" fullPage>
           <div className="contact-inner">
             <div className="glass-card" style={{ padding: "1.5rem 1.75rem" }}>
               <div className="contact-info__item">

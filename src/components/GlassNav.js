@@ -3,15 +3,10 @@ import "./GlassNav.css";
 
 const navLinks = [
   { id: "hero", label: null },
-  { id: "summary", label: "About" },
-  { id: "engineering", label: "Build" },
+  { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "education", label: "Education" },
-  { id: "skills", label: "Skills" },
-  { id: "activity", label: "Stats" },
   { id: "projects", label: "Projects" },
-  { id: "journey", label: "Journey" },
-  { id: "testimonials", label: "Voices" },
+  { id: "activity", label: "Activity" },
   { id: "contact", label: "Contact" },
 ];
 

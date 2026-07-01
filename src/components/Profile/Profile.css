@@ -1,8 +1,9 @@
 .profile {
-    background-color: rgb(255, 255, 255);
+    background: var(--bg-elevated);
     border-radius: 10px;
     width: 100%;
     display: inline-block;
+    border: 1px solid var(--glass-border);
 }
 
 .profile_name {
@@ -14,11 +15,12 @@
     font-size: 17px;
     text-transform: uppercase;
     font-weight: bold;
+    color: var(--text-primary);
 }
 
 .profile_name .title {
     font-size: 13px;
-    color: #777;
+    color: var(--text-muted);
 }
 
 .profile_image {
@@ -35,8 +37,6 @@
     font-weight: 200;
 }
 
-/* Profile information */
-
 .profile_info {
     top: 0;
     left: 0;
@@ -50,18 +50,18 @@
 
 .timelineItem_text {
     font-size: 13.5px !important;
-    color: #787878;
+    color: var(--text-secondary);
     font-weight: 400 !important;
     text-decoration: none;
 }
 
 .timelineItem_text > a {
-    color: #787878;
+    color: var(--text-secondary);
     text-decoration: none;
 }
 
 .timelineItem_text>span {
-    color: black;
+    color: var(--text-primary);
 }
 
 .btn_container {

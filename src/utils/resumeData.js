@@ -11,9 +11,9 @@ const resumeData = {
     "API Specialist",
     "Problem Solver"
   ],
-  tagline: "Rails · React · APIs that ship",
+  tagline: "Full-Stack Engineer · Ruby on Rails & React",
   headline:
-    "Full-stack engineer building production web apps with Ruby on Rails and React — from schema and jobs to polished UI.",
+    "I design and ship production SaaS products — from schema design and REST APIs to polished React interfaces and third-party integrations.",
   email: "2020cs669@student.uet.edu.pk",
   emailPersonal: "syedghani001@gmail.com",
   location: "Lahore, Pakistan",
@@ -257,18 +257,36 @@ const resumeData = {
       image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&h=380&fit=crop",
     },
     {
-      name: "WhatsApp Analyzer",
-      description: "Python utilities to parse chats and surface group / direct-message insights.",
-      url: "https://github.com/sghani001/Whatsapp_Analyzer",
-      tech: ["Python", "Pandas"],
-      image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=600&h=380&fit=crop",
+      name: "rails-guarddog",
+      description:
+        "Production-grade security scanner for Rails apps. Detects vulnerabilities Brakeman misses: AI/LLM injection, DoS/ReDoS patterns, supply chain typosquatting, IDOR gaps, and more. 12 comprehensive security checkers with CWE/OWASP mappings.",
+      url: "https://github.com/sghani001/rails-guarddog",
+      tech: ["Ruby", "Security", "AST Analysis", "Brakeman", "CWE", "OWASP"],
+      image: "https://images.unsplash.com/photo-1581092334490-2f9c7e8e1e9c?w=600&h=380&fit=crop",
     },
     {
-      name: "Olympics Analysis",
-      description: "Exploratory analysis and charts on historical Olympics data.",
-      url: "https://github.com/sghani001/Olympics",
-      tech: ["Python", "Data visualization"],
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
+      name: "rails-persona",
+      description:
+        "Model-level behavioral analytics engine for Rails. Tracks user actions, analyzes onboarding friction, and handles heavy payloads using bulk database inserts and Sidekiq background jobs natively with zero external dependencies.",
+      url: "https://github.com/sghani001/rails-persona",
+      tech: ["Ruby", "Rails Engine", "Sidekiq", "Analytics"],
+      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&h=380&fit=crop",
+    },
+    {
+      name: "rails-tenantify",
+      description:
+        "Lightweight multi-tenancy infrastructure for SaaS applications. Automates sub-domain/request-based routing, secure database isolation scoping, and streamlined tenant onboarding workflows without the bloat of heavy legacy packages.",
+      url: "https://github.com/sghani001/rails-tenantify",
+      tech: ["Ruby on Rails", "SaaS Architecture", "Multi-tenancy"],
+      image: "https://images.unsplash.com/photo-1508830524289-0adcbe822b40?w=600&h=380&fit=crop",
+    },
+    {
+      name: "rails-css_unused",
+      description:
+        "Performance-focused static analysis tool. Scans views, templates, and view components to locate and strip dead, unused CSS classes blocking your asset pipeline payload — ideal for refactoring large legacy codebases.",
+      url: "https://github.com/sghani001/rails-css_unused",
+      tech: ["Ruby", "Static Analysis", "Asset Pipeline"],
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=380&fit=crop",
     },
   ],
 
@@ -298,6 +316,32 @@ const resumeData = {
       title: "Architecture",
       desc: "Extracted billing into a focused service with clear boundaries to the monolith.",
     },
+  ],
+  cachedStats: {
+    github: {
+      public_repos: 24,
+      followers: 16,
+      following: 25,
+      avatar_url: "https://avatars.githubusercontent.com/sghani001",
+    },
+    leetcode: {
+      solvedProblem: 35,
+      easySolved: 18,
+      mediumSolved: 12,
+      hardSolved: 5,
+      totalEasy: 946,
+      totalMedium: 2061,
+      totalHard: 936,
+      acceptanceRate: "74.6",
+      beatsPercentage: "50.2",
+      ranking: 3174284,
+    }
+  },
+  metrics: [
+    { value: "6", label: "SaaS products shipped", detail: "Ruby on Rails + React" },
+    { value: "3.8k+", label: "Gem downloads", detail: "Open-source Rails engines" },
+    { value: "15+", label: "Third-party integrations", detail: "Stripe, HubSpot, Moodle, Documenso" },
+    { value: "$800+", label: "Monthly cloud cost savings", detail: "Performance & architecture wins" },
   ],
 };
 
