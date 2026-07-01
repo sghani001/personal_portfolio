@@ -22,18 +22,7 @@
   gap: 0.5rem;
 }
 
-.github-snake-icon {
-  font-size: 1.15rem;
-  line-height: 1;
-  display: inline-block;
-  animation: snake-wiggle 2.8s ease-in-out infinite;
-}
 
-@keyframes snake-wiggle {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  25%       { transform: rotate(-14deg) scale(1.12); }
-  75%       { transform: rotate(12deg) scale(1.06); }
-}
 
 .github-snake-title {
   font-size: 0.98rem;
@@ -59,26 +48,12 @@
 /* ---- Divider ---- */
 .github-snake-divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1) 20%,
-    rgba(124, 61, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.1) 80%,
-    transparent
-  );
+  background: var(--glass-border);
   margin: 1rem 0 0.85rem;
 }
 
 [data-theme="light"] .github-snake-divider {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(15, 23, 42, 0.08) 20%,
-    rgba(99, 102, 241, 0.2) 50%,
-    rgba(15, 23, 42, 0.08) 80%,
-    transparent
-  );
+  background: rgba(0, 0, 0, 0.08);
 }
 
 /* ---- Frame ---- */
@@ -91,8 +66,6 @@
   justify-content: center;
   border-radius: 12px;
   overflow: hidden;
-  /* Very subtle inner glow */
-  background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124, 61, 255, 0.04) 0%, transparent 70%);
 }
 
 /* ---- Loading state ---- */
@@ -107,15 +80,7 @@
   inset: 0;
 }
 
-.github-snake-loading-icon {
-  font-size: 1.6rem;
-  animation: snake-slither 1s ease-in-out infinite alternate;
-}
 
-@keyframes snake-slither {
-  from { transform: translateX(-14px) rotate(-6deg); }
-  to   { transform: translateX(14px)  rotate(6deg); }
-}
 
 .github-snake-loading-text {
   font-size: 0.82rem;
@@ -129,17 +94,13 @@
   display: block;
   opacity: 0;
   transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  /* Subtle purple glow to blend with the glass card */
-  filter: drop-shadow(0 0 14px rgba(124, 61, 255, 0.2));
 }
 
 .github-snake-svg--visible {
   opacity: 1;
 }
 
-[data-theme="light"] .github-snake-svg {
-  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.1));
-}
+
 
 /* ---- Footer legend ---- */
 .github-snake-footer {
@@ -172,14 +133,12 @@
   flex-shrink: 0;
 }
 
-/* Dark theme contribution colors — matching GitHub's palette */
-.github-snake-dot--empty { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.1); }
+.github-snake-dot--empty { background: rgba(255, 255, 255, 0.07); }
 .github-snake-dot--low   { background: #1a4d1a; }
 .github-snake-dot--mid   { background: #2da82d; }
 .github-snake-dot--high  { background: #39d353; }
 
-/* Light theme */
-[data-theme="light"] .github-snake-dot--empty { background: #ebedf0; border-color: rgba(27, 31, 35, 0.06); }
+[data-theme="light"] .github-snake-dot--empty { background: #ebedf0; }
 [data-theme="light"] .github-snake-dot--low   { background: #9be9a8; }
 [data-theme="light"] .github-snake-dot--mid   { background: #40c463; }
 [data-theme="light"] .github-snake-dot--high  { background: #216e39; }

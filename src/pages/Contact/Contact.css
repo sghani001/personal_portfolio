@@ -1,11 +1,10 @@
 .contactInfo_item {
   font-size: 14px !important;
-  color: #787878;
+  color: var(--text-secondary);
 }
 
 .contactInfo_item>span {
-
-  color: black;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -16,5 +15,5 @@
 .contactInfo_social>a>.MuiSvgIcon-root {
   font-size: 16px !important;
   margin-right: 10px;
-  color: black;
+  color: var(--text-secondary);
 }

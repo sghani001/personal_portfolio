@@ -1,266 +1,324 @@
 import React, { useState, useEffect } from "react";
 import GlassNav from "./components/GlassNav";
 import Hero from "./components/Hero";
-import ProjectModal from "./components/ProjectModal";
 import LeetcodeStats from "./components/LeetcodeStats";
-import TiltSurface from "./components/TiltSurface";
 import GitHubCalendar from "./components/GitHubCalendar";
-import SpotlightCard from "./components/SpotlightCard";
-import CustomCursor from "./components/CustomCursor";
 import LinkedInBadge from "./components/LinkedInBadge";
-import resumeData from "./utils/resumeData";
-import { skillPillClass } from "./utils/skillTone";
+import useMergedData from "./store/useMergedData";
+import { useSubmitContactMutation, useGetGemsQuery } from "./store/portfolioApi";
 import { useInView } from "./hooks/useInView";
-import "./App.css";
 import GitHubBadge from "./components/GitHubBadge";
 import LeetCodeBadge from "./components/LeetCodeBadge";
+import "./App.css";
+import { ExternalLink, Mail, MapPin, Phone, ChevronRight, Quote } from "lucide-react";
 
-function Section({ id, title, subtitle, children, fullPage }) {
+function Section({ id, title, children }) {
   const [ref, inView] = useInView();
-
   return (
     <section
       ref={ref}
       id={id}
-      className={`portfolio-section ${fullPage ? "portfolio-section--fullpage" : ""} ${inView ? "portfolio-section--in-view" : ""}`}
-      data-in-view={inView ? "true" : "false"}
+      className={`py-16 md:py-24 ${inView ? "animate-fade-up" : ""}`}
     >
-      <div className="portfolio-section__inner">
-        <h2 className="portfolio-section__title">{title}</h2>
-        {subtitle && <p className="portfolio-section__subtitle">{subtitle}</p>}
+      <div className="max-w-content mx-auto px-6">
+        <div className="flex items-center gap-3 mb-8">
+          <h2 className="font-mono font-medium text-lg text-text-primary">{title}</h2>
+          <span className="flex-1 h-px bg-border" />
+        </div>
         {children}
       </div>
     </section>
   );
 }
 
+function ProjectModal({ project, onClose }) {
+  if (!project) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 md:pt-24 p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative bg-bg-secondary border border-border rounded-window w-full max-w-2xl flex flex-col max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border rounded-t-[8px] shrink-0">
+          <button onClick={onClose} className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-110" />
+          <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+          <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+          <span className="ml-3 font-mono text-xs text-text-muted truncate">{project.name}</span>
+        </div>
+        <div className="p-5 md:p-6 space-y-4 overflow-y-auto modal-scroll">
+          {project.url && (
+            <a href={project.url} target="_blank" rel="noreferrer" className="text-accent-primary text-xs font-mono hover:underline inline-flex items-center gap-1">
+              View <ExternalLink size={12} />
+            </a>
+          )}
+          <p className="text-text-secondary text-sm leading-relaxed">{project.description}</p>
+          {project.problem && (
+            <div>
+              <h4 className="font-mono font-medium text-text-primary text-xs mb-1.5 uppercase tracking-wider">Problem</h4>
+              <p className="text-text-secondary text-sm leading-relaxed">{project.problem}</p>
+            </div>
+          )}
+          {project.solution && (
+            <div>
+              <h4 className="font-mono font-medium text-text-primary text-xs mb-1.5 uppercase tracking-wider">Solution</h4>
+              <p className="text-text-secondary text-sm leading-relaxed">{project.solution}</p>
+            </div>
+          )}
+          {project.tech && (
+            <div>
+              <h4 className="font-mono font-medium text-text-primary text-xs mb-1.5 uppercase tracking-wider">Tech</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {project.tech.map((t) => (
+                  <span key={t} className="px-2 py-0.5 rounded-pill text-[11px] font-mono bg-bg-primary text-text-muted border border-border">{t}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {project.metrics && (
+            <div>
+              <h4 className="font-mono font-medium text-text-primary text-xs mb-1.5 uppercase tracking-wider">Impact</h4>
+              <ul className="space-y-1">
+                {project.metrics.map((m, i) => (
+                  <li key={i} className="flex items-start gap-1.5 text-text-secondary text-sm"><ChevronRight size={13} className="mt-0.5 shrink-0 text-accent-primary" />{m}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {project.engineering && (
+            <div>
+              <h4 className="font-mono font-medium text-text-primary text-xs mb-1.5 uppercase tracking-wider">Engineering</h4>
+              <ul className="space-y-1">
+                {project.engineering.map((e, i) => (
+                  <li key={i} className="flex items-start gap-1.5 text-text-secondary text-sm"><ChevronRight size={13} className="mt-0.5 shrink-0 text-accent-primary" />{e}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GemStats() {
+  const { data, isLoading, isError } = useGetGemsQuery();
+  const gems = Array.isArray(data) ? data : data?.value || [];
+  if (isLoading) return <div className="text-text-muted text-sm font-mono">Loading gem stats...</div>;
+  if (isError || gems.length === 0) return null;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px]">
+      {gems.map((gem) => (
+        <div key={gem.id} className="bg-bg-secondary border border-border rounded-card p-[14px]">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
+            <span className="font-mono text-[11px] text-text-muted lowercase">live</span>
+          </div>
+          <a
+            href={`https://rubygems.org/gems/${gem.name}`}
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono font-medium text-text-primary hover:text-accent-secondary transition-colors"
+          >
+            {gem.name}
+          </a>
+          <div className="font-mono font-medium text-xl text-text-primary mt-2">
+            {gem.downloads?.toLocaleString()}
+          </div>
+          <div className="font-mono text-[11px] text-text-muted lowercase mt-1">
+            downloads
+          </div>
+          <div className="flex items-center gap-2 mt-3 text-xs font-mono text-text-muted">
+            <span>v{gem.version}</span>
+            <span>·</span>
+            <span>{new Date(gem.updated_at).toLocaleDateString()}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function App() {
-  const [formState, setFormState] = useState("idle"); // idle | sending | success
+  const { data: resumeData } = useMergedData();
+  const [submitContact] = useSubmitContactMutation();
+  const [formState, setFormState] = useState("idle");
+  const [formType, setFormType] = useState("message");
   const [selectedProject, setSelectedProject] = useState(null);
-  const [theme, setTheme] = useState(() => localStorage.getItem("portfolio-theme") || "dark");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("portfolio-theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
-
-  useEffect(() => {
-    console.log(
-      "%cSyed Ghani — portfolio",
-      "color: #b79fff; font-size: 18px; font-weight: 700; font-family: system-ui, sans-serif;"
-    );
-    console.log(
-      "%cReact + Framer Motion + hand-tuned glass UI. If something looks off in your browser, I want to know.\n%s",
-      "color: rgba(244,246,255,0.85); font-size: 13px; font-family: system-ui, sans-serif; line-height: 1.55;",
-      "syedghani001@gmail.com"
-    );
+    const el = document.querySelector(".fullpage-scroll");
+    if (!el) return;
+    const onScroll = () => {
+      const max = Math.max(1, el.scrollHeight - el.clientHeight);
+      setScrollProgress(Math.min(1, Math.max(0, el.scrollTop / max)));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Scroll to hash on load
   useEffect(() => {
-    if (window.location.hash) {
-      const id = window.location.hash.substring(1);
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
+    let input = "";
+    const target = process.env.REACT_APP_ADMIN_TRIGGER_WORD || "admin";
+    const handleKeyDown = (e) => {
+      if (
+        document.activeElement &&
+        (document.activeElement.tagName === "INPUT" ||
+          document.activeElement.tagName === "TEXTAREA" ||
+          document.activeElement.isContentEditable)
+      ) {
+        return;
+      }
+      if (e.key && e.key.length === 1) {
+        input += e.key.toLowerCase();
+        if (input.length > target.length) {
+          input = input.substring(input.length - target.length);
         }
-      }, 300); // Small delay to wait for rendering
-    }
+        if (input === target) {
+          sessionStorage.setItem("admin_gate_passed", "true");
+          const hasToken = !!sessionStorage.getItem("admin_token");
+          window.location.href = hasToken ? "/admin" : "/admin/login";
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Scroll progress (respects reduced motion)
   useEffect(() => {
-    const scrollEl = document.querySelector(".fullpage-scroll");
-    if (!scrollEl) return undefined;
+    let taps = 0;
+    let timeout;
+    const triggerText = process.env.REACT_APP_ADMIN_MOBILE_TRIGGER_TEXT || "syed@remote:~";
+    const tapCount = parseInt(process.env.REACT_APP_MOBILE_TAP_COUNT, 10) || 5;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let ticking = false;
-
-    const update = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (reduced) {
-            ticking = false;
-            return;
-          }
-          const max = Math.max(1, scrollEl.scrollHeight - scrollEl.clientHeight);
-          const t = Math.min(1, Math.max(0, scrollEl.scrollTop / max));
-          
-          const progressBar = document.querySelector(".scroll-progress-bar");
-          if (progressBar) {
-            progressBar.style.width = `${t * 100}%`;
-          }
-          
-          // Keep other variables for background parallax if needed
-          const root = document.documentElement;
-          root.style.setProperty("--scroll-t", t.toFixed(4));
-          root.style.setProperty("--scroll-sin", Math.sin(t * Math.PI).toFixed(4));
-          
-          ticking = false;
-        });
-        ticking = true;
+    const handleGlobalClick = (e) => {
+      if (e.target && e.target.textContent === triggerText) {
+        taps++;
+        if (timeout) clearTimeout(timeout);
+        if (taps >= tapCount) {
+          sessionStorage.setItem("admin_gate_passed", "true");
+          const hasToken = !!sessionStorage.getItem("admin_token");
+          window.location.href = hasToken ? "/admin" : "/admin/login";
+          taps = 0;
+          return;
+        }
+        timeout = setTimeout(() => {
+          taps = 0;
+        }, 2000);
       }
     };
 
-    update();
-    scrollEl.addEventListener("scroll", update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(scrollEl);
-    return () => {
-      scrollEl.removeEventListener("scroll", update);
-      ro.disconnect();
-    };
+    window.addEventListener("click", handleGlobalClick);
+    return () => window.removeEventListener("click", handleGlobalClick);
   }, []);
 
-  const handleContactSubmit = (e) => {
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 100);
+    }
+  }, []);
+
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
     if (formState !== "idle") return;
     setFormState("sending");
     const form = e.target;
     const name = form.name?.value || "";
     const email = form.email?.value || "";
-    const message = form.message?.value || "";
-    const mailto = `mailto:${resumeData.emailPersonal}?subject=Contact from ${encodeURIComponent(
-      name
-    )}&body=Name: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0A%0A${encodeURIComponent(
-      message
-    )}`;
-    setTimeout(() => {
-      window.location.href = mailto;
+    
+    let message = "";
+    if (formType === "service") {
+      const service = form.service?.value || "";
+      const budget = form.budget?.value || "";
+      const desc = form.description?.value || "";
+      message = `[SERVICE REQUEST: ${service}]
+Budget Range: ${budget}
+
+Project Description:
+${desc}`;
+    } else {
+      message = form.message?.value || "";
+    }
+
+    try {
+      await submitContact({ name, email, message }).unwrap();
       setFormState("success");
+      form.reset();
       setTimeout(() => setFormState("idle"), 3000);
-    }, 900);
+    } catch (err) {
+      const errMsg = err.data?.details?.join(", ") || err.data?.error || "Failed to send. Please try emailing directly.";
+      alert(errMsg);
+      setFormState("idle");
+    }
   };
 
   return (
     <>
-      <CustomCursor />
-      <div className="scroll-progress-bar" style={{ width: "0%" }} />
-      <GlassNav theme={theme} toggleTheme={toggleTheme} />
+      <div className="fixed top-0 left-0 h-[2px] bg-accent-primary z-[100] transition-[width] duration-75" style={{ width: `${scrollProgress * 100}%` }} />
+      <GlassNav />
       <main className="fullpage-scroll">
-        <div className="scroll-depth-bg" aria-hidden>
-          <span className="scroll-depth-bg__plane scroll-depth-bg__plane--a" />
-          <span className="scroll-depth-bg__plane scroll-depth-bg__plane--b" />
-          <span className="scroll-depth-bg__mesh" />
-          <span className="scroll-depth-bg__glow" />
-        </div>
-        <Hero />
+        <Hero data={resumeData} />
 
-        <Section id="summary" title="About Me" subtitle="Brief" fullPage>
-          {/* Full width about card */}
-          <SpotlightCard className="magic-card--text" style={{ width: "100%", marginBottom: "2rem" }}>
-            <p className="magic-brief">{resumeData.summary}</p>
-            {resumeData.aboutExtra && (
-              <p className="magic-brief magic-brief--extra">{resumeData.aboutExtra}</p>
-            )}
-          </SpotlightCard>
-
-          {/* Badges row */}
-          <div className="about-badges-row">
-            <LinkedInBadge theme={theme} />
-            <GitHubBadge username="sghani001" theme={theme} />
+        <Section id="about" title="About">
+          <div className="bg-bg-secondary border border-border rounded-card p-6 md:p-8 mb-8">
+            <p className="text-text-secondary leading-relaxed mb-4">{resumeData.summary}</p>
+            {resumeData.aboutExtra && <p className="text-text-secondary leading-relaxed">{resumeData.aboutExtra}</p>}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <LinkedInBadge />
+            <GitHubBadge username="sghani001" />
             <LeetCodeBadge username="syedghani" />
           </div>
         </Section>
 
-        <Section id="engineering" title="Engineering" subtitle="How I Build" fullPage>
-          <div className="engineering-grid">
-            <SpotlightCard className="engineering-card">
-              <h3 className="engineering-card__title">Engineering Practices</h3>
-              <ul className="engineering-practices-list">
-                {resumeData.engineeringPractices.map((practice, i) => (
-                  <li key={i}>{practice}</li>
+        <Section id="engineering" title="Engineering">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-bg-secondary border border-border rounded-card p-6">
+              <h3 className="font-mono font-medium text-text-primary mb-4 text-sm">practices</h3>
+              <ul className="space-y-2">
+                {resumeData.engineeringPractices.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2 text-text-secondary text-sm"><ChevronRight size={14} className="mt-0.5 shrink-0 text-accent-primary" />{p}</li>
                 ))}
               </ul>
-            </SpotlightCard>
-            <div className="engineering-highlights">
-              {resumeData.technicalHighlights.map((highlight, i) => (
-                <div key={i} className="glass-card highlight-item" style={{ "--stagger-i": i }}>
-                  <h4 className="highlight-item__title">
-                    {highlight.title}
-                  </h4>
-                  <p className="highlight-item__desc">{highlight.desc}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {resumeData.technicalHighlights.map((h, i) => (
+                <div key={i} className="bg-bg-secondary border border-border rounded-card p-5">
+                  <h4 className="font-mono font-medium text-text-primary text-sm mb-1">{h.title}</h4>
+                  <p className="text-text-secondary text-xs leading-relaxed">{h.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </Section>
 
-        <Section id="experience" title="Experience" fullPage>
-          <div className="exp-list">
+        <Section id="experience" title="Experience">
+          <div className="space-y-[10px]">
             {resumeData.experience.map((job, i) => (
-              <div key={i} className="exp-item glass-card" style={{ "--stagger-i": i }}>
-                <div className="exp-item__header">
-                  {job.roles ? (
-                    <div className="exp-item__roles-list">
-                      {job.roles.map((r, rIdx) => (
-                        <div key={rIdx} className="exp-item__role-entry">
-                          <span className="exp-item__role">{r.title}</span>
-                          <span className="exp-item__role-duration">{r.duration}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="exp-item__role">{job.role}</span>
-                  )}
-                  {job.companyUrl ? (
-                    <a href={job.companyUrl} target="_blank" rel="noreferrer" className="exp-item__company-link">
-                      <span className="exp-item__company">{job.company}</span>
-                      <svg
-                        className="exp-item__link-icon"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                      </svg>
-                    </a>
-                  ) : (
-                    <span className="exp-item__company">{job.company}</span>
-                  )}
+              <div key={i} className="bg-bg-secondary border border-border rounded-card p-[14px]">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+                  {job.roles ? job.roles.map((r, ri) => (
+                    <span key={ri} className="font-mono font-medium text-text-primary">{r.title}</span>
+                  )) : <span className="font-mono font-medium text-text-primary">{job.role}</span>}
+                  <span className="font-mono text-xs text-text-muted">{job.company}</span>
                 </div>
-                {!job.roles ? (
-                  <div className="exp-item__meta">
-                    {job.duration}
-                    {job.durationShort && ` (${job.durationShort})`} · {job.location}
-                  </div>
-                ) : (
-                  <div className="exp-item__meta">
-                    {job.location}
-                  </div>
-                )}
+                <div className="font-mono text-xs text-text-muted mb-3">
+                  {job.duration || (job.roles?.[0]?.duration)}{job.location ? ` · ${job.location}` : ""}
+                </div>
                 {job.projects && (
-                  <div className="exp-item__projects exp-item__projects--cards">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[10px] mb-3">
                     {job.projects.map((proj, j) => (
-                      <TiltSurface key={j} as="button" fill className="exp-project-card" onClick={() => setSelectedProject(proj)}>
-                        <div className="exp-project-card__img-wrap">
-                          {proj.image ? (
-                            <img src={proj.image} alt="" className="exp-project-card__img exp-project-card__img--photo" />
-                          ) : (
-                            <div className={`exp-project-card__img exp-project-card__img--${(j % 3) + 1}`} aria-hidden />
-                          )}
-                        </div>
-                        <span className="exp-project-card__label">{proj.name}</span>
-                        <p className="exp-project-card__desc">{proj.description}</p>
-                      </TiltSurface>
+                      <button key={j} onClick={() => setSelectedProject(proj)}
+                        className="text-left bg-bg-primary border border-border rounded-card p-4 hover:border-border-hover transition-colors duration-150">
+                        <span className="font-mono font-medium text-text-primary text-sm block mb-1">{proj.name}</span>
+                        <p className="text-text-secondary text-xs leading-relaxed">{proj.description}</p>
+                      </button>
                     ))}
                   </div>
                 )}
                 {job.points && (
-                  <ul className="exp-item__points">
-                    {job.points.map((point, k) => (
-                      <li key={k}>{point}</li>
+                  <ul className="space-y-1">
+                    {job.points.map((p, k) => (
+                      <li key={k} className="flex items-start gap-2 text-text-secondary text-sm"><ChevronRight size={14} className="mt-0.5 shrink-0 text-accent-secondary" />{p}</li>
                     ))}
                   </ul>
                 )}
@@ -269,254 +327,238 @@ function App() {
           </div>
         </Section>
 
-        <Section id="education" title="Education" fullPage>
-          <div className="edu-list">
+        <Section id="education" title="Education">
+          <div className="space-y-[10px]">
             {resumeData.education.map((edu, i) => (
-              <div key={i} className="edu-item glass-card" style={{ "--stagger-i": i }}>
-                <div className="edu-item__degree">{edu.degree}</div>
-                <div className="edu-item__meta">
-                  {edu.institution} · {edu.duration}
-                </div>
-                {edu.gpa && <div className="edu-item__gpa">GPA: {edu.gpa}</div>}
+              <div key={i} className="bg-bg-secondary border border-border rounded-card p-[14px]">
+                <h3 className="font-mono font-medium text-text-primary mb-1">{edu.degree}{edu.field ? ` in ${edu.field}` : ""}</h3>
+                <div className="font-mono text-xs text-text-muted mb-2">{edu.institution} · {edu.duration}</div>
+                {edu.gpa && <span className="inline-block px-2 py-0.5 rounded-pill text-xs font-mono bg-bg-primary text-text-muted border border-border">GPA: {edu.gpa}</span>}
               </div>
             ))}
           </div>
         </Section>
 
-        <Section id="skills" title="Skills" fullPage>
-          <div className="glass-card" style={{ padding: "1.5rem 1.75rem" }}>
-            <div className="skills-group">
-              <div className="skills-group__label">Core</div>
-              <div className="skills-grid">
-                {resumeData.skills.core.map((s, i) => (
-                  <span key={i} className={`skill-pill ${skillPillClass(s)}`} style={{ "--pill-i": i }}>
-                    {s}
-                  </span>
-                ))}
+        <Section id="skills" title="Skills">
+          <div className="bg-bg-secondary border border-border rounded-card p-6 md:p-8">
+            {Object.entries(resumeData.skills || {}).map(([group, items]) => items?.length > 0 ? (
+              <div key={group} className="mb-6 last:mb-0">
+                <h4 className="font-mono text-xs text-text-muted lowercase mb-3">{group}</h4>
+                <div className="flex flex-wrap gap-[6px]">
+                  {items.map((s, i) => (
+                    <span key={i} className="px-3 py-1 rounded-pill text-sm font-mono bg-bg-primary text-text-muted border border-border">{s}</span>
+                  ))}
+                </div>
               </div>
+            ) : null)}
+          </div>
+        </Section>
+
+        <Section id="activity" title="Activity">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <h3 className="font-mono text-sm text-text-muted lowercase mb-4">github</h3>
+              <div className="grid grid-cols-2 gap-[10px] mb-4">
+                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="bg-bg-secondary border border-border rounded-card p-3 hover:border-border-hover transition-colors">
+                  <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=58a6ff&text_color=c9d1d9&icon_color=7ee787&hide_border=true&bg_color=0d1117" alt="GitHub Stats" className="w-full" />
+                </a>
+                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="bg-bg-secondary border border-border rounded-card p-3 hover:border-border-hover transition-colors">
+                  <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=58a6ff&text_color=c9d1d9&hide_border=true&bg_color=0d1117" alt="Top Languages" className="w-full" />
+                </a>
+              </div>
+              <GitHubCalendar username="sghani001" />
             </div>
-            <div className="skills-group">
-              <div className="skills-group__label">Integrations & tools</div>
-              <div className="skills-grid">
-                {resumeData.skills.integrations.map((s, i) => (
-                  <span key={i} className={`skill-pill ${skillPillClass(s)}`} style={{ "--pill-i": i }}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="skills-group">
-              <div className="skills-group__label">Front-end</div>
-              <div className="skills-grid">
-                {resumeData.skills.frontend.map((s, i) => (
-                  <span key={i} className={`skill-pill ${skillPillClass(s)}`} style={{ "--pill-i": i }}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="skills-group">
-              <div className="skills-group__label">Also</div>
-              <div className="skills-grid">
-                {resumeData.skills.also.map((s, i) => (
-                  <span key={i} className={`skill-pill ${skillPillClass(s)}`} style={{ "--pill-i": i }}>
-                    {s}
-                  </span>
-                ))}
-              </div>
+            <div>
+              <h3 className="font-mono text-sm text-text-muted lowercase mb-4">leetcode</h3>
+              <LeetcodeStats username="syedghani" />
             </div>
           </div>
         </Section>
 
-        <Section id="activity" title="Technical Prowess" subtitle="Stats & Activity" fullPage>
-          <div className="activity-grid">
-            <div className="github-activity">
-              <h3 className="activity-group-title">GitHub Activity</h3>
-              <div className="github-stats-grid">
-                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up">
-                  <img
-                    src={`https://github-readme-stats-eight-theta.vercel.app/api?username=sghani001&show_icons=true&theme=transparent&title_color=${theme === "dark" ? "b79fff" : "5b21b6"}&text_color=${theme === "dark" ? "f4f6ff" : "111118"}&icon_color=${theme === "dark" ? "7c3dff" : "6366f1"}&hide_border=true&bg_color=00000000`}
-                    alt="Syed Ghani's GitHub Stats"
-                    className="github-stat-img"
-                  />
-                </a>
-                <a href="https://github.com/sghani001" target="_blank" rel="noreferrer" className="glass-card github-card fade-in-up" style={{ animationDelay: '0.1s' }}>
-                  <img
-                    src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sghani001&layout=compact&theme=transparent&title_color=${theme === "dark" ? "b79fff" : "5b21b6"}&text_color=${theme === "dark" ? "f4f6ff" : "111118"}&hide_border=true&bg_color=00000000`}
-                    alt="Top Languages"
-                    className="github-stat-img"
-                  />
-                </a>
-              </div>
-              <div className="github-contribution fade-in-up" style={{ animationDelay: '0.2s', width: '100%' }}>
-                <GitHubCalendar username="sghani001" theme={theme} />
-              </div>
-            </div>
-
-            <div className="leetcode-activity">
-              <h3 className="activity-group-title">LeetCode Stats</h3>
-              <div className="fade-in-up" style={{ animationDelay: '0.3s' }}>
-                <LeetcodeStats username="syedghani" />
-              </div>
-            </div>
-          </div>
+        <Section id="gems" title="Ruby Gems">
+          <GemStats />
         </Section>
 
-        <Section id="projects" title="Personal Projects" fullPage>
-          <div className="magic-projects">
+        <Section id="projects" title="Projects">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[10px]">
             {resumeData.projects.map((proj, i) => (
-              <TiltSurface key={i} as="button" fill className="magic-project-card" onClick={() => setSelectedProject(proj)}>
-                <div className="magic-project-card__img-wrap">
-                  {proj.image ? (
-                    <img src={proj.image} alt="" className="magic-project-card__img magic-project-card__img--photo" />
-                  ) : (
-                    <div className={`magic-project-card__img magic-project-card__img--${(i % 3) + 1}`} aria-hidden />
-                  )}
-                </div>
-                <span className="magic-project-card__label">{proj.name}</span>
-                {proj.description && <span className="magic-project-card__desc">{proj.description}</span>}
-              </TiltSurface>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="journey" title="My Journey" subtitle="Timeline" fullPage>
-          <div className="journey-timeline">
-            {resumeData.journey.map((item, i) => (
-              <div key={i} className="journey-item" style={{ "--stagger-i": i }}>
-                <div className="journey-item__dot"></div>
-                <div className="journey-item__content glass-card">
-                  <div className="journey-item__year">{item.year}</div>
-                  <h3 className="journey-item__title">{item.title}</h3>
-                  <p className="journey-item__desc">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="testimonials" title="Testimonials" subtitle="What They Say" fullPage>
-          <div className="testimonials-grid">
-            {resumeData.testimonials.map((test, i) => (
-              <div key={i} className="testimonial-card glass-card" style={{ "--stagger-i": i }}>
-                <svg className="testimonial-quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-                <p className="testimonial-text">"{test.quote}"</p>
-                <div className="testimonial-author-wrap">
-                  <div className="testimonial-author-info">
-                    <h4 className="testimonial-author">{test.author}</h4>
-                    <span className="testimonial-role">{test.title}</span>
+              <button key={i} onClick={() => setSelectedProject(proj)}
+                className="text-left bg-bg-secondary border border-border rounded-card p-[14px] hover:border-border-hover transition-colors duration-150">
+                <span className="font-mono font-medium text-text-primary block mb-1">{proj.name}</span>
+                <p className="text-text-secondary text-sm leading-relaxed">{proj.description}</p>
+                {proj.tech && (
+                  <div className="flex flex-wrap gap-[6px] mt-3">
+                    {proj.tech.map((t) => (
+                      <span key={t} className="px-2 py-0.5 rounded-pill text-[11px] font-mono bg-bg-primary text-text-muted border border-border">{t}</span>
+                    ))}
                   </div>
-                  {test.url && (
-                    <a href={test.url} target="_blank" rel="noreferrer" className="testimonial-link" aria-label="View original post">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                      </svg>
-                    </a>
-                  )}
+                )}
+              </button>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="journey" title="Career">
+          <div className="relative space-y-6">
+            <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
+            {resumeData.journey.map((item, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="w-[15px] h-[15px] rounded-full bg-accent-secondary shrink-0 mt-1 relative z-10 border-2 border-bg-primary" />
+                <div>
+                  <div className="font-mono text-xs text-text-muted mb-0.5">{item.year}</div>
+                  <h3 className="font-mono font-medium text-text-primary">{item.title}</h3>
+                  <p className="text-text-secondary text-sm leading-relaxed mt-0.5">{item.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </Section>
 
-        <Section id="contact" title="Contact" fullPage>
-          <div className="contact-inner">
-            <div className="glass-card" style={{ padding: "1.5rem 1.75rem" }}>
-              <div className="contact-info__item">
-                <strong>Email</strong>
-                <a href={`mailto:${resumeData.emailPersonal}`}>{resumeData.emailPersonal}</a>
+        <Section id="testimonials" title="Testimonials">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px]">
+            {resumeData.testimonials.map((t, i) => (
+              <div key={i} className="bg-bg-secondary border border-border rounded-card p-[14px]">
+                <Quote size={16} className="text-accent-secondary/40 mb-2" />
+                <p className="text-text-secondary text-sm leading-relaxed mb-4">"{t.quote}"</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-mono font-medium text-text-primary text-sm">{t.author}</h4>
+                    <span className="font-mono text-xs text-text-muted">{t.title}</span>
+                  </div>
+                  {t.url && <a href={t.url} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent-secondary"><ExternalLink size={16} /></a>}
+                </div>
               </div>
-              <div className="contact-info__item">
-                <strong>Location</strong>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="contact" title="Contact">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-bg-secondary border border-border rounded-card p-6 space-y-4">
+              <div className="flex items-center gap-3 text-text-secondary text-sm">
+                <Mail size={16} className="text-accent-primary shrink-0" />
+                <a href={`mailto:${resumeData.emailPersonal}`} className="hover:text-text-primary">{resumeData.emailPersonal}</a>
+              </div>
+              <div className="flex items-center gap-3 text-text-secondary text-sm">
+                <MapPin size={16} className="text-accent-secondary shrink-0" />
                 {resumeData.location}
               </div>
-              <div className="contact-info__item">
-                <strong>Phone</strong>
-                <a href={`tel:${resumeData.phone.replace(/\s/g, "")}`}>{resumeData.phone}</a>
+              <div className="flex items-center gap-3 text-text-secondary text-sm">
+                <Phone size={16} className="text-accent-secondary shrink-0" />
+                <a href={`tel:${resumeData.phone?.replace(/\s/g, "")}`} className="hover:text-text-primary">{resumeData.phone}</a>
               </div>
-              <div className="contact-info__item">
-                <strong>Links</strong>
-                <span>
-                  {resumeData.socials.map((s, i) => (
-                    <React.Fragment key={s.name}>
-                      <a href={s.url} target="_blank" rel="noreferrer">
-                        {s.name}
-                      </a>
-                      {i < resumeData.socials.length - 1 && " · "}
-                    </React.Fragment>
-                  ))}
-                  {" · "}
-                  <a href={resumeData.leetcodeUrl} target="_blank" rel="noreferrer">
-                    LeetCode
-                  </a>
-                </span>
+              <div className="flex gap-3 pt-2">
+                {resumeData.socials?.map((s) => {
+                  let icon;
+                  if (s.icon === "github") {
+                    icon = <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>;
+                  } else if (s.icon === "linkedin") {
+                    icon = <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>;
+                  } else {
+                    icon = <Mail size={18} />;
+                  }
+                  return (
+                    <a key={s.name} href={s.url} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent-secondary" aria-label={s.name}>
+                      {icon}
+                    </a>
+                  );
+                })}
+                {resumeData.leetcodeUrl && (
+                  <a href={resumeData.leetcodeUrl} target="_blank" rel="noreferrer" className="font-mono text-xs text-text-muted hover:text-accent-secondary self-center">LC</a>
+                )}
               </div>
             </div>
-            <div className="contact-form">
-              <form className="glass-card" onSubmit={handleContactSubmit}>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your name"
-                  required
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your email"
-                  required
-                />
-                <textarea
-                  name="message"
-                  placeholder="Message"
-                  rows={4}
-                />
-                <button
-                  type="submit"
-                  className={`hero__btn hero__btn--primary contact-form__submit contact-form__submit--${formState}`}
-                  disabled={formState !== "idle"}
-                >
-                  {formState === "idle" && "Send message"}
-                  {formState === "sending" && (
-                    <span className="contact-form__spinner-wrap">
-                      <span className="contact-form__spinner" aria-hidden /> Sending…
-                    </span>
-                  )}
-                  {formState === "success" && (
-                    <span className="contact-form__success-wrap">
-                      <svg className="contact-form__check" viewBox="0 0 20 20" fill="none" aria-hidden>
-                        <polyline points="4 10 8 14 16 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      Sent!
-                    </span>
-                  )}
+            <form className="bg-bg-secondary border border-border rounded-card p-6 space-y-4" onSubmit={handleContactSubmit}>
+              <div className="flex gap-1 mb-2 bg-bg-primary p-1 border border-border rounded-card">
+                <button type="button" onClick={() => setFormType("message")}
+                  className={`flex-1 py-1.5 font-mono text-[11px] rounded-card transition-colors ${formType === "message" ? "bg-accent-primary text-bg-primary font-medium" : "text-text-muted hover:text-text-primary"}`}>
+                  general message
                 </button>
-              </form>
-            </div>
+                <button type="button" onClick={() => setFormType("service")}
+                  className={`flex-1 py-1.5 font-mono text-[11px] rounded-card transition-colors ${formType === "service" ? "bg-accent-primary text-bg-primary font-medium" : "text-text-muted hover:text-text-primary"}`}>
+                  ask for service
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">name</label>
+                  <input type="text" name="name" required
+                    className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover placeholder:text-text-muted"
+                    placeholder="Your name" />
+                </div>
+                <div>
+                  <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">email</label>
+                  <input type="email" name="email" required
+                    className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover placeholder:text-text-muted"
+                    placeholder="your@email.com" />
+                </div>
+              </div>
+
+              {formType === "service" ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">service type</label>
+                      <select name="service" required
+                        className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover">
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile App Development">Mobile App Development</option>
+                        <option value="API Design & Backend">API Design & Backend</option>
+                        <option value="Hotwire & Rails Consulting">Hotwire & Rails Consulting</option>
+                        <option value="Code Audit & Refactoring">Code Audit & Refactoring</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">budget range</label>
+                      <select name="budget" required
+                        className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover">
+                        <option value="< $1,000">&lt; $1,000</option>
+                        <option value="$1,000 - $5,000">$1,000 - $5,000</option>
+                        <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                        <option value="> $10,000">&gt; $10,000</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">project description</label>
+                    <textarea name="description" rows={4} required minLength={10}
+                      className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover placeholder:text-text-muted resize-none"
+                      placeholder="Describe your project goals, timeline, and requirements... (minimum 10 characters)" />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <label className="font-mono text-[11px] text-text-muted lowercase block mb-1">message</label>
+                  <textarea name="message" rows={4} required minLength={10}
+                    className="w-full px-3 py-2 rounded-card bg-bg-primary border border-border text-text-primary text-sm focus:outline-none focus:border-border-hover placeholder:text-text-muted resize-none"
+                    placeholder="Your message (minimum 10 characters)" />
+                </div>
+              )}
+
+              <button type="submit" disabled={formState !== "idle"}
+                className="w-full px-4 py-2.5 rounded-card border border-accent-primary text-accent-primary bg-transparent font-mono text-sm hover:bg-accent-primary/10 transition-all duration-150 disabled:opacity-40">
+                {formState === "idle" && "Send request"}
+                {formState === "sending" && "Sending..."}
+                {formState === "success" && "Sent!"}
+              </button>
+              {formState === "success" && <p className="text-accent-primary text-xs font-mono text-center">delivered</p>}
+            </form>
           </div>
         </Section>
 
-        <footer className="magic-footer">
-          <div className="magic-footer__gradient" aria-hidden />
-          <div className="magic-footer__inner">
-            <p>
-              <a href="https://www.linkedin.com/in/syed-m-ghani-357ba4234" target="_blank" rel="noreferrer">
-                {resumeData.name}
-              </a>
-              — Software Engineer · Lahore
+        <footer className="border-t border-border py-8 mt-8">
+          <div className="max-w-content mx-auto px-6 text-center">
+            <p className="font-mono text-xs text-text-muted">
+              <a href="https://www.linkedin.com/in/syed-m-ghani-357ba4234" target="_blank" rel="noreferrer" className="hover:text-text-primary">{resumeData.name}</a>
+              <span className="mx-2">·</span>Software Engineer
             </p>
           </div>
         </footer>
       </main>
 
-      <ProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </>
   );
 }

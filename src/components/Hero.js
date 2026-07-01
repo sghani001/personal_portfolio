@@ -1,179 +1,107 @@
-import React, { useCallback, memo } from "react";
-import resumeData from "../utils/resumeData";
-import MagneticWrapper from "./MagneticWrapper";
-import "./Hero.css";
+import React, { useMemo } from "react";
+import { useGetGemsQuery } from "../store/portfolioApi";
 
-const heroPhoto = process.env.PUBLIC_URL + "/hero-photo.png";
-const roles = resumeData.titles || [resumeData.title];
-
-/**
- * HeroVisual — Memoized so the 3D scene never re-renders during
- * typewriter state changes in the parent Hero component.
- */
-const HeroVisual = memo(function HeroVisual() {
-  return (
-    <div className="hero__visual" aria-hidden>
-      <div className="hero-scene">
-        <div className="hero-scene__depth">
-          <div className="hero-scene__panel hero-scene__panel--rails">
-            <span className="hero-scene__panel-label">Rails</span>
-            <span className="hero-scene__panel-lines" />
-          </div>
-          <div className="hero-scene__panel hero-scene__panel--react">
-            <span className="hero-scene__panel-label">React</span>
-          </div>
-          <div className="hero-scene__panel hero-scene__panel--python">
-            <span className="hero-scene__panel-label">Python</span>
-          </div>
-
-          <div className="hero-scene__ruby-wrap">
-            <div className="hero-scene__ruby" />
-          </div>
-          <div className="hero-scene__orbit">
-            <span className="hero-scene__electron" />
-          </div>
-
-          <div className="hero-scene__pillars">
-            <span className="hero-scene__pillar" />
-            <span className="hero-scene__pillar hero-scene__pillar--mid" />
-            <span className="hero-scene__pillar" />
-          </div>
-        </div>
-
-        <div className="hero-scene__photo glass-hero-photo">
-          <img src={heroPhoto} alt="" className="hero-scene__photo-img" />
-        </div>
-      </div>
-    </div>
-  );
-});
-
-export default function Hero() {
+export default function Hero({ data }) {
+  const roles = useMemo(() => (data && data.titles) || ["Software Engineer"], [data]);
   const [titleIndex, setTitleIndex] = React.useState(0);
-  const [displayText, setDisplayText] = React.useState("");
+  const [displayText, setDisplayText] = React.useState(roles[0] || "");
   const [isDeleting, setIsDeleting] = React.useState(false);
-  const [typingSpeed, setTypingSpeed] = React.useState(150);
-  const heroRef = React.useRef(null);
 
   React.useEffect(() => {
-    const handleTyping = () => {
-      const currentRole = roles[titleIndex];
-      const isFinishing = !isDeleting && displayText === currentRole;
-      const isStarting = isDeleting && displayText === "";
-
-      if (isFinishing) {
-        setTimeout(() => setIsDeleting(true), 2000);
-        return;
-      }
-
-      if (isStarting) {
-        setIsDeleting(false);
-        setTitleIndex((prev) => (prev + 1) % roles.length);
-        return;
-      }
-
-      const nextText = isDeleting
-        ? currentRole.substring(0, displayText.length - 1)
-        : currentRole.substring(0, displayText.length + 1);
-
-      setDisplayText(nextText);
-      setTypingSpeed(isDeleting ? 50 : 120);
-    };
-
-    const timer = setTimeout(handleTyping, typingSpeed);
+    const currentRole = roles[titleIndex];
+    const isFinishing = !isDeleting && displayText === currentRole;
+    const isStarting = isDeleting && displayText === "";
+    if (isFinishing) {
+      const t = setTimeout(() => setIsDeleting(true), 2000);
+      return () => clearTimeout(t);
+    }
+    if (isStarting) {
+      setIsDeleting(false);
+      setTitleIndex((prev) => (prev + 1) % roles.length);
+      return;
+    }
+    const nextText = isDeleting
+      ? currentRole.substring(0, displayText.length - 1)
+      : currentRole.substring(0, displayText.length + 1);
+    const timer = setTimeout(() => setDisplayText(nextText), isDeleting ? 40 : 100);
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, titleIndex, typingSpeed]);
+  }, [displayText, isDeleting, titleIndex, roles]);
 
-  // Stable ref — doesn't change across typewriter re-renders
-  const handleMouseMove = useCallback((e) => {
-    if (!heroRef.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = heroRef.current.getBoundingClientRect();
-    const x = (clientX - left) / width - 0.5;
-    const y = (clientY - top) / height - 0.5;
-    heroRef.current.style.setProperty("--mx", x.toFixed(3));
-    heroRef.current.style.setProperty("--my", y.toFixed(3));
-  }, []);
+  const gemsData = useGetGemsQuery();
+  const gems = Array.isArray(gemsData.data) ? gemsData.data : gemsData.data?.value || [];
+  const totalDownloads = gems.reduce((sum, g) => sum + (g.downloads || 0), 0);
+  const downloadDisplay = totalDownloads >= 1000 ? `${(totalDownloads / 1000).toFixed(1)}k+` : `${totalDownloads}+`;
 
-  const scrollTo = useCallback(
-    (id) => (e) => {
-      e.preventDefault();
-      window.history.pushState(null, "", `#${id}`);
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    },
-    []
-  );
+  const metrics = data?.metrics?.length
+    ? data.metrics.map((m) =>
+        m.label === "Gem downloads" ? { ...m, value: downloadDisplay } : m
+      )
+    : [];
+
+  const socialUrls = data?.socials || [];
+
+  const scrollTo = (id) => (e) => {
+    e.preventDefault();
+    window.history.pushState(null, "", `#${id}`);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <section
-      id="hero"
-      className="hero hero--vision"
-      ref={heroRef}
-      onMouseMove={handleMouseMove}
-    >
-      <div className="hero__grid">
-        <div className="hero__copy">
-          <p className="hero__eyebrow">Software engineer · Lahore</p>
-          <h1 className="hero__name">{resumeData.name}</h1>
-          <div className="hero__typewriter">
-            <span className="hero__typewriter-text">{displayText || roles[0]}</span>
-            <span className="hero__typewriter-cursor">|</span>
+    <section id="hero" className="min-h-screen flex flex-col justify-center px-6 pt-24 pb-8">
+      <div className="max-w-content mx-auto w-full">
+        <div className="bg-bg-secondary border border-border rounded-window overflow-hidden mb-8">
+          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border">
+            <span className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+            <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+            <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+            <span className="ml-3 font-mono text-xs text-text-muted select-none">syed@remote:~</span>
           </div>
-          <p className="hero__headline">{resumeData.headline}</p>
-          <div className="hero__badge-row" style={{ marginBottom: "1.5rem" }}>
-            <a 
-              href="https://github.com/sghani001" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="hero__badge-link"
-            >
-              <img 
-                src="https://img.shields.io/badge/GitHub-sghani001-181717?style=for-the-badge&logo=github" 
-                alt="GitHub Profile" 
-                style={{ height: "26px", borderRadius: "5px" }} 
-              />
-            </a>
-          </div>
-          <ul className="hero__bullets">
-            {(resumeData.heroBullets || []).map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-          <div className="hero__actions">
-            <MagneticWrapper strength={0.35}>
-              <button
-                type="button"
-                className="hero__btn hero__btn--primary"
-                onClick={scrollTo("experience")}
-              >
-                View experience
-              </button>
-            </MagneticWrapper>
-
-            <MagneticWrapper strength={0.25}>
-              <a
-                href="#contact"
-                className="hero__btn hero__btn--ghost"
-                onClick={scrollTo("contact")}
-              >
-                Contact
-              </a>
-            </MagneticWrapper>
+          <div className="p-5 md:p-6">
+            <p className="font-mono text-xs text-text-muted mb-3">
+              <span className="text-accent-secondary">guest</span>@<span className="text-accent-primary">syedghani.is-a.dev</span>
+              <span className="text-text-muted">:</span><span className="text-accent-secondary">~</span><span className="text-text-muted">$ </span>
+              <span className="text-text-secondary">whoami</span>
+            </p>
+            <h1 className="font-mono font-medium text-xl md:text-[22px] text-accent-primary leading-snug mb-3">
+              {data?.name || "Syed Ghani"}
+            </h1>
+            <div className="h-7 flex items-center mb-3">
+              <span className="font-mono text-xs text-text-muted mr-2">$</span>
+              <span className="font-mono text-base md:text-lg font-medium text-accent-primary">{displayText}</span>
+              <span className="w-[6px] h-[14px] bg-accent-primary ml-1 animate-pulse" />
+            </div>
+            <p className="text-text-secondary text-sm leading-relaxed max-w-xl">
+              {data?.headline || ""}
+            </p>
           </div>
         </div>
 
-        <HeroVisual />
-      </div>
+        <div className="flex flex-wrap gap-[10px] mb-8">
+          {metrics.slice(0, 3).map((m, i) => (
+            <div key={i} className="inline-flex items-center gap-2 px-3 py-1.5 border border-border rounded-card">
+              <span className="font-mono font-medium text-text-primary text-lg">{m.value}</span>
+              <span className="font-mono text-[11px] text-text-muted lowercase">{m.label.replace(/\s+/g, "_")}</span>
+            </div>
+          ))}
+        </div>
 
-      <button
-        type="button"
-        className="hero__scroll-hint"
-        onClick={scrollTo("summary")}
-        aria-label="Scroll to about"
-      >
-        <span className="hero__scroll-line" />
-        <span className="hero__scroll-label">Scroll</span>
-      </button>
+        <div className="flex flex-wrap gap-3">
+          <button type="button" onClick={scrollTo("experience")}
+            className="inline-flex items-center px-4 py-2 rounded-card border border-accent-primary text-accent-primary font-mono text-sm hover:bg-accent-primary/10 transition-all duration-150">
+            View experience
+          </button>
+          {socialUrls.find((s) => s.icon === "github") && (
+            <a href={socialUrls.find((s) => s.icon === "github").url} target="_blank" rel="noreferrer"
+              className="inline-flex items-center px-4 py-2 rounded-card border border-border text-text-secondary font-mono text-sm hover:border-border-hover transition-colors duration-150">
+              GitHub
+            </a>
+          )}
+          <button type="button" onClick={scrollTo("contact")}
+            className="inline-flex items-center px-4 py-2 rounded-card border border-border text-text-secondary font-mono text-sm hover:border-border-hover transition-colors duration-150">
+            Contact
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

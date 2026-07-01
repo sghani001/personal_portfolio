@@ -1,28 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import resumeData from "../utils/resumeData";
 
 export default function GitHubBadge({ username, theme }) {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState({
+    name: "Syed Ghani",
+    login: username,
+    bio: "Software Engineer | Ruby on Rails & React.js",
+    company: "Blackstack Software Solutions",
+    location: "Lahore, Pakistan",
+    avatar_url: resumeData.cachedStats.github.avatar_url,
+    public_repos: resumeData.cachedStats.github.public_repos,
+    followers: resumeData.cachedStats.github.followers,
+    following: resumeData.cachedStats.github.following,
+  });
 
   useEffect(() => {
     fetch(`https://api.github.com/users/${username}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setProfile(data);
-        setLoading(false);
+      .then((r) => {
+        if (!r.ok) throw new Error("API failed");
+        return r.json();
       })
-      .catch(() => setLoading(false));
+      .then((data) => {
+        if (data && data.login) {
+          setProfile(data);
+        }
+      })
+      .catch(() => {});
   }, [username]);
-
-  if (loading) {
-    return (
-      <div className="github-badge-wrapper">
-        <div className="github-badge__loading">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!profile) return null;
 
   return (
     <a href={`https://github.com/${username}`} target="_blank" rel="noreferrer" className="github-badge-wrapper fade-in-up">
@@ -37,8 +41,8 @@ export default function GitHubBadge({ username, theme }) {
         <div className="github-badge__name">{profile.name || username}</div>
         <div className="github-badge__username">@{profile.login}</div>
         {profile.bio && <div className="github-badge__bio">{profile.bio}</div>}
-        {profile.company && <div className="github-badge__meta">🏢 {profile.company}</div>}
-        {profile.location && <div className="github-badge__meta">📍 {profile.location}</div>}
+        {profile.company && <div className="github-badge__meta">{profile.company}</div>}
+        {profile.location && <div className="github-badge__meta">{profile.location}</div>}
         <div className="github-badge__stats">
           <div className="github-badge__stat">
             <span className="github-badge__stat-value">{profile.public_repos}</span>

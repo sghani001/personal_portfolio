@@ -11,9 +11,9 @@ const resumeData = {
     "API Specialist",
     "Problem Solver"
   ],
-  tagline: "Rails · React · APIs that ship",
+  tagline: "Full-Stack Engineer · Ruby on Rails & React",
   headline:
-    "Full-stack engineer building production web apps with Ruby on Rails and React — from schema and jobs to polished UI.",
+    "I design and ship production SaaS products — from schema design and REST APIs to polished React interfaces and third-party integrations.",
   email: "2020cs669@student.uet.edu.pk",
   emailPersonal: "syedghani001@gmail.com",
   location: "Lahore, Pakistan",
@@ -37,125 +37,33 @@ const resumeData = {
     "Software engineer focused on Ruby on Rails and React. I design and ship end-to-end features for SaaS products — REST APIs, data modeling, background jobs, and accessible front ends — in agile teams where reliability and pace both matter. Recent work spans AI-enabled PRM, college recruiting marketplaces, K–12 coaching platforms, and fintech-style billing services.",
 
   aboutExtra:
-    "I care about clear boundaries between domains, tests that earn their keep (RSpec / Jest), and integrations that survive real traffic. Comfortable owning a slice of the stack from migration to deploy.",
+    "I care about clear boundaries between domains, tests that earn their keep (RSpec), and integrations that survive real traffic. Comfortable owning a slice of the stack from migration to deploy.",
 
   experience: [
     {
+      role: "Software Engineer",
       company: "Blackstack Software Solutions",
       companyUrl: "https://www.linkedin.com/company/blackstack-software-solutions/posts/?feedView=all",
       location: "Lahore, Pakistan · Remote-friendly",
-      roles: [
-        { title: "Software Engineer", duration: "Aug 2025 — May 2026" },
-        { title: "Associate Software Engineer", duration: "Aug 2024 — Aug 2025" },
+      duration: "Aug 2025 — May 2026",
+      points: [
+        "Managed small engineering teams on CinnaLab and Monthend/Controllr — task breakdown, code reviews, delivery coordination.",
+        "Designed and implemented Stripe-facing subscription microservice (Docyt), extracting billing paths from monolith into a service with clear REST contracts and idempotent webhook reconciliation.",
+        "Set up and deployed Documenso e-signature on Heroku; integrated Documenso API for agreement workflows.",
+        "Integrated HubSpot CRM sync, Moodle LMS, and multiple third-party webhook systems.",
       ],
-      projects: [
-        {
-          name: "CinnaLab",
-          url: "https://cinnalab.io/",
-          description:
-            "AI-assisted Partner Relationship Management: partner onboarding, deal registration, training, and e-signatures with CRM and LMS sync.",
-          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=380&fit=crop",
-          tech: ["React.js", "Ruby on Rails", "HubSpot API", "Moodle", "Documenso", "Redis", "Sidekiq"],
-          problem:
-            "Partner programs lived across HubSpot, Moodle, and documents — high drop-off, duplicate data, and fragile manual handoffs between sales and enablement.",
-          solution:
-            "Built CinnaLab as the operational hub: guided onboarding, deal registration, and training paths with two-way sync to HubSpot and Moodle plus Documenso for agreements.",
-          metrics: [
-            "Cut onboarding cycle time materially through guided flows and automation",
-            "Standardized e-signature and document paths via Documenso",
-            "Reduced manual re-entry between CRM and LMS via resilient webhooks",
-          ],
-          engineering: [
-            "Webhook-driven sync with retries, idempotency-minded handlers, and clear audit trails",
-            "JWT-based session model alongside secure server-side checks",
-            "Sidekiq queues for imports, exports, and long-running partner operations",
-            "Strict API contracts and validation at Rails boundaries",
-          ],
-        },
-        {
-          name: "Intercollegiate",
-          url: "https://intercollegiate.co/",
-          description:
-            "National job board for college athletics — search, filters, and listings at scale for DI / DII / DIII programs and candidates.",
-          image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=380&fit=crop",
-          tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Performance tuning"],
-          problem:
-            "Recruiters and candidates needed fast, trustworthy search across sport, division, conference, compensation, and role level without painful load times.",
-          solution:
-            "Implemented indexed, composable querying and a Rails-centric architecture that keeps filters snappy as listing volume grows.",
-          metrics: [
-            "2,500+ concurrent listings with responsive filter UX",
-            "Tuned multi-parameter search into sub-200ms paths on representative workloads",
-            "Served steady daily traffic from athletic departments and applicants",
-          ],
-          engineering: [
-            "PostgreSQL indexing and scoped ActiveRecord patterns for heavy filter combinations",
-            "Presenter-style view layer to keep complex search readable",
-            "Performance passes on N+1 hotspots and hot query paths",
-          ],
-        },
-        {
-          name: "Bullseye",
-          url: "https://bullseye.education/",
-          description:
-            "K–12 instructional coaching: walkthroughs, in-the-moment feedback (web / mobile signals), and analytics for school leaders.",
-          image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=380&fit=crop",
-          tech: ["Ruby on Rails", "React.js", "PostgreSQL"],
-          problem:
-            "Districts needed consistent coaching workflows and visibility into classroom support — not one-off spreadsheets or ad hoc tools.",
-          solution:
-            "Contributed features across coaching workflows, feedback capture, and reporting surfaces used by principals and district leads.",
-          metrics: [
-            "Shipped iterative improvements alongside product and instructional design",
-            "Hardened flows used in live districts during the school year",
-          ],
-          engineering: [
-            "Feature work spanning Rails services and React client components",
-            "Collaboration on permissions and role-aware views for staff vs leaders",
-          ],
-        },
-        {
-          name: "Docyt",
-          url: "https://docyt.com/",
-          description:
-            "AI-assisted bookkeeping — microservices for payments and subscriptions integrated with the core accounting product.",
-          image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
-          tech: ["Ruby on Rails", "Stripe", "Microservices", "Webhooks"],
-          problem:
-            "Subscription and invoicing logic needed to live in a dedicated service with reliable Stripe webhooks and clear reconciliation.",
-          solution:
-            "Designed and implemented the Stripe-facing microservice: plans, billing cycles, webhooks, and handoff to core Docyt services.",
-          metrics: [
-            "Production-ready Stripe flows for hospitality and accounting lines",
-            "Webhook handling with operational logging for finance teams",
-          ],
-          engineering: [
-            "Service extraction from monolith billing paths",
-            "Idempotent webhook processing and defensive error handling",
-            "REST contracts between payment service and platform core",
-          ],
-        },
-        {
-          name: "Monthend / Controllr",
-          url: "https://fly.controllr.app/",
-          description:
-            "SaaS for month-end close and controls — auth, onboarding, and workflows for finance teams.",
-          image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=380&fit=crop",
-          tech: ["Ruby on Rails", "React.js", "OAuth", "PostgreSQL", "Devise"],
-          problem:
-            "Finance teams lacked a single place to run close tasks with clear ownership and audit-friendly history.",
-          solution:
-            "Built authentication (email + Google OAuth), onboarding, and product surfaces that support recurring close and control tasks.",
-          metrics: [
-            "Delivered OAuth and email auth end-to-end with session hygiene",
-            "Reduced friction in first-run setup for new orgs",
-          ],
-          engineering: [
-            "Devise + Google OAuth 2.0 with careful callback and token refresh handling",
-            "Multi-step React onboarding with shared form state patterns",
-            "REST collaboration on control and checklist endpoints",
-          ],
-        },
+    },
+    {
+      role: "Associate Software Engineer",
+      company: "Blackstack Software Solutions",
+      companyUrl: "https://www.linkedin.com/company/blackstack-software-solutions/posts/?feedView=all",
+      location: "Lahore, Pakistan · Remote-friendly",
+      duration: "Jun 2024 — Aug 2025",
+      points: [
+        "Developed and optimized search query performance for Intercollegiate (national athletics job board), tuning ActiveRecord and PostgreSQL indexes to achieve sub-200ms response times for 2,500+ listings.",
+        "Shipped core features for Bullseye (K-12 coaching platform) across Rails APIs and React components, implementing role-aware permission flows for staff and admin views.",
+        "Built secure authentication (Google OAuth 2.0, Devise) and multi-step onboarding forms using Hotwire, Stimulus.js, and Turbo for Monthend/Controllr.",
+        "Collaborated closely in agile sprints, participating in code reviews, API contract design, and CI/CD maintenance.",
       ],
     },
     {
@@ -204,7 +112,7 @@ const resumeData = {
     ],
     integrations: ["Stripe", "HubSpot", "Moodle", "Documenso", "Git", "Linux", "Docker (basics)"],
     frontend: ["Tailwind CSS", "Vite", "React Query", "React Router", "Redux"],
-    also: ["Python", "Node.js", "Microservices", "Third-party API design", "RSpec", "Jest"],
+    also: ["Python", "Node.js", "Microservices", "Third-party API design", "RSpec"],
   },
 
   journey: [
@@ -219,7 +127,7 @@ const resumeData = {
       description: "Web intern at Apex Space; R&D intern at KICS — shipping under guidance and learning how research maps to code.",
     },
     {
-      year: "Aug 2024",
+      year: "Jun 2024",
       title: "Associate Software Engineer — Blackstack",
       description: "Joined a product-focused consultancy shipping Rails and React for US-facing SaaS customers.",
     },
@@ -249,32 +157,189 @@ const resumeData = {
 
   projects: [
     {
-      name: "Online Exam System",
+      name: "CinnaLab",
       description:
-        "Capstone-style Rails app: exam authoring, approvals, student attempts, grading, and reporting (PostgreSQL).",
-      url: "https://github.com/sghani001/Online_Exam_System",
-      tech: ["Rails", "PostgreSQL", "RSpec"],
-      image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&h=380&fit=crop",
+        "AI-assisted Partner Relationship Management platform built at Blackstack. Designed and shipped partner onboarding, deal registration, training paths, and e-signature workflows with two-way sync to HubSpot CRM and Moodle LMS. Documenso integrated for agreements. Deployed on Heroku.",
+      url: "https://cinnalab.io/",
+      tech: ["React.js", "Ruby on Rails", "HubSpot API", "Moodle", "Documenso", "Redis", "Sidekiq", "Heroku"],
+      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=380&fit=crop",
+      problem:
+        "Partner programs lived across HubSpot, Moodle, and documents — high drop-off, duplicate data, and fragile manual handoffs between sales and enablement.",
+      solution:
+        "Built CinnaLab as the operational hub: guided onboarding, deal registration, and training paths with two-way sync to HubSpot and Moodle plus Documenso for agreements.",
+      metrics: [
+        "Cut onboarding cycle time materially through guided flows and automation",
+        "Standardized e-signature and document paths via Documenso",
+        "Reduced manual re-entry between CRM and LMS via resilient webhooks",
+      ],
+      engineering: [
+        "Webhook-driven sync with retries, idempotency-minded handlers, and clear audit trails",
+        "JWT-based session model alongside secure server-side checks",
+        "Sidekiq queues for imports, exports, and long-running partner operations",
+        "Strict API contracts and validation at Rails boundaries",
+      ],
     },
     {
-      name: "WhatsApp Analyzer",
-      description: "Python utilities to parse chats and surface group / direct-message insights.",
-      url: "https://github.com/sghani001/Whatsapp_Analyzer",
-      tech: ["Python", "Pandas"],
-      image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=600&h=380&fit=crop",
+      name: "Intercollegiate",
+      description:
+        "National job board for college athletics serving DI/DII/DIII programs, built at Blackstack. Features multi-parameter search across sport, division, conference, compensation, and role level with sub-200ms response times via PostgreSQL indexing and scoped ActiveRecord patterns. Handles 2,500+ concurrent listings with steady daily traffic from athletic departments and applicants.",
+      url: "https://intercollegiate.co/",
+      tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Performance Tuning"],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=380&fit=crop",
+      problem:
+        "Recruiters and candidates needed fast, trustworthy search across sport, division, conference, compensation, and role level without painful load times.",
+      solution:
+        "Implemented indexed, composable querying and a Rails-centric architecture that keeps filters snappy as listing volume grows.",
+      metrics: [
+        "2,500+ concurrent listings with responsive filter UX",
+        "Tuned multi-parameter search into sub-200ms paths on representative workloads",
+        "Served steady daily traffic from athletic departments and applicants",
+      ],
+      engineering: [
+        "PostgreSQL indexing and scoped ActiveRecord patterns for heavy filter combinations",
+        "Presenter-style view layer to keep complex search readable",
+        "Performance passes on N+1 hotspots and hot query paths",
+      ],
     },
     {
-      name: "Olympics Analysis",
-      description: "Exploratory analysis and charts on historical Olympics data.",
-      url: "https://github.com/sghani001/Olympics",
-      tech: ["Python", "Data visualization"],
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=380&fit=crop",
+      name: "Bullseye",
+      description:
+        "K–12 instructional coaching platform built at Blackstack, enabling walkthroughs, in-the-moment feedback via web and mobile signals, and actionable analytics for school leaders and district administrators. Feature work spanned Rails services and React components with role-aware permissions.",
+      url: "https://bullseye.education/",
+      tech: ["Ruby on Rails", "React.js", "PostgreSQL"],
+      image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=380&fit=crop",
+      problem:
+        "Districts needed consistent coaching workflows and visibility into classroom support — not one-off spreadsheets or ad hoc tools.",
+      solution:
+        "Contributed features across coaching workflows, feedback capture, and reporting surfaces used by principals and district leads.",
+      metrics: [
+        "Shipped iterative improvements alongside product and instructional design",
+        "Hardened flows used in live districts during the school year",
+      ],
+      engineering: [
+        "Feature work spanning Rails services and React client components",
+        "Collaboration on permissions and role-aware views for staff vs leaders",
+      ],
+    },
+    {
+      name: "Docyt",
+      description:
+        "AI-assisted bookkeeping microservice handling payments and subscriptions, built at Blackstack. Designed and implemented Stripe-facing service with billing cycles, webhook reconciliation, and operational logging. Extracted from monolith billing paths into a focused service with clear REST contracts.",
+      url: "https://docyt.com/",
+      tech: ["Ruby on Rails", "Stripe", "Microservices", "Webhooks"],
+      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=380&fit=crop",
+      problem:
+        "Subscription and invoicing logic needed to live in a dedicated service with reliable Stripe webhooks and clear reconciliation.",
+      solution:
+        "Designed and implemented the Stripe-facing microservice: plans, billing cycles, webhooks, and handoff to core Docyt services.",
+      metrics: [
+        "Production-ready Stripe flows for hospitality and accounting lines",
+        "Webhook handling with operational logging for finance teams",
+      ],
+      engineering: [
+        "Service extraction from monolith billing paths",
+        "Idempotent webhook processing and defensive error handling",
+        "REST contracts between payment service and platform core",
+      ],
+    },
+    {
+      name: "Monthend / Controllr",
+      description:
+        "SaaS platform for month-end close and financial controls, built at Blackstack. Built authentication (email + Google OAuth 2.0), multi-step onboarding flows, and workflow management surfaces for finance teams using Devise, Stimulus, and Turbo. Managed small engineering team on this project.",
+      url: "https://fly.controllr.app/",
+      tech: ["Ruby on Rails", "Hotwire", "Stimulus.js", "Turbo", "OAuth", "PostgreSQL", "Devise"],
+      image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=380&fit=crop",
+      problem:
+        "Finance teams lacked a single place to run close tasks with clear ownership and audit-friendly history.",
+      solution:
+        "Built authentication (email + Google OAuth), onboarding, and product surfaces that support recurring close and control tasks.",
+      metrics: [
+        "Delivered OAuth and email auth end-to-end with session hygiene",
+        "Reduced friction in first-run setup for new orgs",
+      ],
+      engineering: [
+        "Devise + Google OAuth 2.0 with careful callback and token refresh handling",
+        "Multi-step onboarding flows with reactive Stimulus controllers and Turbo frames",
+        "Turbo-powered updates and checklist interactions for a real-time SPA feel",
+      ],
+    },
+    {
+      name: "rails-guarddog",
+      description:
+        "Production-grade security scanner for Rails apps. Detects vulnerabilities Brakeman misses: AI/LLM injection, DoS/ReDoS patterns, supply chain typosquatting, IDOR gaps, and more. 12 comprehensive security checkers with CWE/OWASP mappings.",
+      url: "https://github.com/sghani001/rails-guarddog",
+      tech: ["Ruby", "Security", "AST Analysis", "Brakeman", "CWE", "OWASP"],
+      image: "https://images.unsplash.com/photo-1581092334490-2f9c7e8e1e9c?w=600&h=380&fit=crop",
+      metrics: [
+        "Maintains a stable release cycle mapping directly to CWE/OWASP vulnerability patterns",
+        "Scans abstract syntax trees (AST) to surface high-impact risks that standard text regex engines miss",
+        "Zero-configuration CLI setup providing scannable security reports in CI/CD pipelines",
+      ],
+      engineering: [
+        "Built custom AST static analysis rule checkers using Prism/Parser to parse and trace Ruby source patterns safely",
+        "Implements targeted detectors for modern application vulnerabilities including LLM prompt injection and ReDoS vulnerabilities",
+        "Designed light memory footprint execution rules ensuring security passes don't block rapid development feedback loops",
+      ],
+    },
+    {
+      name: "rails-persona",
+      description:
+        "Model-level behavioral analytics engine for Rails. Tracks user actions, analyzes onboarding friction, and handles heavy payloads using bulk database inserts and Sidekiq background jobs natively with zero external dependencies.",
+      url: "https://github.com/sghani001/rails-persona",
+      tech: ["Ruby", "Rails Engine", "Sidekiq", "Analytics"],
+      image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&h=380&fit=crop",
+      metrics: [
+        "Achieved clean concurrent tracking under high payload testing without impacting primary web requests",
+        "Eliminated heavy analytics vendor overhead by tracking user behaviors directly inside core database tables",
+        "Tracks critical activation funnel steps and conversion friction natively within the Rails application lifecycle",
+      ],
+      engineering: [
+        "Utilizes low-overhead native bulk database inserts and batched queueing models to reduce continuous I/O context switching",
+        "Leverages background job structures (Sidekiq/Redis) cleanly to offload asynchronous analytics processing paths",
+        "Engineered with a strict zero-dependency philosophy, keeping the package footprint lightweight and isolated",
+      ],
+    },
+    {
+      name: "rails-tenantify",
+      description:
+        "Lightweight multi-tenancy infrastructure for SaaS applications. Automates sub-domain/request-based routing, secure database isolation scoping, and streamlined tenant onboarding workflows without the bloat of heavy legacy packages.",
+      url: "https://github.com/sghani001/rails-tenantify",
+      tech: ["Ruby on Rails", "SaaS Architecture", "Multi-tenancy"],
+      image: "https://images.unsplash.com/photo-1508830524289-0adcbe822b40?w=600&h=380&fit=crop",
+      metrics: [
+        "Serves as a lean, modernized multi-tenancy alternative tailored cleanly for modern Rails architecture structures",
+        "Enforces total row-level data isolation parameters seamlessly across complex related application domains",
+        "Maintains clean multi-tenant context delegation across distributed background asynchronous workloads",
+      ],
+      engineering: [
+        "Implements explicit ActiveSupport context storage bindings to handle isolated request-to-tenant thread mapping safely",
+        "Automates automatic ActiveRecord query scope injections while explicitly building protective bulk-write exception blocks",
+        "Integrates clean execution middleware configurations for ActiveJob and Sidekiq to ensure context persistence across queues",
+      ],
+    },
+    {
+      name: "rails-css_unused",
+      description:
+        "Performance-focused static analysis tool. Scans views, templates, and view components to locate and strip dead, unused CSS classes blocking your asset pipeline payload — ideal for refactoring large legacy codebases.",
+      url: "https://github.com/sghani001/rails-css_unused",
+      tech: ["Ruby", "Static Analysis", "Asset Pipeline"],
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=380&fit=crop",
+      metrics: [
+        "Optimizes build pipelines by isolating dead styling code blocks hiding in legacy structures",
+        "Scans wide asset maps to surface unused styling selectors without executing live application view layers",
+        "Reduces production asset compilation weights by highlighting redundant layout utility components",
+      ],
+      engineering: [
+        "Employs static parsing mechanics to map defined stylesheet CSS declarations against active HTML/ERB template files",
+        "Designed deep structural view tree traversals capable of parsing complex ViewComponent variations correctly",
+        "Constructed explicit false-positive protection logic to handle dynamically constructed CSS class name patterns cleanly",
+      ],
     },
   ],
 
   engineeringPractices: [
     "REST API design with explicit contracts and validation",
-    "Automated tests where they protect regressions (RSpec, Jest)",
+    "Automated tests where they protect regressions (RSpec)",
     "Git workflows with meaningful review and small diffs",
     "PostgreSQL tuning: indexes, scopes, and explain-driven fixes",
     "SOLID-friendly Rails objects — not god models",
@@ -298,6 +363,32 @@ const resumeData = {
       title: "Architecture",
       desc: "Extracted billing into a focused service with clear boundaries to the monolith.",
     },
+  ],
+  cachedStats: {
+    github: {
+      public_repos: 24,
+      followers: 16,
+      following: 25,
+      avatar_url: "https://avatars.githubusercontent.com/sghani001",
+    },
+    leetcode: {
+      solvedProblem: 35,
+      easySolved: 18,
+      mediumSolved: 12,
+      hardSolved: 5,
+      totalEasy: 946,
+      totalMedium: 2061,
+      totalHard: 936,
+      acceptanceRate: "74.6",
+      beatsPercentage: "50.2",
+      ranking: 3174284,
+    }
+  },
+  metrics: [
+    { value: "6", label: "SaaS products shipped", detail: "Ruby on Rails + React" },
+    { value: "4.1k+", label: "Gem downloads", detail: "Open-source Rails engines" },
+    { value: "15+", label: "Third-party integrations", detail: "Stripe, HubSpot, Moodle, Documenso" },
+    { value: "$800+", label: "Monthly cloud cost savings", detail: "Performance & architecture wins" },
   ],
 };
 
