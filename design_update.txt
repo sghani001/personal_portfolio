@@ -1,0 +1,100 @@
+# Design System Plan — syedghani.is-a.dev
+*Critique of reference site + our own design direction*
+
+---
+
+## 1. What to avoid (specific issues from reference screenshots)
+
+### Navigation bar
+- Fully pill-rounded floating capsule nav — generic SaaS-template look
+- Every nav item, the `⌘K` badge, and the CTA button all use the same rounded-pill treatment → no visual hierarchy, everything competes for attention equally
+- Active-state underline (cyan) is thin and disconnected from the rest of the design language
+
+**Fix:** flat, minimal nav — no floating capsule. Thin 1px bottom border on the whole bar, not per-item rounding. Active state = solid underline or a subtle left-aligned tick mark, not a colored text change alone. CTA button should be visually distinct (solid fill) while nav links stay text-only — creates real hierarchy instead of "5 buttons that all look equally important."
+
+### Containers / cards
+- Every single block — stack category boxes, individual node chips, the telemetry side panel — uses identical rounded-rectangle-with-1px-border styling
+- Result: no depth, no sense of what's a primary content block vs. a secondary UI chrome element
+- Corner radius appears to be one fixed value (~8-12px) applied everywhere with zero variation
+
+**Fix:** establish 2–3 distinct container types with different treatments:
+1. **Primary panels** (case study cards, philosophy block) — sharp/near-sharp corners (2-4px), slightly heavier border, subtle top-accent line instead of full border
+2. **Secondary chips** (tech nodes, tags) — small pill or tag-style, visually clearly "smaller weight" than primary panels
+3. **Data/telemetry blocks** — monospace, left-bordered (accent color, 2px) rather than fully boxed — reads more like a real terminal/log output than a UI card
+
+### Background particles
+- Random scattered dots read as decorative filler, not intentional
+- **Fix:** either remove entirely, or make it purposeful — e.g., a very faint grid (not dots) that reinforces the "console/schematic" feel, or dots only along diagram connector paths (functional, not ambient)
+
+### Color palette
+- Pure cyan-on-black is heavily saturated in AI-portfolio circles right now — reads as trend-chasing rather than distinctive
+- **Fix (ours):** graphite/near-black base (`#0B0D10` rather than pure `#000`), warm accent tied to Ruby/Rails identity — a muted brick-red/garnet (`#C0392B`–`#D64545` range), used sparingly as a signal color (status dots, active states, key numbers) rather than washing the whole UI in it. Secondary accent: warm off-white/parchment for headline text instead of pure white, for a slightly less "sterile SaaS" feel.
+
+### Diagram/node styling
+- Inconsistent box sizes, thin uniform gray lines, floating labels — reads as auto-generated flowchart, not designed
+- **Fix:** consistent node sizing per tier, connector lines with slight curve + varying weight (primary path thicker, secondary thinner), active/hovered node gets a soft glow + connected-line highlight rather than just a border color change
+
+---
+
+## 2. Our Design Direction: "Production Engineering Console"
+
+### Typography
+- **Headlines:** a grotesque sans with slight personality — Inter is fine but slightly overused; consider **Space Grotesk** or **General Sans** for headlines, paired with **JetBrains Mono** or **IBM Plex Mono** for all data/label/code elements
+- Clear type scale: hero headline very large (64–80px desktop), section headers medium (28–32px), body 16–18px, mono labels 12–13px uppercase tracked-out
+
+### Color System
+```
+Base background:     #0B0D10 (near-black graphite, not pure black)
+Surface (panels):    #14171C
+Border (default):    #23272E
+Border (accent):     #D64545 (garnet/brick — Ruby-adjacent)
+Text primary:        #F4F1EC (warm off-white)
+Text secondary:      #8A9099
+Text muted:          #5A5F66
+Accent (status/live):#3ECF8E (single green, used ONLY for "live/available" signals)
+Accent (highlight):  #D64545 (garnet — used for key numbers, active states, CTA)
+```
+Two accents only — garnet for identity/brand, green reserved exclusively for "live/status" indicators so it stays meaningful rather than decorative.
+
+### Nav Bar (rebuilt)
+- Flat bar, full-width, 1px bottom border (`#23272E`)
+- Logo/mark: `~/syed-ghani` in mono, left
+- Nav links: plain text, generous letter-spacing, active = 2px underline in garnet (not a rounded pill)
+- Right side: `⌘K` shown as plain mono text `[ ⌘K ]` with square brackets instead of a boxed badge — reads more "terminal," less "UI kit"
+- CTA: solid garnet-filled button, sharp corners (4px radius max) — the ONE rounded/filled element in the whole nav, so it actually stands out
+
+### Containers (three-tier system)
+1. **Primary content panels:** background `#14171C`, 1px border `#23272E`, 2–4px radius, thin top accent line (2px garnet) instead of full colored border
+2. **Tech/stack chips:** small mono-labeled tags, minimal padding, border-only (no fill) until hover, then fill with 10% garnet tint
+3. **Data/log blocks:** left-border accent (3px garnet or green depending on context), no full box, monospace, feels like real terminal output
+
+### Diagram System
+- Fixed node sizes per tier (e.g., all "service" nodes 140×48px, all "data store" nodes slightly larger)
+- Connector lines: 1.5px default, 2.5px + garnet glow on active/hover path, subtle bezier curves instead of straight/right-angle-only lines
+- Hover panel: slides in from the right with mono "spec sheet" styling — reuse tone but make copy feel like an internal doc, not marketing copy
+
+### Motion
+- Counters count up on scroll-into-view (Framer Motion `useInView`)
+- Diagram nodes: hover glow + connected-path highlight, 150ms ease
+- Section reveals: subtle fade + 8px translate-up, staggered by ~60ms per element — avoid heavy parallax/particle animation, keep it fast and purposeful (ties back to "reliable, not flashy" positioning)
+
+### Background treatment
+- Remove random particle dots
+- Replace with a very faint (3–5% opacity) fixed grid or dot-grid pattern, static, no animation — gives texture without looking decorative/AI-generated
+
+---
+
+## 3. Component Checklist for Build
+- [ ] Nav bar (flat, bordered, mono `⌘K`, solid CTA)
+- [ ] Hero with philosophy sub-headline + live stat strip (left-bordered log style, not boxed cards)
+- [ ] Architecture diagram (fixed node tiers, curved connectors, spec-sheet hover panel)
+- [ ] Case study cards (top-accent line, tag chips, STAR-format body)
+- [ ] Open Source gem cards (live download counter, code snippet block)
+- [ ] Timeline/log section (left-border mono entries)
+- [ ] Tech arsenal grid (chip-style, grouped, filterable)
+- [ ] Contact/footer (flat, mono, resume + plain-text ATS view)
+
+---
+
+## 4. One-line Design Ethos (for our own reference while building)
+*"Console, not dashboard. Every element earns its border — nothing is rounded just because it can be."*

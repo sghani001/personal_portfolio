@@ -1,0 +1,77 @@
+.metrics-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  padding: 1.25rem 1rem;
+  text-align: center;
+  animation-delay: calc(var(--stagger-i, 0) * 0.06s);
+}
+
+.metric-card__value {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--accent);
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1.1;
+}
+
+.metric-card__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+  line-height: 1.35;
+}
+
+.metric-card__detail {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.philosophy-quote {
+  position: relative;
+  padding: 2rem 2.25rem;
+  text-align: center;
+  border-left: 3px solid var(--accent);
+}
+
+.philosophy-quote__mark {
+  position: absolute;
+  top: 0.5rem;
+  left: 1.25rem;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.25;
+  font-family: Georgia, serif;
+}
+
+.philosophy-quote p {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.philosophy-quote__footer {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-style: normal;
+}

@@ -1,0 +1,151 @@
+# Portfolio Upgrade Plan — syedghani.is-a.dev
+
+**Reference site:** https://hassaan-ahmad.com/ (theme/structure inspiration only — stack, content, and projects are 100% ours)
+
+**Goal:** Match and exceed the presentation quality of the reference site while showcasing our own, arguably stronger, credentials: 6 shipped SaaS products, 4 published Ruby gems with 3,809+ real downloads, verifiable financial/infra impact, zero critical billing incidents.
+
+---
+
+## 0. Engineering Philosophy Statement (new — his strongest single element)
+
+He repeats one line across the site as an identity anchor:
+
+> "I don't just build APIs. I engineer systems that remain reliable, scalable, observable and maintainable."
+
+We need our own version of this — a single sentence that we repeat in the hero, in a pull-quote block mid-page, and possibly in the footer. It should reflect what actually makes our work distinct: **ownership of full systems end-to-end, not just features**, plus the fact that we've handled money (payments/billing) and multi-tenant data, where mistakes are unrecoverable.
+
+Draft options (pick/refine one):
+
+- *"I don't just ship features. I own systems — from schema to billing to production — where zero data loss isn't a goal, it's a requirement."*
+- *"Anyone can call an API. I build the multi-tenant systems, billing pipelines, and integrations that can't afford to be wrong."*
+- *"I build for the parts of a product that can't fail quietly — auth, billing, and data isolation."*
+- *"Not just full-stack. Full-ownership — from database schema to production billing to zero-downtime migration."*
+
+This line should appear:
+- In the hero as a sub-headline
+- As a standalone pull-quote block (his "Engineering Philosophy" section, section 05)
+- Possibly in the footer tagline
+
+---
+
+## 1. Theme & Visual Identity (ours, not his)
+
+| | His site | Ours |
+|---|---|---|
+| Theme | AI/infra telemetry dashboard | "Production Engineering Console" — ops/systems-operator aesthetic |
+| Accent color | Blue/teal (AWS/AI-adjacent) | Deep red/maroon (Ruby/Rails-adjacent) on graphite/navy base |
+| Identity | "Backend & AI Systems Engineer" | "Full-Stack Engineer — Rails, React, Payments & Multi-Tenant SaaS" |
+| Diagram subject | Agent/LLM request routing | CRM sync + billing migration flow |
+
+Keep his *structural* ideas (hub-and-spoke stack map, hover-to-inspect nodes, terminal motifs, section numbering `01 / 02 / 03`, command palette) — but reskinned with our color system, our language, our systems.
+
+---
+
+## 2. Section-by-Section Plan (mapped against his structure)
+
+### 01 — Hero
+- Availability badge: "Available immediately"
+- Headline: **Full-Stack Engineer** — building production SaaS that handles real money and real data
+- Sub-headline: our philosophy statement (see section 0)
+- Live "telemetry-style" strip — but using **real, verifiable numbers** instead of fake latency stats:
+  - `gem-downloads: 3,809`
+  - `saas-products: 6`
+  - `critical-incidents: 0`
+  - `infra-savings: $800+/mo`
+- CTAs: View Architecture / Explore Projects / Resume / GitHub / LinkedIn
+- `⌘K` command palette for quick nav
+
+### 02 — System Architecture (hub-and-spoke, our stack)
+Node groups (hover/click to inspect production role + deployment note, exactly like his pattern):
+- **Backend Core:** Ruby on Rails, ActiveRecord, Sidekiq, ActiveJob
+- **Frontend:** React.js, Redux Toolkit, React Query, TailwindCSS, Material UI
+- **Databases:** PostgreSQL, MySQL, Redis
+- **Payments:** Stripe, Paddle, Chargebee
+- **Integrations:** HubSpot, Salesforce, QuickBooks Online, Moodle, Documenso
+- **DevOps:** Docker, GitHub Actions, AWS (IAM, VPC, EC2, RDS, S3, CloudWatch), Heroku
+- **Security/Testing:** Devise, Pundit, RSpec, FactoryBot, rails-guarddog
+
+Example inspection panel (mirroring his Django panel):
+> **Sidekiq** — Production role: powers webhook processing, CRM sync jobs, and billing retry/DLQ handling across every product shipped. Deployment note: idempotent job design prevents duplicate CRM writes under retry storms.
+
+### 03 — Credentials & History
+Same terminal/log-styled timeline as his, our content:
+- **Blackstack Software Solutions** (Aug 2024 – May 2026) — sole engineer on CinnaLab PRM + 4 other products
+- **Apex Space** (Jun–Aug 2023) — internship
+- **Education:** BSc CS, UET Lahore — FYP: Urdu Signify (GANs/NLP, Urdu → Pakistan Sign Language)
+- Achievements / open-source contributions section (Hacktoberfest-equivalent: highlight actual gem publishing as an "achievement," since it's rarer and more credible than a training badge)
+
+### 04 — Selected Work (project case studies)
+Use his exact card pattern — status tag, tech stack pills, role, deploy context, "View Case Study" link:
+
+| # | Project | Status | Tags |
+|---|---|---|---|
+| 01 | CinnaLab PRM (AI-Powered PRM) | Production | Multi-tenant, CRM Sync, Billing Migration, Sole Engineer |
+| 02 | Intercollegiate Athletics Job Board | Production | 2,500+ Listings, Faceted Search, 40% Query Speedup |
+| 03 | Controllr / Monthend (Finance SaaS) | Production | QBO Sync, GAAP Job-Costing, Real-Time Ingestion |
+| 04 | Cross-Domain Form Bookmark Feature | Production | 90% Reduction in Manual Form-Filling |
+| 05 | Docyt Stripe Microservice | Production | PCI-Aligned, Idempotent Webhooks |
+
+Each gets a full case study page: **Problem → Role → Solution → Result** (STAR format), matching his "Case studies from production, not tutorials" framing.
+
+### 05 — Metrics That Hold Up
+Animated counters, our real numbers:
+- API/billing reliability: **0 critical incidents**
+- Query performance improvement: **40%**
+- Manual work eliminated: **90%** (form-filling), **$800+/mo** (infra costs)
+- Gem downloads: **3,809**
+- SaaS products shipped: **6**
+
+Pull-quote block directly beneath, in his exact "Engineering Philosophy" style — our line from Section 0.
+
+### 06 — Tech Arsenal (searchable/filterable stack list)
+Same filesystem-search UX pattern, grouped: Languages / Frameworks / Databases / Payments / Integrations / DevOps / Testing & Security.
+
+### 07 — Open Source Spotlight (**our version of his "AI Systems" section — this is our unique flex, not a copy**)
+Since we don't do agentic AI systems, this section replaces his "AI Systems" diagram with something he *can't* match: real published packages with live metrics.
+
+- Per-gem card: **rails-guarddog**, **rails-persona**, **rails-tenantify**, **rails-css_unused**
+- Live RubyGems.org download counters (API-fetched, not hardcoded)
+- One code snippet per gem showing clean API design
+- GitHub stars + RubyGems links
+- Diagram: how `rails-guarddog` scans a codebase (parse → detect → severity-tag → CI exit code) — a legitimate systems diagram, our own subject
+
+### 08 — GitHub Activity
+Same live GraphQL contribution heatmap technique — easy parity win.
+
+### 09 — Leadership & Ownership
+Reframe "leadership" around sole-ownership rather than team lead title (we haven't held that title yet, so be honest):
+- Sole Engineer on full product (CinnaLab PRM) — architecture, delivery, and ops ownership end-to-end
+- Cross-team coordination with CRM/billing vendors (HubSpot, Salesforce, Chargebee)
+- Open-source maintainer — triaging issues, versioning, publishing 4 public packages
+
+### 10 — Recommendations
+Request 1–2 real testimonials from Blackstack teammates/manager before launch if possible — genuinely the highest-trust section on his site and easy to replicate with a short ask.
+
+### Contact
+Terminal-styled contact block, resume PDF + plain-text/ATS-friendly version, direct mailto/LinkedIn/GitHub, "Available immediately" status.
+
+---
+
+## 3. Things We Deliberately Do NOT Copy
+- His AI/LangChain/agentic framing — not our stack, would be dishonest
+- His literal color scheme and copy
+- His specific project subjects — ours are real and different (PRM, fintech, ed-tech, athletics)
+- Overstated "Team Lead" language unless we've actually held that title
+
+## 4. Technical Build
+- **Stack:** Next.js (App Router) + TypeScript + Tailwind + Framer Motion
+- **Live data:** GitHub GraphQL API (contribution heatmap), RubyGems.org REST API (gem downloads) — fetched server-side, revalidated on interval
+- **Diagrams:** custom SVG/canvas, hover/click state, matching his interaction pattern but our systems (CRM sync, billing migration, gem scanner flow)
+- **Performance target:** Lighthouse 90+ across the board (mobile-first — recruiters click from LinkedIn on phone)
+- **Resume:** PDF download + plain-text ATS-friendly version on the same page
+- **Deploy:** Vercel, keep current domain
+
+## 5. Suggested Build Order
+1. Content/copy lock: philosophy statement, hero numbers, case study STAR write-ups
+2. Design system: colors, type, component shells (console/terminal aesthetic)
+3. Static sections first (hero, timeline, projects, tech arsenal)
+4. Live-data integrations (GitHub heatmap, RubyGems counters)
+5. Interactive diagrams (architecture map, gem-scanner flow)
+6. Recommendations + contact + resume
+7. Performance pass + mobile QA + Lighthouse audit

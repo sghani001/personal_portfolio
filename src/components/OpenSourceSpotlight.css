@@ -1,0 +1,150 @@
+.oss-spotlight {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.oss-spotlight__diagram {
+  padding: 1.25rem 1.5rem;
+}
+
+.oss-spotlight__diagram-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.oss-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.oss-flow__step {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-glow);
+}
+
+.oss-flow__step span {
+  color: var(--accent);
+  margin-right: 0.35rem;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.oss-flow__arrow {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.oss-spotlight__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.oss-gem {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.oss-gem__img-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+}
+
+.oss-gem__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.oss-gem__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.oss-gem__desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.oss-gem__downloads {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.oss-gem__dl-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.oss-gem__dl-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.oss-gem__snippet {
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.oss-gem__snippet code {
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.oss-gem__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.oss-gem__tech .skill-pill {
+  font-size: 0.65rem;
+}
+
+.oss-gem__links {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .oss-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .oss-flow__arrow {
+    text-align: center;
+    transform: rotate(90deg);
+  }
+}

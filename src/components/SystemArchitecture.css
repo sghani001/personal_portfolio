@@ -1,0 +1,139 @@
+.arch-map {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.arch-map__hub {
+  text-align: center;
+  padding: 2rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.arch-map__hub-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.arch-map__hub-name {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.arch-map__hub-sub {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-top: 0.35rem;
+}
+
+.arch-map__spokes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.arch-spoke__group {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.arch-spoke--active .arch-spoke__group {
+  border-color: var(--spoke-color, var(--accent));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--spoke-color, var(--accent)) 30%, transparent);
+}
+
+.arch-spoke__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--spoke-color, var(--accent));
+  flex-shrink: 0;
+}
+
+.arch-spoke__nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding-left: 0.25rem;
+}
+
+.arch-node {
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.arch-node:hover,
+.arch-node--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.arch-inspect {
+  padding: 1.25rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.arch-inspect__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.arch-inspect__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.arch-inspect__close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+
+.arch-inspect__body p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+
+.arch-inspect__body strong {
+  color: var(--text-primary);
+}

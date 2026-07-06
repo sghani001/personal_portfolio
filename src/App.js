@@ -95,7 +95,7 @@ function App() {
     <>
       <GlassNav theme={theme} toggleTheme={toggleTheme} />
       <main className="fullpage-scroll">
-        <Hero />
+        <Hero theme={theme} toggleTheme={toggleTheme} />
 
         {/* SECTION 1: ABOUT */}
         <Section id="about" title="About Me" subtitle="Brief" fullPage>

@@ -78,16 +78,117 @@
   margin-bottom: 0.75rem;
 }
 
+.hero__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--success);
+  margin-bottom: 1rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.hero__availability-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .hero__name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.hero__name-role {
   font-size: clamp(2.35rem, 4.8vw, 3.25rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.08;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(120deg, #f4f6ff 0%, #ccfbf1 40%, #5eead4 95%);
+  background: linear-gradient(120deg, #f4f6ff 0%, #f5b7b1 45%, #c0392b 95%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.hero__name-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.hero__philosophy {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 36rem;
+  margin-bottom: 1.25rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--accent);
+}
+
+.hero__telemetry {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+
+.hero__telemetry-item {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.hero__telemetry-item:nth-child(odd) {
+  border-right: 1px solid var(--glass-border);
+}
+
+.hero__telemetry-key {
+  color: var(--text-muted);
+}
+
+.hero__telemetry-value {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hero__cmd-hint {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.hero__cmd-hint kbd {
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  font-family: inherit;
+  font-size: 0.72rem;
 }
 
 .hero__typewriter {
@@ -213,7 +314,7 @@
 .hero__btn--primary {
   color: #fff;
   background: var(--accent);
-  box-shadow: 0 12px 40px rgba(20, 184, 166, 0.3);
+  box-shadow: 0 12px 40px rgba(192, 57, 43, 0.3);
 }
 
 .hero__btn--primary:hover {
@@ -330,6 +431,78 @@
 .hero__visual {
   position: relative;
   width: 100%;
+}
+
+.hero__command-shell {
+  margin-top: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 1rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  color: #e5e7eb;
+  min-height: 180px;
+  display: grid;
+  gap: 0.75rem;
+}
+
+[data-theme="light"] .hero__command-shell {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.hero__command-header {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(148, 163, 184, 1);
+}
+
+.hero__command-output {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 120px;
+  padding-right: 0.25rem;
+  font-size: 0.88rem;
+}
+
+.hero__command-line {
+  line-height: 1.5;
+}
+
+.hero__command-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .hero__command-form {
+  border-top-color: rgba(15, 23, 42, 0.08);
+}
+
+.hero__command-prompt {
+  color: #34d399;
+}
+
+.hero__command-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+  min-width: 0;
+}
+
+.hero__command-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .hero__command-input::placeholder {
+  color: rgba(17, 24, 39, 0.55);
 }
 
 .hero__scroll-hint {

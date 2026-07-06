@@ -1,6 +1,17 @@
-import React, { useCallback, memo } from "react";
+import React, { useCallback, memo, useState, useMemo } from "react";
 import resumeData from "../utils/resumeData";
 import "./Hero.css";
+
+const COMMANDS = [
+  { id: "help", label: "help", description: "List available resume commands" },
+  { id: "about", label: "about", description: "Open the About section" },
+  { id: "experience", label: "experience", description: "Open the Experience section" },
+  { id: "projects", label: "projects", description: "Open the Projects section" },
+  { id: "skills", label: "skills", description: "Open the Skills section" },
+  { id: "contact", label: "contact", description: "Open the Contact section" },
+  { id: "theme", label: "theme", description: "Toggle light/dark theme" },
+  { id: "clear", label: "clear", description: "Reset the command output" },
+];
 
 /**
  * HeroVisual — Sleek code editor mockup showcasing Syed's tech profile.
@@ -20,25 +31,25 @@ const HeroVisual = memo(function HeroVisual() {
           <span className="editor-file">ghani.rb</span>
         </div>
         
-        {/* Code Content */}
+{/* Code Content */}
         <div className="editor-body">
           <pre className="code-block">
             <code>
-<span className="code-keyword">class</span> <span className="code-class">Developer</span>
-  attr_reader <span className="code-symbol">:name</span>, <span className="code-symbol">:stack</span>
-
-  <span className="code-keyword">def</span> <span className="code-method">initialize</span>
-    <span className="code-variable">@name</span>  = <span className="code-string">"Syed Ghani"</span>
-    <span className="code-variable">@stack</span> = [<span className="code-string">"Rails"</span>, <span className="code-string">"React"</span>, <span className="code-string">"PostgreSQL"</span>]
-  <span className="code-keyword">end</span>
-
-  <span className="code-keyword">def</span> <span className="code-method">build_saas</span>(<span className="code-variable">client</span>)
-    puts <span className="code-string">"Designing secure APIs..."</span>
-    <span className="code-variable">client</span>.integrate_stripe!
-    <span className="code-variable">client</span>.sync_hubspot!
-    <span className="code-variable">client</span>.deploy_features!
-  <span className="code-keyword">end</span>
-<span className="code-keyword">end</span>
+              <span className="code-keyword">class</span> <span className="code-class">Developer</span>{'\n'}
+              {'\u00A0\u00A0'}attr_reader <span className="code-symbol">:name</span>, <span className="code-symbol">:stack</span>{'\n'}
+              {'\n'}
+              {'\u00A0\u00A0'}<span className="code-keyword">def</span> <span className="code-method">initialize</span>{'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}<span className="code-variable">@name</span>  = <span className="code-string">"Syed Ghani"</span>{'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}<span className="code-variable">@stack</span> = [<span className="code-string">"Rails"</span>, <span className="code-string">"React"</span>, <span className="code-string">"PostgreSQL"</span>]{'\n'}
+              {'\u00A0\u00A0'}<span className="code-keyword">end</span>{'\n'}
+              {'\n'}
+              {'\u00A0\u00A0'}<span className="code-keyword">def</span> <span className="code-method">build_saas</span>(<span className="code-variable">client</span>){'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}puts <span className="code-string">"Designing secure APIs..."</span>{'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}<span className="code-variable">client</span>.integrate_stripe!{'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}<span className="code-variable">client</span>.sync_hubspot!{'\n'}
+              {'\u00A0\u00A0\u00A0\u00A0'}<span className="code-variable">client</span>.deploy_features!{'\n'}
+              {'\u00A0\u00A0'}<span className="code-keyword">end</span>{'\n'}
+              <span className="code-keyword">end</span>
             </code>
           </pre>
         </div>
@@ -47,8 +58,12 @@ const HeroVisual = memo(function HeroVisual() {
   );
 });
 
-export default function Hero() {
+export default function Hero({ theme, toggleTheme }) {
   const heroRef = React.useRef(null);
+  const [commandInput, setCommandInput] = useState("");
+  const [commandOutput, setCommandOutput] = useState([
+    "Type 'help' to see available commands.",
+  ]);
 
   const handleMouseMove = useCallback((e) => {
     if (!heroRef.current) return;
@@ -62,12 +77,69 @@ export default function Hero() {
 
   const scrollTo = useCallback(
     (id) => (e) => {
-      e.preventDefault();
+      e?.preventDefault();
       window.history.pushState(null, "", `#${id}`);
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     },
     []
   );
+
+  const commandsById = useMemo(
+    () => COMMANDS.reduce((map, item) => ({ ...map, [item.id]: item }), {}),
+    []
+  );
+
+  const executeCommand = (command) => {
+    const normalized = command.trim().toLowerCase();
+
+    if (!normalized) {
+      setCommandOutput((prev) => [...prev, "Please enter a command."]);
+      return;
+    }
+
+    if (normalized === "help") {
+      setCommandOutput((prev) => [
+        ...prev,
+        "Available commands:",
+        ...COMMANDS.map((item) => `- ${item.label}: ${item.description}`),
+      ]);
+      return;
+    }
+
+    if (normalized === "clear") {
+      setCommandOutput(["Command output cleared."]);
+      return;
+    }
+
+    const commandItem = commandsById[normalized];
+    if (commandItem) {
+      setCommandOutput((prev) => [...prev, `> ${normalized}`]);
+      switch (normalized) {
+        case "about":
+        case "experience":
+        case "projects":
+        case "skills":
+        case "contact":
+          scrollTo(normalized)();
+          setCommandOutput((prev) => [...prev, `Navigating to ${normalized}...`]);
+          break;
+        case "theme":
+          toggleTheme();
+          setCommandOutput((prev) => [...prev, `Theme toggled to ${theme === "dark" ? "light" : "dark"}.`]);
+          break;
+        default:
+          setCommandOutput((prev) => [...prev, `Command '${normalized}' executed.`]);
+      }
+    } else {
+      setCommandOutput((prev) => [...prev, `Unknown command: '${command}'. Type 'help' for options.`]);
+    }
+  };
+
+  const handleCommandSubmit = (e) => {
+    e.preventDefault();
+    executeCommand(commandInput);
+    setCommandInput("");
+  };
 
   return (
     <section
@@ -105,6 +177,24 @@ export default function Hero() {
                 style={{ height: "26px", borderRadius: "5px" }} 
               />
             </a>
+          </div>
+          <div className="hero__command-shell">
+            <div className="hero__command-header">resume-cli</div>
+            <div className="hero__command-output" aria-live="polite">
+              {commandOutput.map((line, i) => (
+                <div key={i} className="hero__command-line">{line}</div>
+              ))}
+            </div>
+            <form className="hero__command-form" onSubmit={handleCommandSubmit}>
+              <span className="hero__command-prompt">$</span>
+              <input
+                value={commandInput}
+                onChange={(e) => setCommandInput(e.target.value)}
+                className="hero__command-input"
+                placeholder="Type a command, then press Enter"
+                autoComplete="off"
+              />
+            </form>
           </div>
           <ul className="hero__bullets">
             {(resumeData.heroBullets || []).map((line) => (
