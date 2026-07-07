@@ -178,24 +178,6 @@ export default function Hero({ theme, toggleTheme }) {
               />
             </a>
           </div>
-          <div className="hero__command-shell">
-            <div className="hero__command-header">resume-cli</div>
-            <div className="hero__command-output" aria-live="polite">
-              {commandOutput.map((line, i) => (
-                <div key={i} className="hero__command-line">{line}</div>
-              ))}
-            </div>
-            <form className="hero__command-form" onSubmit={handleCommandSubmit}>
-              <span className="hero__command-prompt">$</span>
-              <input
-                value={commandInput}
-                onChange={(e) => setCommandInput(e.target.value)}
-                className="hero__command-input"
-                placeholder="Type a command, then press Enter"
-                autoComplete="off"
-              />
-            </form>
-          </div>
           <ul className="hero__bullets">
             {(resumeData.heroBullets || []).map((line) => (
               <li key={line}>{line}</li>
