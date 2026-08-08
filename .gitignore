@@ -13,7 +13,9 @@
 
 # misc
 .DS_Store
+.env
 .env.local
+deploy-details.local.md
 .env.development.local
 .env.test.local
 .env.production.local
