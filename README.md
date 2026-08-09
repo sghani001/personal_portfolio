@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:121827,50:2F2B64,100:7C5EFF&height=200&section=header&text=Personal%20Portfolio&fontSize=48&fontColor=ffffff&fontAlignY=38&desc=Syed%20Ghani%20%C2%B7%20Full-Stack%20Engineer&descSize=18&descAlignY=58&descColor=7C5EFF" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:121316,40:1C1917,80:926839,100:D4A373&height=200&section=header&text=Personal%20Portfolio&fontSize=48&fontColor=FAF8F5&fontAlignY=38&desc=Syed%20Ghani%20%C2%B7%20Full-Stack%20Engineer&descSize=18&descAlignY=58&descColor=D4A373" width="100%" />
 
 <br/>
 
@@ -56,4 +56,4 @@ If you're looking for a versatile software engineer who can write clean domains,
 
 ---
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:7C5EFF,50:2F2B64,100:121827&height=120&section=footer&fontSize=1" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:121316,40:1C1917,80:926839,100:D4A373&height=120&section=footer&fontSize=1" width="100%" />
