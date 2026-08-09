@@ -267,7 +267,6 @@ const resumeData = {
     ],
     testingAndDevOps: [
       { name: "RSpec" },
-      { name: "Jest" },
       { name: "FactoryBot" },
       { name: "GitHub Actions CI/CD" },
       { name: "AWS", detail: ["IAM", "VPC", "EC2", "RDS", "S3", "CloudWatch"] },
@@ -284,7 +283,6 @@ const resumeData = {
     ],
     also: [
       { name: "Python" },
-      { name: "Node.js" },
       { name: "Microservices" },
       { name: "Third-party API design" },
       { name: "Agile/Scrum" },

@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import C from "../../theme";
 
 export default function SkillPill({ skill, dashed = false }) {
   const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
   const hasDetail = skill.detail && skill.detail.length > 0;
 
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
+    <div ref={wrapperRef} style={{ position: "relative", display: "inline-block" }}>
       <button
         onClick={() => hasDetail && setOpen(!open)}
         style={{
