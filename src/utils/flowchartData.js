@@ -13,7 +13,7 @@ export const FLOW_CORE = {
   items: [
     {
       id: "rails7",
-      name: "Ruby on Rails 7",
+      name: "Ruby on Rails 6/7/8",
       nodeClass: "Application Core",
       role: "Multi-tenant SaaS backbone — REST APIs, ActiveRecord, service objects, and subdomain routing.",
       deploymentNote: "Production PRM platform (CinnaLab) runs entirely on Rails 7 with zero critical incidents since launch.",
