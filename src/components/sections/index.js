@@ -1,0 +1,14 @@
+export { HeroSection } from "./HeroSection";
+export { MetricsSection } from "./MetricsSection";
+export { RailsShowcaseSection } from "./RailsShowcaseSection";
+export { CaseStudiesSection } from "./CaseStudiesSection";
+export { GemsSection } from "./GemsSection";
+export { GitHubSection } from "./GitHubSection";
+export { ProjectsSection } from "./ProjectsSection";
+export { SkillsSection } from "./SkillsSection";
+export { ProcessSection } from "./ProcessSection";
+export { TechStackSection } from "./TechStackSection";
+export { ExperienceSection } from "./ExperienceSection";
+export { TestimonialsSection } from "./TestimonialsSection";
+export { AboutSection } from "./AboutSection";
+export { ContactSection } from "./ContactSection";

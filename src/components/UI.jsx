@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useSectionInView from "../hooks/useSectionInView";
 import C from "../theme";
+import IconForTech from "./Icons";
 
 export function FadeUp({ children, delay = 0, className = "" }) {
   const [ref, inView] = useSectionInView();
@@ -62,7 +63,7 @@ export function SkillPill({ skill, dashed = false }) {
           color: dashed ? C.secondary : C.primary,
           display: "inline-flex",
           alignItems: "center",
-          gap: 5,
+          gap: 7,
           transition: "border-color 0.2s, color 0.2s",
           whiteSpace: "nowrap",
         }}
@@ -75,7 +76,8 @@ export function SkillPill({ skill, dashed = false }) {
           e.currentTarget.style.color = dashed ? C.secondary : C.primary;
         }}
       >
-        {skill.name}
+        <IconForTech name={skill.name} size={14} colored={true} />
+        <span>{skill.name}</span>
         {hasDetail && (
           <span
             style={{

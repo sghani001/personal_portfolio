@@ -40,11 +40,11 @@ const resumeData = {
     "6 SaaS Products Shipped",
     "Sole Engineer on a Production PRM",
     "4 Published Rails Gems",
-    "5,993 Gem Downloads",
+    "Gem Downloads (live from RubyGems)",
   ],
 
   summary:
-    "Full-stack engineer focused on Ruby on Rails and React who has shipped and owned a production SaaS platform end-to-end — not just contributed to one. As sole engineer on CinnaLab PRM, built the entire system from zero to production in 8 months: multi-tenant React/Rails architecture, bi-directional HubSpot/Salesforce CRM sync, a zero-data-loss Paddle-to-Chargebee billing migration, and a Devise + Pundit RBAC system with ActionCable-powered real-time notifications — running with zero critical incidents since launch. Across 6 SaaS products in AI/PRM, fintech, ed-tech, and college athletics, the pattern repeats: given ambiguous scope, ships working production systems, not prototypes — entirely async where needed, with 100% on-time sprint delivery. Also maintains 4 open-source Rails gems with 5,993 combined downloads. Following a company-wide downsizing at Blackstack (May 2026, not performance-related), has used the interim to deepen Docker, AWS, and background-job expertise, and to learn Django.",
+    "Full-stack engineer focused on Ruby on Rails and React who has shipped and owned a production SaaS platform end-to-end — not just contributed to one. As sole engineer on CinnaLab PRM, built the entire system from zero to production in 8 months: multi-tenant React/Rails architecture, bi-directional HubSpot/Salesforce CRM sync, a zero-data-loss Paddle-to-Chargebee billing migration, and a Devise + Pundit RBAC system with ActionCable-powered real-time notifications — running with zero critical incidents since launch. Across 6 SaaS products in AI/PRM, fintech, ed-tech, and college athletics, the pattern repeats: given ambiguous scope, ships working production systems, not prototypes — entirely async where needed, with 100% on-time sprint delivery. Also maintains 4 open-source Rails gems with {GEM_DOWNLOADS} combined downloads. Following a company-wide downsizing at Blackstack (May 2026, not performance-related), has used the interim to deepen Docker, AWS, and background-job expertise, and to learn Django.",
 
   aboutExtra:
     "I care about clear boundaries between domains, tests that earn their keep (RSpec / Jest), and integrations that survive real traffic. Comfortable owning a slice of the stack from migration to deploy — or the whole thing, solo, from architecture to launch.",

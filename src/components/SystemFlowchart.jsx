@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
-import IconForTech from "./Icons";
+import IconForTech, { getTechColor } from "./Icons";
+import C from "../theme";
 import {
   FLOW_CORE,
   FLOW_CLUSTERS,
-  FLOW_EDGES,
   getFlowItem,
 } from "../utils/flowchartData";
 
@@ -25,7 +25,7 @@ function getCoreEdgePoint(core, side, t) {
   return { x: core.left + t * (core.right - core.left), y: core.bottom }; // bottom
 }
 
-export default function SystemFlowchart({ C }) {
+export default function SystemFlowchart() {
   const [selectedId, setSelectedId] = useState(FLOW_CORE.items[0].id);
   const [activeCluster, setActiveCluster] = useState(null);
   const [hoveredId, setHoveredId] = useState(null);
@@ -52,8 +52,6 @@ export default function SystemFlowchart({ C }) {
   const clusterRefs = useRef({});
   const coreRef = useRef(null);
   const [canvasSize, setCanvasSize] = useState({ w: 1000, h: 600 });
-  // Each entry now stores a distinct {from, to} pair per cluster instead of a
-  // single shared anchor + shared core center.
   const [edgePaths, setEdgePaths] = useState({});
 
   const measure = () => {
@@ -88,7 +86,6 @@ export default function SystemFlowchart({ C }) {
       const { side, t } = CORE_SIDE_MAP[cluster.id] || { side: "left", t: 0.5 };
       const to = getCoreEdgePoint(core, side, t);
 
-      // Anchor point on the cluster's own box, on the edge nearest to `to`.
       const vx = to.x - cx;
       const vy = to.y - cy;
       const pad = 6;
@@ -98,16 +95,10 @@ export default function SystemFlowchart({ C }) {
       const absVy = Math.abs(vy);
       if (absVx > absVy) {
         ax = vx > 0 ? right + pad : left - pad;
-        ay = cy + ((ax - cx) * vy / (vx || 1));
       } else {
         ay = vy > 0 ? bottom + pad : top - pad;
-        ax = cx + ((ay - cy) * vx / (vy || 1));
       }
-      // Clamp the anchor so it doesn't wander outside the box's own edge span.
-      ay = Math.min(Math.max(ay, top), bottom);
-      ax = Math.min(Math.max(ax, left), right);
-
-      newPaths[cluster.id] = { from: { x: Math.round(ax), y: Math.round(ay) }, to, side };
+      newPaths[cluster.id] = { from: { x: ax, y: ay }, to };
     });
 
     setCanvasSize({ w, h });
@@ -116,31 +107,25 @@ export default function SystemFlowchart({ C }) {
 
   useLayoutEffect(() => {
     measure();
-    const id = window.setTimeout(measure, 200);
-    return () => window.clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const onResize = () => requestAnimationFrame(measure);
+    const onResize = () => measure();
     window.addEventListener("resize", onResize);
-    const ro = new ResizeObserver(() => requestAnimationFrame(measure));
+    const ro = new ResizeObserver(onResize);
     if (canvasRef.current) ro.observe(canvasRef.current);
-    Object.values(clusterRefs.current).forEach(el => el && ro.observe(el));
     if (coreRef.current) ro.observe(coreRef.current);
     return () => {
       window.removeEventListener("resize", onResize);
       ro.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const mobile = canvasSize.w < 720;
 
-  const iconGlyphColor = (on) => (on ? GOLD : C.primary);
-
   const IconUnit = ({ item, size, iconSize, innerSize, glow }) => {
     const on = selectedId === item.id;
+    const brandColor = getTechColor(item.name);
     return (
       <div
         onMouseEnter={() => setHoveredId(item.id)}
@@ -155,17 +140,17 @@ export default function SystemFlowchart({ C }) {
             height: size,
             padding: 0,
             borderRadius: Math.round(size * 0.28),
-            border: `1px solid ${on ? GOLD : C.border}`,
-            background: on ? "rgba(226,199,153,0.14)" : C.surface,
-            boxShadow: on && glow ? `0 0 16px ${GOLD_GLOW}` : "none",
-            color: iconGlyphColor(on),
+            border: `1px solid ${on ? GOLD : `${brandColor}40`}`,
+            background: on ? `${GOLD}1E` : `${brandColor}0F`,
+            boxShadow: on && glow ? `0 0 16px ${GOLD_GLOW}` : on ? `0 0 14px ${brandColor}40` : "none",
             display: "grid",
             placeItems: "center",
             cursor: "pointer",
+            transition: "all 0.2s ease",
           }}
         >
-          <div style={{ width: innerSize, height: innerSize, borderRadius: Math.round(innerSize * 0.3), display: "grid", placeItems: "center", background: C.bg, border: `1px solid ${C.border}`, color: iconGlyphColor(on) }}>
-            <IconForTech name={item.name} size={iconSize} />
+          <div style={{ width: innerSize, height: innerSize, borderRadius: Math.round(innerSize * 0.3), display: "grid", placeItems: "center", background: C.bg, border: `1px solid ${brandColor}30` }}>
+            <IconForTech name={item.name} size={iconSize} colored={true} />
           </div>
         </button>
         <span style={{ fontSize: 10.5, fontWeight: 700, textAlign: "center", lineHeight: 1.2, color: on ? GOLD : C.primary }}>
@@ -283,10 +268,13 @@ export default function SystemFlowchart({ C }) {
                 const { from, to, side } = p;
                 const active = activeCluster === cluster.id || cluster.items.some(i => i.id === selectedId);
 
+                  const midX = from.x + (to.x - from.x) * 0.5;
                 const path =
-                  side === "bottom"
-                    ? `M ${from.x} ${from.y} C ${from.x} ${(from.y + to.y) / 2}, ${to.x} ${(from.y + to.y) / 2}, ${to.x} ${to.y}`
-                    : `M ${from.x} ${from.y} C ${(from.x + to.x) / 2} ${from.y}, ${(from.x + to.x) / 2} ${to.y}, ${to.x} ${to.y}`;
+                  from.x === to.x
+                    ? `M ${from.x} ${from.y} L ${to.x} ${to.y}`
+                    : from.y === to.y
+                    ? `M ${from.x} ${from.y} L ${to.x} ${to.y}`
+                    : `M ${from.x} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${to.x} ${to.y}`;
 
                 return (
                   <path
@@ -415,9 +403,26 @@ export default function SystemFlowchart({ C }) {
           );
         })()}
 
-        <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 22, fontWeight: 700, color: C.primary, margin: "0 0 12px", lineHeight: 1.1 }}>
-          {selected.name}
-        </h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "0 0 12px" }}>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 10,
+              flexShrink: 0,
+              background: `${getTechColor(selected.name)}18`,
+              border: `1px solid ${getTechColor(selected.name)}40`,
+              display: "grid",
+              placeItems: "center",
+              boxShadow: `0 4px 12px ${getTechColor(selected.name)}20`,
+            }}
+          >
+            <IconForTech name={selected.name} size={22} colored={true} />
+          </div>
+          <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 20, fontWeight: 700, color: C.primary, margin: 0, lineHeight: 1.1 }}>
+            {selected.name}
+          </h3>
+        </div>
 
         <p style={{ fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: C.secondary, margin: "0 0 6px", letterSpacing: "0.08em" }}>
           PRODUCTION ROLE
