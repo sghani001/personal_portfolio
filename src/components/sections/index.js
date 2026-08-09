@@ -12,3 +12,4 @@ export { ExperienceSection } from "./ExperienceSection";
 export { TestimonialsSection } from "./TestimonialsSection";
 export { AboutSection } from "./AboutSection";
 export { ContactSection } from "./ContactSection";
+export { TypewriterText } from "./TypewriterText";

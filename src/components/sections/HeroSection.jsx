@@ -4,6 +4,7 @@ import C from "../../theme";
 import { useGemStatsContext } from "../../context/GemStatsContext";
 import { IconArrow } from "../Icons";
 import { heroStats } from "../../data/sectionsData";
+import { TypewriterText } from "./TypewriterText";
 
 export function HeroSection() {
   const { displayTotal, isLive } = useGemStatsContext();
@@ -79,16 +80,32 @@ export function HeroSection() {
                 lineHeight: 1.06,
                 letterSpacing: "0.02em",
                 textTransform: "uppercase",
-                marginBottom: 24,
+                marginBottom: 18,
               }}
             >
-              Full-stack{' '}
+              I help SaaS{' '}
               <span style={{ color: C.primary, position: "relative", display: "inline-block" }}>
-                Ruby on Rails
+               founders ship Websites
                 <span style={{ position: "absolute", bottom: -3, left: 0, right: 0, height: 1, borderBottom: `1px dotted ${C.border}`, opacity: 0.6 }} />
               </span>{' '}
-              & React engineer.
+              & Production features.
             </h1>
+
+            {/* Typewriter line — cycles through resumeData.titles: types one role
+                title out, pauses, deletes it, moves to the next, loops forever. */}
+            <div
+              style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 17,
+                fontWeight: 600,
+                color: C.copper,
+                minHeight: 26,
+                marginBottom: 22,
+              }}
+            >
+              <span style={{ color: C.secondary, marginRight: 8 }}>{'>'}</span>
+              <TypewriterText words={resumeData.titles} />
+            </div>
 
             <p style={{ fontSize: 17, color: C.secondary, lineHeight: 1.75, marginBottom: 12, maxWidth: 560 }}>
               2+ years shipping real production software across 6 SaaS products. Sole engineer on CinnaLab PRM — from architecture to CRM integrations to billing migration.
