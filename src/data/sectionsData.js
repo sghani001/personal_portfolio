@@ -37,6 +37,4 @@ export const processSteps = [
 export const socialLinks = [
   { label: "LinkedIn", url: resumeData.linkedinUrl, type: "linkedin", color: "#0A66C2", display: "LinkedIn" },
   { label: "GitHub", url: resumeData.githubUrl, type: "github", color: "#E6EDF3", display: "GitHub" },
-  { label: "WhatsApp", url: "https://wa.me/923090204019", type: "whatsapp", color: "#25D366", display: "WhatsApp (+92 309 020 4019)" },
-  { label: "Phone", url: "tel:+923090204019", type: "phone", color: "#4CAF50", display: "+92 309 020 4019" },
 ];

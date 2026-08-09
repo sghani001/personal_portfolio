@@ -107,7 +107,7 @@ export function ContactSection() {
               <p style={{ color: C.secondary, fontSize: 13, margin: 0 }}>Async-first. EU/US schedule overlap available.</p>
             </div>
             <div>
-              <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.18em", color: C.secondary, marginBottom: 12 }}>Connect & Profiles</p>
+              <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.18em", color: C.secondary, marginBottom: 12 }}>Profiles</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {socialLinks.map((link) => {
                   const brandColor = getTechColor(link.type);

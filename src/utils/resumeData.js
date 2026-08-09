@@ -340,28 +340,46 @@ const resumeData = {
   // ── Testimonials (3 total) ────────────────────────────────────────────────
   testimonials: [
     {
+      quote: "I had the pleasure of working with Ghani and truly appreciated his dedication and commitment towards his work. Beyond his strong technical skills, he is approachable, responsible, and genuinely easy to work with. He takes ownership of his responsibilities, communicates well with the team and can always be relied upon to get the job done. \n \n I would highly recommend Ghani to any engineering team looking for a responsible, punctual, and reliable professional. It was a great experience working alongside him and I’m confident he will be a valuable addition to any team.",
+      author: "Eisha Qamar",
+      title: "Software Engineer | LGU’24 | BSSE | MERN | JavaScript | Web development — LinkedIn recommendation, Aug 2026",
+      url: "https://www.linkedin.com/in/eishaqamar/",
+      type: "profile",
+    },
+    {
+      quote: "It was a pleasure working with Ghani. He is a great team member with excellent problem-solving and communication skills. He is always friendly, approachable, and supportive of his colleagues. Ghani consistently demonstrates a positive attitude and a strong willingness to help the team whenever needed. His dedication, teamwork, and professionalism make him a valuable asset to the organization. I truly enjoyed working with him and wish him continued success in his future endeavors.",
+      author: "Muhammad Abdullah Faran",
+      title: "Software Engineer | ROR | MERN | Typescript — LinkedIn recommendation, Aug 2026",
+      url: "https://www.linkedin.com/in/muhammad-abdullah-faran-28b4951b1/",
+      type: "profile",
+    },
+    {
       quote: "I had the pleasure of working with Ghani and have always appreciated his dedication and approach to development. He is a skilled Ruby on Rails developer with a strong understanding of backend development and a good problem-solving mindset. Beyond his technical skills, Ghani is a reliable and supportive teammate who is easy to work with. I would definitely recommend him to any team looking for a talented and motivated Ruby on Rails developer.",
       author: "Rabiya Nadeem",
       title: "Software Engineer | MERN Stack & React Native — LinkedIn recommendation, Aug 2026",
       url: "https://www.linkedin.com/in/rabiya-nadeem22/",
+      type: "profile",
     },
     {
       quote: "One of the most proactive and technically skilled engineers I've managed. As a Full-Stack Engineer, Ghani took full ownership of critical products, including building complex backend architectures and modern frontend interfaces from scratch. His ability to handle background job processing, API integrations, and database optimization made him an invaluable asset to our engineering workflows. Beyond his core technical execution, his passion for open-source development and clean code consistently raised the standard for our team. A high-impact, reliable developer who learns fast and ships quality software.",
       author: "Muhammad Ali Subhani",
       title: "Software Engineer @ ForeFastSolutions · ex-Blackstack · Syed's mentor and manager — LinkedIn recommendation, Aug 2026",
-      url: null,
+      url: "https://www.linkedin.com/in/alisubhani/",
+      type: "profile",
     },
     {
       quote: "Ghani has proven himself to be a phenomenal asset to the company, taking full ownership of his responsibilities and going above and beyond to support his team. His dedication and punctuality truly make a difference in our office.",
       author: "Blackstack Software Solutions",
       title: "Performance bonus & appreciation — 2025",
       url: "https://www.linkedin.com/posts/blackstack-software-solutions_workculture-employeeappreciation-employeecelebration-activity-7396172400092053504-Ci2f",
+      type: "post",
     },
     {
       quote: "Your dedication, respect towards your seniors, and support for your juniors truly sets you apart. You've been a great team member, bringing positive energy that reflects beautifully in our workplace culture. A true technical wizard.",
       author: "Blackstack Software Solutions",
       title: "First work anniversary spotlight",
       url: "https://www.linkedin.com/posts/blackstack-software-solutions_workanniversary-milestone-firstworkanniversary-activity-7356977157857849344-X7fF",
+      type: "post",
     },
   ],
 
