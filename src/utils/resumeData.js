@@ -340,10 +340,10 @@ const resumeData = {
   // ── Testimonials (3 total) ────────────────────────────────────────────────
   testimonials: [
     {
-      quote: "I had the pleasure of working with Ghani and truly appreciated his dedication and commitment towards his work. Beyond his strong technical skills, he is approachable, responsible, and genuinely easy to work with. He takes ownership of his responsibilities, communicates well with the team and can always be relied upon to get the job done. \n \n I would highly recommend Ghani to any engineering team looking for a responsible, punctual, and reliable professional. It was a great experience working alongside him and I’m confident he will be a valuable addition to any team.",
-      author: "Eisha Qamar",
-      title: "Software Engineer | LGU’24 | BSSE | MERN | JavaScript | Web development — LinkedIn recommendation, Aug 2026",
-      url: "https://www.linkedin.com/in/eishaqamar/",
+      quote: "One of the most proactive and technically skilled engineers I've managed. As a Full-Stack Engineer, Ghani took full ownership of critical products, including building complex backend architectures and modern frontend interfaces from scratch. His ability to handle background job processing, API integrations, and database optimization made him an invaluable asset to our engineering workflows. Beyond his core technical execution, his passion for open-source development and clean code consistently raised the standard for our team. A high-impact, reliable developer who learns fast and ships quality software.",
+      author: "Muhammad Ali Subhani",
+      title: "Software Engineer @ ForeFastSolutions · ex-Blackstack · Syed's mentor and manager — LinkedIn recommendation, Aug 2026",
+      url: "https://www.linkedin.com/in/alisubhani/",
       type: "profile",
     },
     {
@@ -354,17 +354,31 @@ const resumeData = {
       type: "profile",
     },
     {
+      quote: "I had the opportunity to work with Ghani on multiple projects, and my experience working with him has been excellent. He is a highly professional and dependable person who consistently takes ownership of his work and delivers on time.\n\n What I particularly appreciate about Ghani is his ability to think outside the box and come up with creative and practical solutions to challenges. He is committed to delivering quality work while maintaining a professional and collaborative attitude throughout the project. \n\n I would highly recommend Ghani to anyone looking for a dedicated, professional, and innovative person to work with. It has been a great experience working alongside him.",
+      author: "Muhammad Faizan",
+      title: "Software Engineer | Turning Ideas into Web, Mobile & AI Apps with MERN, Next.js, Nest.js, React Native | JavaScript • Python • System Design",
+      url: "https://www.linkedin.com/in/muhammad-faizan-b18379241/",
+      type: "profile",
+    },
+    {
+      quote: "I had the pleasure of working with Syed Ghani, and I highly recommend him as a skilled and versatile Full-Stack Developer. He has strong expertise in both front-end and back-end development, along with solid experience in middleware and API integration. He is a problem-solver, a quick learner, and consistently delivers clean, reliable, and scalable solutions. His technical skills, professionalism, and collaborative approach make him a valuable addition to any development team.",
+      author: "Kashif Ali",
+      title: "Software Engineer | Ruby on Rails | MERN",
+      url: "https://www.linkedin.com/in/kashif-ali-9173b7302/",
+      type: "profile"
+    },
+    {
+      quote: "I had the opportunity to work with Syed M Ghani and found him to be a highly professional, responsible, and dedicated individual. He consistently demonstrated strong communication skills, a positive attitude, and a willingness to support others whenever needed.\n\n He is someone who takes ownership of his responsibilities and maintains a professional approach even when dealing with challenging situations. His commitment, reliability, and ability to work effectively with others make him a valuable asset to any organization. \n\nI would gladly recommend him to anyone looking for a dependable and professional team member. I wish him continued success in his career.",
+      author: "Fazeel Ashraf Nadeem",
+      title: "QuickBooks Certified Accountant | Financial Reporting | Bank Reconciliation | Helping Small Businesses Manage Accurate Books",
+      url: "https://www.linkedin.com/in/fazeel-ashraf-nadeem-091b7912b/",
+      type: "profile",
+    },
+    {
       quote: "I had the pleasure of working with Ghani and have always appreciated his dedication and approach to development. He is a skilled Ruby on Rails developer with a strong understanding of backend development and a good problem-solving mindset. Beyond his technical skills, Ghani is a reliable and supportive teammate who is easy to work with. I would definitely recommend him to any team looking for a talented and motivated Ruby on Rails developer.",
       author: "Rabiya Nadeem",
       title: "Software Engineer | MERN Stack & React Native — LinkedIn recommendation, Aug 2026",
       url: "https://www.linkedin.com/in/rabiya-nadeem22/",
-      type: "profile",
-    },
-    {
-      quote: "One of the most proactive and technically skilled engineers I've managed. As a Full-Stack Engineer, Ghani took full ownership of critical products, including building complex backend architectures and modern frontend interfaces from scratch. His ability to handle background job processing, API integrations, and database optimization made him an invaluable asset to our engineering workflows. Beyond his core technical execution, his passion for open-source development and clean code consistently raised the standard for our team. A high-impact, reliable developer who learns fast and ships quality software.",
-      author: "Muhammad Ali Subhani",
-      title: "Software Engineer @ ForeFastSolutions · ex-Blackstack · Syed's mentor and manager — LinkedIn recommendation, Aug 2026",
-      url: "https://www.linkedin.com/in/alisubhani/",
       type: "profile",
     },
     {
@@ -380,6 +394,13 @@ const resumeData = {
       title: "First work anniversary spotlight",
       url: "https://www.linkedin.com/posts/blackstack-software-solutions_workanniversary-milestone-firstworkanniversary-activity-7356977157857849344-X7fF",
       type: "post",
+    },
+    {
+      quote: "I had the pleasure of working with Ghani and truly appreciated his dedication and commitment towards his work. Beyond his strong technical skills, he is approachable, responsible, and genuinely easy to work with. He takes ownership of his responsibilities, communicates well with the team and can always be relied upon to get the job done. \n \n I would highly recommend Ghani to any engineering team looking for a responsible, punctual, and reliable professional. It was a great experience working alongside him and I’m confident he will be a valuable addition to any team.",
+      author: "Eisha Qamar",
+      title: "Software Engineer | LGU’24 | BSSE | MERN | JavaScript | Web development — LinkedIn recommendation, Aug 2026",
+      url: "https://www.linkedin.com/in/eishaqamar/",
+      type: "profile",
     },
   ],
 
