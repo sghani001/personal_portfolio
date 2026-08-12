@@ -15,7 +15,7 @@ const resumeData = {
   headline:
     "Full-stack engineer building and owning production Ruby on Rails + React SaaS systems — from schema and background jobs to polished UI. Open to on-site/hybrid roles in Lahore and remote roles globally.",
 
-  email: "syedghani001@gmail.com",
+  email: "devsyed.ghani@gmail.com",
   emailAcademic: "2020cs669@student.uet.edu.pk",
   location: "Lahore, Pakistan",
   timezone: "GMT+5 · 4–5 hr overlap with EU · available for US East morning standups",
