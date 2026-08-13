@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  schedule:
+    # Daily rebuild so the live RubyGems download count baked into the OG
+    # image and meta description stays fresh even without a code push.
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
