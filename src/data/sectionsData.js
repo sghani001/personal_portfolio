@@ -1,12 +1,5 @@
 import resumeData from "../utils/resumeData";
 
-export const heroStats = [
-  { value: "2+", label: "Years in Production" },
-  { value: "6", label: "Live SaaS Products" },
-  { value: "1", label: "Solo-Owned Platform" },
-  { value: "4", label: "Published Rails Gems" },
-];
-
 export const processSteps = [
   {
     n: "01",

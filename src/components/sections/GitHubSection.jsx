@@ -3,6 +3,7 @@ import C from "../../theme";
 import { FadeUp, Section } from "../UI";
 import { useGitHubContributions } from "../../hooks/useGitHubContributions";
 import { useLeetCodeStats } from "../../hooks/useLeetCodeStats";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 
 const GITHUB_USERNAME = "sghani001";
 const LEETCODE_USERNAME = "sghani001";
@@ -10,7 +11,11 @@ const LEETCODE_USERNAME = "sghani001";
 // GitHub contribution level → color (authentic GitHub palette, dark-mode tuned)
 const LEVEL_COLORS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"];
 
+// Non-linear so high-activity days visibly pop — a level-4 day floats much higher than level-1.
+const Z_BY_LEVEL = [0, 10, 22, 38, 58];
+
 function ContributionHeatmap({ contributions, totalThisYear }) {
+  const reducedMotion = usePrefersReducedMotion();
   const weeks = useMemo(() => {
     if (!contributions || contributions.length === 0) return [];
     // Group days into weeks (columns of 7)
@@ -62,62 +67,78 @@ function ContributionHeatmap({ contributions, totalThisYear }) {
         <span style={{ color: C.sage, fontWeight: 700 }}>{totalThisYear?.toLocaleString()}</span>
         <span>contributions in the last year</span>
       </div>
-      <div style={{ display: "flex" }}>
-        {/* Day-of-week labels */}
-        <div style={{ display: "flex", flexDirection: "column", gap: GAP, marginRight: 6, paddingTop: 18 }}>
-          {DAY_LABELS.map((label, i) => (
-            <div key={i} style={{ height: CELL, fontSize: 9, color: C.secondary, fontFamily: "'JetBrains Mono',monospace", lineHeight: `${CELL}px`, textAlign: "right", whiteSpace: "nowrap" }}>
-              {label}
-            </div>
-          ))}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Month labels */}
-          <div style={{ display: "flex", marginBottom: 4, minWidth: totalWidth }}>
-            {monthLabels.map((ml, i) => (
-              <div
-                key={i}
-                style={{
-                  position: "relative",
-                  left: ml.weekIdx * (CELL + GAP),
-                  fontSize: 9,
-                  color: C.secondary,
-                  fontFamily: "'JetBrains Mono',monospace",
-                  whiteSpace: "nowrap",
-                  marginRight: i < monthLabels.length - 1 ? (monthLabels[i + 1].weekIdx - ml.weekIdx) * (CELL + GAP) - 20 : 0,
-                }}
-              >
-                {ml.month}
+      {/* Tilt wrapper — labels and grid are children of the SAME rotated block, so they move
+          together as one rigid unit and stay perfectly aligned regardless of tilt angle. */}
+      <div style={{ perspective: reducedMotion ? "none" : 550, paddingBottom: reducedMotion ? 0 : 30 }}>
+        <div
+          style={{
+            display: "flex",
+            transformStyle: reducedMotion ? "flat" : "preserve-3d",
+            transform: reducedMotion ? "none" : "rotateX(38deg)",
+            transformOrigin: "top",
+          }}
+        >
+          {/* Day-of-week labels */}
+          <div style={{ display: "flex", flexDirection: "column", gap: GAP, marginRight: 6, paddingTop: 18 }}>
+            {DAY_LABELS.map((label, i) => (
+              <div key={i} style={{ height: CELL, fontSize: 9, color: C.secondary, fontFamily: "'JetBrains Mono',monospace", lineHeight: `${CELL}px`, textAlign: "right", whiteSpace: "nowrap" }}>
+                {label}
               </div>
             ))}
           </div>
-          {/* Grid */}
-          <div style={{ display: "flex", gap: GAP }}>
-            {weeks.map((week, wi) => (
-              <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
-                {week.map((day, di) => {
-                  if (!day) return <div key={di} style={{ width: CELL, height: CELL }} />;
-                  const color = LEVEL_COLORS[day.level ?? 0];
-                  return (
-                    <div
-                      key={di}
-                      title={`${day.date}: ${day.count} contributions`}
-                      style={{
-                        width: CELL,
-                        height: CELL,
-                        borderRadius: 2,
-                        background: color,
-                        border: day.level > 0 ? `1px solid ${color}80` : "1px solid #21262d",
-                        cursor: "default",
-                        transition: "transform 0.1s",
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.4)"; e.currentTarget.style.zIndex = "10"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.zIndex = "1"; }}
-                    />
-                  );
-                })}
-              </div>
-            ))}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Month labels */}
+            <div style={{ display: "flex", marginBottom: 4, minWidth: totalWidth }}>
+              {monthLabels.map((ml, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: "relative",
+                    left: ml.weekIdx * (CELL + GAP),
+                    fontSize: 9,
+                    color: C.secondary,
+                    fontFamily: "'JetBrains Mono',monospace",
+                    whiteSpace: "nowrap",
+                    marginRight: i < monthLabels.length - 1 ? (monthLabels[i + 1].weekIdx - ml.weekIdx) * (CELL + GAP) - 20 : 0,
+                  }}
+                >
+                  {ml.month}
+                </div>
+              ))}
+            </div>
+            {/* Grid — cells extrude toward the viewer with translateZ, proportional to contribution level */}
+            <div style={{ display: "flex", gap: GAP, transformStyle: reducedMotion ? "flat" : "preserve-3d" }}>
+              {weeks.map((week, wi) => (
+                <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP, transformStyle: reducedMotion ? "flat" : "preserve-3d" }}>
+                  {week.map((day, di) => {
+                    if (!day) return <div key={di} style={{ width: CELL, height: CELL }} />;
+                    const level = day.level ?? 0;
+                    const color = LEVEL_COLORS[level];
+                    const z = reducedMotion ? 0 : Z_BY_LEVEL[level];
+                    const baseTransform = `translateZ(${z}px)`;
+                    return (
+                      <div
+                        key={di}
+                        title={`${day.date}: ${day.count} contributions`}
+                        style={{
+                          width: CELL,
+                          height: CELL,
+                          borderRadius: 2,
+                          background: color,
+                          border: level > 0 ? `1px solid ${color}80` : "1px solid #21262d",
+                          boxShadow: level > 0 && !reducedMotion ? `0 ${Math.round(z * 0.4)}px ${z + 10}px 0 ${color}99, 0 2px 6px rgba(0,0,0,0.6)` : "none",
+                          cursor: "default",
+                          transform: baseTransform,
+                          transition: "transform 0.15s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = `${baseTransform} scale(1.4)`; e.currentTarget.style.zIndex = "10"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = baseTransform; e.currentTarget.style.zIndex = "1"; }}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -212,45 +233,8 @@ export function GitHubSection() {
   const totalThisYear = ghData?.total ? Object.values(ghData.total).reduce((a, b) => a + b, 0) : null;
 
   return (
-    <Section id="github" label="Activity" title="GitHub & LeetCode">
+    <Section id="github" label="Activity" title="GitHub & LeetCode" watermark="ACTIVITY">
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-
-        {/* Snake Animation */}
-        <FadeUp>
-          <div
-            style={{
-              borderRadius: 16,
-              overflow: "hidden",
-              background: "#0d1117",
-              border: "1px solid #21262d",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-            }}
-          >
-            {/* Terminal bar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 16px", borderBottom: "1px solid #21262d", background: "#161b22" }}>
-              <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#ff5f57" }} />
-              <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#febc2e" }} />
-              <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#28c840" }} />
-              <span style={{ fontSize: 11, color: "#8b949e", fontFamily: "'JetBrains Mono',monospace", marginLeft: 8 }}>
-                github.com/{GITHUB_USERNAME} — contribution snake
-              </span>
-            </div>
-            <div style={{ padding: "20px 16px", overflowX: "auto" }}>
-              <img
-                src={`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_USERNAME}/output/github-contribution-grid-snake-dark.svg`}
-                alt="GitHub contribution snake animation"
-                style={{ width: "100%", minWidth: 600, display: "block" }}
-                onError={(e) => {
-                  // Fallback: try the light version or hide
-                  e.target.src = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_USERNAME}/output/github-contribution-grid-snake.svg`;
-                  e.target.onerror = () => {
-                    e.target.parentElement.innerHTML = `<div style="padding:20px;text-align:center;color:#8b949e;font-family:'JetBrains Mono',monospace;font-size:12px">Snake animation requires a GitHub Action in your profile repo (${GITHUB_USERNAME}/${GITHUB_USERNAME}) — see github.com/Platane/snk</div>`;
-                  };
-                }}
-              />
-            </div>
-          </div>
-        </FadeUp>
 
         {/* Contribution heatmap + LeetCode side by side */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start" }}>

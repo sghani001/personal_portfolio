@@ -1,23 +1,26 @@
 import React from "react";
+import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
 import C from "../../theme";
 import { FadeUp, Section } from "../UI";
 import { socialLinks } from "../../data/sectionsData";
 import { IconLocation, IconGlobe, IconForTech, getTechColor } from "../Icons";
 import { useGemStatsContext } from "../../context/GemStatsContext";
+import { useScrollParallax } from "../../hooks/useScrollParallax";
 
 export function AboutSection() {
   const { displayTotal, loading } = useGemStatsContext();
   const gemDownloads = loading ? "5,993" : displayTotal;
+  const { ref: photoParallaxRef, y: photoParallaxY } = useScrollParallax(30);
 
   // Render summary with dynamic gem download count
   const summaryParts = resumeData.summary.split("{GEM_DOWNLOADS}");
 
   return (
-    <Section id="about" label="About" title="Who You're Hiring">
+    <Section id="about" label="About" title="Who You're Hiring" watermark="ABOUT">
       <div className="about-grid">
         <FadeUp>
-          <div style={{ position: "relative", maxWidth: 260 }}>
+          <motion.div ref={photoParallaxRef} style={{ position: "relative", maxWidth: 260, y: photoParallaxY }}>
             <div style={{ width: "100%", aspectRatio: "1", borderRadius: 18, overflow: "hidden", background: C.surface, border: `1px solid ${C.border}`, boxShadow: "0 8px 32px rgba(0,0,0,0.28)" }}>
               <img
                 src={resumeData.photo}
@@ -32,7 +35,7 @@ export function AboutSection() {
             <div style={{ position: "absolute", bottom: -14, right: -14, padding: "8px 16px", borderRadius: 10, background: `linear-gradient(135deg, ${C.copper}, ${C.copperDeep})`, color: C.onGold, fontSize: 12, fontFamily: "'JetBrains Mono',monospace", boxShadow: `0 6px 20px rgba(0,0,0,0.35)` }}>
               GMT+5 · Remote ✓
             </div>
-          </div>
+          </motion.div>
         </FadeUp>
 
         <FadeUp delay={100}>

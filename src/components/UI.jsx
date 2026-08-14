@@ -1,32 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
-import useSectionInView from "../hooks/useSectionInView";
+import { motion } from "framer-motion";
+import { useTilt3D } from "../hooks/useTilt3D";
 import C from "../theme";
 import IconForTech from "./Icons";
 
 export function FadeUp({ children, delay = 0, className = "" }) {
-  const [ref, inView] = useSectionInView();
   return (
-    <div
-      ref={ref}
+    <motion.div
       className={className}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 0.65s ease ${delay}ms, transform 0.65s ease ${delay}ms`,
-      }}
+      style={{ transformPerspective: 800 }}
+      initial={{ opacity: 0, y: 24, rotateX: -8 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.65, delay: delay / 1000, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
-export function Card({ children, hover = true, className = "", style = {} }) {
+export function Card({ children, hover = true, tilt3D = false, className = "", style = {}, onClick }) {
   const [hov, setHov] = useState(false);
+  const { ref, onPointerMove, onPointerLeave, tilt, enabled: tiltEnabled } = useTilt3D();
+
+  const lift = hov ? -4 : 0;
+  const transform =
+    tilt3D && tiltEnabled
+      ? `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateY(${lift}px)`
+      : `translateY(${lift}px)`;
+
   return (
     <div
+      ref={tilt3D ? ref : undefined}
       className={className}
+      onClick={onClick}
       onMouseEnter={() => hover && setHov(true)}
-      onMouseLeave={() => hover && setHov(false)}
+      onMouseLeave={(e) => {
+        if (hover) setHov(false);
+        if (tilt3D) onPointerLeave(e);
+      }}
+      onPointerMove={tilt3D ? onPointerMove : undefined}
       style={{
         background: C.surface,
         border: `1px solid ${hov ? C.copper + "55" : C.border}`,
@@ -34,8 +47,8 @@ export function Card({ children, hover = true, className = "", style = {} }) {
         boxShadow: hov
           ? "0 8px 32px var(--shadow-hover), var(--shadow-inset), 0 0 0 1px #E2C79918"
           : "0 4px 16px var(--shadow-base), var(--shadow-inset)",
-        transform: hov ? "translateY(-4px)" : "translateY(0)",
-        transition: "background 0.3s, border-color 0.25s, box-shadow 0.25s, transform 0.25s",
+        transform,
+        transition: "background 0.3s, border-color 0.25s, box-shadow 0.25s, transform 0.15s ease-out",
         ...style,
       }}
     >
@@ -151,17 +164,46 @@ export function SkillPill({ skill, dashed = false }) {
   );
 }
 
-export function Section({ id, label, title, subtitle, children, tinted = false }) {
+export function Section({ id, label, title, subtitle, children, tinted = false, watermark, className = "" }) {
+  const wm = watermark || null;
+
   return (
     <section
       id={id}
+      className={className}
       style={{
+        position: "relative",
+        overflow: "hidden",
         padding: "96px 0",
         background: tinted ? "var(--tinted-bg)" : "transparent",
         transition: "background 0.3s, color 0.3s",
       }}
     >
-      <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px" }}>
+      {wm && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "-0.06em",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontFamily: "'Space Grotesk',sans-serif",
+            fontWeight: 800,
+            fontSize: "clamp(70px, 14vw, 200px)",
+            lineHeight: 1,
+            color: C.primary,
+            opacity: 0.035,
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+            userSelect: "none",
+            zIndex: 0,
+            letterSpacing: "0.02em",
+          }}
+        >
+          {wm}
+        </div>
+      )}
+      <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
         {label && (
           <FadeUp>
             <p

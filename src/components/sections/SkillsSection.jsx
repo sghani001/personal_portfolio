@@ -1,8 +1,108 @@
 import React from "react";
+import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
 import C from "../../theme";
 import { IconForTech } from "../Icons";
 import { FadeUp, SkillPill, Section } from "../UI";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+
+const RINGS = [
+  { radius: 92, duration: 18, size: 38, iconSize: 16, icons: ["React.js", "PostgreSQL", "Redis"] },
+  { radius: 168, duration: 32, size: 42, iconSize: 18, icons: ["Sidekiq", "Docker", "AWS"] },
+  { radius: 244, duration: 48, size: 42, iconSize: 18, icons: ["Stripe", "GitHub Actions", "TailwindCSS"] },
+];
+
+function OrbitRing({ radius, duration, size, iconSize, icons }) {
+  return (
+    <>
+      <div style={{ position: "absolute", top: "50%", left: "50%", width: radius * 2, height: radius * 2, marginLeft: -radius, marginTop: -radius, borderRadius: "50%", border: `1px dashed ${C.border}` }} />
+      <motion.div
+        style={{ position: "absolute", inset: 0 }}
+        animate={{ rotate: 360 }}
+        transition={{ duration, repeat: Infinity, ease: "linear" }}
+      >
+        {icons.map((name, i) => {
+          const angle = (360 / icons.length) * i;
+          return (
+            <div key={name} style={{ position: "absolute", top: "50%", left: "50%", transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)` }}>
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration, repeat: Infinity, ease: "linear" }}
+                style={{
+                  marginLeft: -size / 2,
+                  marginTop: -size / 2,
+                  width: size,
+                  height: size,
+                  borderRadius: Math.round(size * 0.28),
+                  background: C.surface,
+                  border: `1px solid ${C.border}`,
+                  boxShadow: "0 4px 16px var(--shadow-base)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconForTech name={name} size={iconSize} colored />
+              </motion.div>
+            </div>
+          );
+        })}
+      </motion.div>
+    </>
+  );
+}
+
+function SkillSolarSystem() {
+  const reducedMotion = usePrefersReducedMotion();
+  if (reducedMotion) return null;
+
+  const outerRadius = RINGS[RINGS.length - 1].radius;
+  const diameter = outerRadius * 2 + 60;
+
+  return (
+    <div style={{ perspective: 1100, marginBottom: -diameter * 0.15, overflow: "hidden" }}>
+      <div
+        style={{
+          position: "relative",
+          width: diameter,
+          height: diameter,
+          margin: "0 auto",
+          transformStyle: "preserve-3d",
+          transform: "rotateX(45deg)",
+        }}
+      >
+        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `radial-gradient(circle, ${C.copper}12 0%, transparent 65%)` }} />
+        {RINGS.map((ring, i) => (
+          <OrbitRing key={i} {...ring} />
+        ))}
+        {/* Sun — Ruby on Rails at the center */}
+        <motion.div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 76,
+            height: 76,
+            marginLeft: -38,
+            marginTop: -38,
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 35% 30%, ${C.gold}, ${C.goldDeep})`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2,
+          }}
+          animate={{ boxShadow: [`0 0 24px 6px ${C.copper}55`, `0 0 40px 14px ${C.copper}80`, `0 0 24px 6px ${C.copper}55`] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div style={{ width: 46, height: 46, borderRadius: "50%", background: "rgba(18,18,18,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <IconForTech name="Ruby on Rails" size={26} colored />
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
 
 export function SkillsSection() {
   const sk = resumeData.skills;
@@ -17,7 +117,10 @@ export function SkillsSection() {
   ];
 
   return (
-    <Section id="skills" label="Tech" title="Skills" subtitle="Click any highlighted pill to see specifics. Skills with ▼ expand on click." tinted>
+    <Section id="skills" label="Tech" title="Skills" subtitle="Click any highlighted pill to see specifics. Skills with ▼ expand on click." tinted className="crosshair-grid" watermark="SKILLS">
+      <FadeUp>
+        <SkillSolarSystem />
+      </FadeUp>
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         {groups.map((g, i) => (
           <FadeUp key={i} delay={i * 50}>

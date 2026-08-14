@@ -1,6 +1,7 @@
 import React from "react";
 import C from "../../theme";
 import { useGemStatsContext } from "../../context/GemStatsContext";
+import { StatNumber } from "../StatNumber";
 
 export function MetricsSection() {
   const { displayTotal, isLive, loading } = useGemStatsContext();
@@ -26,7 +27,7 @@ export function MetricsSection() {
               borderRight: i < stats.length - 1 ? `1px solid ${C.border}` : "none",
             }}
           >
-            <div style={{ fontSize: 26, fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: C.copper, marginBottom: 6 }}>{s.value}</div>
+            <StatNumber value={s.value} style={{ display: "block", fontSize: 26, fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: C.copper, marginBottom: 6 }} />
             <div style={{ fontSize: 11, color: C.secondary, textTransform: "uppercase", letterSpacing: "0.15em", lineHeight: 1.4 }}>{s.label}</div>
           </div>
         ))}

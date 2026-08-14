@@ -82,7 +82,7 @@ export function ContactSection() {
   };
 
   return (
-    <Section id="contact" label="Contact" title="Let's Work Together" subtitle="I respond within 24 hours. No middlemen — just me." tinted>
+    <Section id="contact" label="Contact" title="Let's Work Together" subtitle="I respond within 24 hours. No middlemen — just me." tinted className="crosshair-grid" watermark="CONTACT">
       <div className="contact-grid">
         <FadeUp>
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>

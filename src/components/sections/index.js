@@ -9,6 +9,7 @@ export { SkillsSection } from "./SkillsSection";
 export { ProcessSection } from "./ProcessSection";
 export { TechStackSection } from "./TechStackSection";
 export { ExperienceSection } from "./ExperienceSection";
+export { EducationSection } from "./EducationSection";
 export { TestimonialsSection } from "./TestimonialsSection";
 export { AboutSection } from "./AboutSection";
 export { ContactSection } from "./ContactSection";

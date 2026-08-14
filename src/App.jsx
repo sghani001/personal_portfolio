@@ -9,12 +9,13 @@ import {
   RailsShowcaseSection,
   CaseStudiesSection,
   GemsSection,
-  GitHubSection,
   ProjectsSection,
   SkillsSection,
   ProcessSection,
   TechStackSection,
+  GitHubSection,
   ExperienceSection,
+  EducationSection,
   TestimonialsSection,
   AboutSection,
   ContactSection,
@@ -53,7 +54,9 @@ export default function App() {
           <SkillsSection />
           <ProcessSection />
           <TechStackSection />
+          <GitHubSection />
           <ExperienceSection />
+          <EducationSection />
           <TestimonialsSection />
           <AboutSection />
           <ContactSection />

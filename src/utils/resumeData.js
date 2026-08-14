@@ -340,10 +340,24 @@ const resumeData = {
   // ── Testimonials (3 total) ────────────────────────────────────────────────
   testimonials: [
     {
+      quote: "I had the pleasure of working with Syed Ghani at BlackStack Software Solutions. Syed is technically strong, a great team player, and highly skilled in web development, particularly with Ruby on Rails and React. He is a quick learner and an excellent problem solver who consistently adapts well to new challenges. \n\nHe also contributed significantly to integrations and was always willing to support the team whenever needed. His strong technical skills, collaborative approach, and commitment to delivering quality work make him a valuable asset to any development team. I would highly recommend Syed for any web development role.",
+      author: "Raza Malik",
+      title: "Software Engineer @ Medical Guardian | Microsoft Entra | ReactJs | NextJs | Ruby on Rails",
+      url: "https://www.linkedin.com/in/raza-malik-81109a268/",
+      type: "profile",
+    },
+    {
       quote: "One of the most proactive and technically skilled engineers I've managed. As a Full-Stack Engineer, Ghani took full ownership of critical products, including building complex backend architectures and modern frontend interfaces from scratch. His ability to handle background job processing, API integrations, and database optimization made him an invaluable asset to our engineering workflows. Beyond his core technical execution, his passion for open-source development and clean code consistently raised the standard for our team. A high-impact, reliable developer who learns fast and ships quality software.",
       author: "Muhammad Ali Subhani",
       title: "Software Engineer @ ForeFastSolutions · ex-Blackstack · Syed's mentor and manager — LinkedIn recommendation, Aug 2026",
       url: "https://www.linkedin.com/in/alisubhani/",
+      type: "profile",
+    },
+    {
+      quote: "I had the pleasure of working with Syed Ghani as a classmate and group member during university. He is a dedicated, responsible, and hardworking person who always brings a positive attitude to the team. I really appreciated his teamwork, willingness to help, and commitment to getting things done. I would gladly recommend Ghani to anyone looking for a reliable and capable professional.",
+      author: "Muhammad Hamza",
+      title: "ReactJS | NodeJS | MERN Stack Developer | Heuristic Sol Pvt Ltd",
+      url: "https://www.linkedin.com/in/muhammad-hamza-695b54229/",
       type: "profile",
     },
     {
@@ -412,21 +426,53 @@ const resumeData = {
       description: "GAN + NLP pipeline that converts Urdu text into Pakistan Sign Language animations — a web demo interface built on top of a deep-learning backend. One of the few Urdu→PSL translation systems with an interactive web UI.",
       url: "https://github.com/sghani001",
       tech: ["Python", "GAN", "NLP", "Flask", "React.js"],
-      image: "https://images.unsplash.com/photo-1589254065909-b7086229d08c?w=700&h=440&fit=crop&q=80",
     },
     {
       name: "Online Exam System",
       description: "Multi-role exam platform (admin / teacher / student) with role-based navigation, protected route guards, and full exam lifecycle: create → approve → sit → grade.",
       url: "https://github.com/sghani001/Online_Exam_System",
       tech: ["Ruby on Rails", "React.js", "Devise", "Pundit", "PostgreSQL", "RSpec"],
-      image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=700&h=440&fit=crop&q=80",
     },
     {
       name: "WhatsApp Analyzer",
       description: "Python utilities to parse exported WhatsApp chat logs and surface group / DM insights — message frequency, most active users, time-of-day patterns.",
       url: "https://github.com/sghani001/Whatsapp_Analyzer",
       tech: ["Python", "Pandas", "Matplotlib"],
-      image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=700&h=440&fit=crop&q=80",
+    },
+    {
+      name: "Task Manager (Rails + AWS)",
+      badge: "Docker/AWS Practice",
+      description: "Real-time collaborative Kanban board (To Do / In Progress / Completed) built server-driven with Rails and Hotwire — live multi-browser sync over ActionCable and drag-and-drop, no custom JS state management. Containerized with Docker, deployed via Kamal.",
+      url: "https://github.com/sghani001/task_manager_rails_aws",
+      tech: ["Ruby on Rails 8", "PostgreSQL", "Hotwire", "Turbo", "Stimulus", "ActionCable", "SolidQueue", "Docker", "Kamal"],
+    },
+    {
+      name: "File Manager — Backend",
+      badge: "Docker/AWS Practice",
+      description: "File-management API handling direct-to-S3 presigned uploads, tracking file state (uploading → processing → processed) via an EventBridge-triggered Lambda pipeline, and issuing secure, time-limited/passcode-protected share links. Deployed on EC2 + RDS behind nginx.",
+      url: "https://github.com/sghani001/file_manager_backend",
+      tech: ["Ruby on Rails 8 (API)", "PostgreSQL", "AWS S3", "AWS Lambda", "EventBridge", "Docker", "JWT"],
+    },
+    {
+      name: "File Manager — Frontend",
+      badge: "Docker/AWS Practice",
+      description: "React dashboard for the File Manager API — drag-and-drop uploads with direct-to-S3 progress tracking, auto-polling status, file previews (images/PDF/text), reprocessing of failed uploads, and shareable-link management.",
+      url: "https://github.com/sghani001/file_manager_frontend",
+      tech: ["React 19", "Vite", "Axios"],
+    },
+    {
+      name: "Chat App — Frontend",
+      badge: "Early Stage",
+      description: "Early-stage React chat client, built alongside its Rails backend as Docker/AWS deployment practice — scaffolding and infrastructure in place, feature work in progress.",
+      url: "https://github.com/sghani001/chat-app-fe",
+      tech: ["React", "Vite"],
+    },
+    {
+      name: "Chat App — Backend",
+      badge: "Early Stage",
+      description: "Early-stage Rails chat API, built alongside its React frontend as Docker/AWS deployment practice — scaffolding and infrastructure in place, feature work in progress.",
+      url: "https://github.com/sghani001/chat-app-be",
+      tech: ["Ruby on Rails", "Docker", "Kamal"],
     },
   ],
 

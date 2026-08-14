@@ -1,56 +1,191 @@
 import React from "react";
+import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
 import C from "../../theme";
 import { useGemStatsContext } from "../../context/GemStatsContext";
 import { IconArrow } from "../Icons";
-import { heroStats } from "../../data/sectionsData";
 import { TypewriterText } from "./TypewriterText";
+import { FadeUp } from "../UI";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useScrollParallax } from "../../hooks/useScrollParallax";
+import { useTilt3D } from "../../hooks/useTilt3D";
 
-export function HeroSection() {
-  const { displayTotal, isLive } = useGemStatsContext();
+function TiltPortrait() {
+  const { ref, onPointerMove, onPointerLeave, tilt, enabled } = useTilt3D({ max: 8 });
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
-    <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <div
-          style={{
-            position: "absolute",
-            top: "8%",
-            right: "-8%",
-            width: "58%",
-            height: "72%",
-            background: "linear-gradient(155deg, #242424 0%, #1A1A1A 45%, #141414 100%)",
-            transform: "rotate(-10deg)",
-            boxShadow: "0 48px 96px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)",
-            borderRadius: 3,
-            opacity: 0.85,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: "18%",
-            right: "6%",
-            width: "42%",
-            height: "2px",
-            borderTop: "1px dotted rgba(255,255,255,0.15)",
-          }}
-        />
-        <div style={{ position: "absolute", top: -120, left: -80, width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(226,199,153,0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
-        <div style={{ position: "absolute", bottom: 0, right: -60, width: 480, height: 480, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)", filter: "blur(60px)" }} />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `linear-gradient(rgba(226,199,153,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(226,199,153,0.025) 1px, transparent 1px)`,
-            backgroundSize: "52px 52px",
+    <div style={{ position: "relative", width: "100%", maxWidth: 460, margin: "0 auto" }}>
+      {/* Decorative rings are deliberately much smaller than the photo so the person
+          visually breaks past their edges (shoulders/head popping out of the circle)
+          instead of being contained inside it. */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "62%",
+          aspectRatio: "1",
+          transform: "translate(-50%, -50%)",
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${C.copper}35 0%, transparent 70%)`,
+          filter: "blur(40px)",
+          zIndex: 0,
+        }}
+      />
+      {!reducedMotion && (
+        <>
+          <motion.div
+            style={{ position: "absolute", top: "50%", left: "50%", width: "68%", aspectRatio: "1", borderRadius: "50%", border: `1px dashed ${C.copper}50`, zIndex: 0 }}
+            initial={{ x: "-50%", y: "-50%" }}
+            animate={{ rotate: 360, x: "-50%", y: "-50%" }}
+            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div
+            style={{ position: "absolute", top: "50%", left: "50%", width: "80%", aspectRatio: "1", borderRadius: "50%", border: `1px dotted ${C.border}`, zIndex: 0 }}
+            initial={{ x: "-50%", y: "-50%" }}
+            animate={{ rotate: -360, x: "-50%", y: "-50%" }}
+            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          />
+        </>
+      )}
+      <div
+        ref={ref}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          transform: enabled ? `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)` : "none",
+          transition: "transform 0.2s ease-out",
+        }}
+      >
+        <img
+          src="/syed_ghani_no_bg.png"
+          alt="Syed M. Ghani — Ruby on Rails & React Engineer, Lahore"
+          style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.5))" }}
+          onError={(e) => {
+            // Falls back to the existing photo if the no-background cutout isn't reachable.
+            if (e.target.src.indexOf("syed_ghani_no_bg") !== -1) {
+              e.target.src = resumeData.photo;
+              e.target.style.borderRadius = "24px";
+            } else {
+              e.target.style.display = "none";
+            }
           }}
         />
       </div>
+    </div>
+  );
+}
 
-      <div style={{ maxWidth: 1160, margin: "0 auto", padding: "80px 24px", width: "100%", position: "relative" }}>
-        <div className="hero-grid">
-          <div style={{ maxWidth: 660 }}>
+function ContactWidget() {
+  const reducedMotion = usePrefersReducedMotion();
+  return (
+    <motion.a
+      href="#contact"
+      animate={reducedMotion ? undefined : { y: [0, 8, 0] }}
+      transition={reducedMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+      style={{
+        position: "absolute",
+        bottom: 8,
+        right: 8,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "10px 16px 10px 10px",
+        borderRadius: 14,
+        background: "rgba(12,10,8,0.8)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        border: `1px solid ${C.copper}45`,
+        boxShadow: "0 16px 40px rgba(0,0,0,0.45)",
+        textDecoration: "none",
+        zIndex: 3,
+      }}
+    >
+      <span
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: "50%",
+          background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 13,
+          fontWeight: 800,
+          color: C.onGold,
+          flexShrink: 0,
+        }}
+      >
+        SG
+      </span>
+      <div>
+        <div style={{ fontSize: 9, color: "#9a9a9a", textTransform: "uppercase", letterSpacing: "0.1em" }}>Let's talk</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", fontFamily: "'Space Grotesk',sans-serif" }}>Syed Ghani</div>
+      </div>
+      <IconArrow />
+    </motion.a>
+  );
+}
+
+export function HeroSection() {
+  const { displayTotal, isLive } = useGemStatsContext();
+  const { ref: parallaxRef, y: parallaxY } = useScrollParallax(140, ["start start", "end start"]);
+
+  return (
+    <section ref={parallaxRef} style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+      <motion.div className="crosshair-grid" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.5, y: parallaxY }}>
+        <div style={{ position: "absolute", top: -120, left: -80, width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(226,199,153,0.06) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div style={{ position: "absolute", bottom: -100, right: -80, width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(226,199,153,0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
+      </motion.div>
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "2%",
+          pointerEvents: "none",
+          userSelect: "none",
+          zIndex: 0,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Space Grotesk',sans-serif",
+            fontWeight: 800,
+            fontSize: "clamp(40px, 7vw, 110px)",
+            lineHeight: 0.95,
+            color: C.primary,
+            opacity: 0.12,
+            letterSpacing: "0.03em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          SYED
+        </div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk',sans-serif",
+            fontWeight: 800,
+            fontSize: "clamp(40px, 7vw, 110px)",
+            lineHeight: 0.95,
+            color: C.gold,
+            opacity: 0.14,
+            letterSpacing: "0.03em",
+            marginTop: -6,
+            whiteSpace: "nowrap",
+          }}
+        >
+          GHANI
+        </div>
+      </div>
+
+      <div className="hero-split">
+        <div style={{ position: "relative", zIndex: 2, flex: "1 1 480px", maxWidth: 560 }}>
+          <FadeUp>
             <div
               style={{
                 display: "inline-flex",
@@ -63,67 +198,56 @@ export function HeroSection() {
                 fontSize: 12,
                 fontFamily: "'JetBrains Mono',monospace",
                 color: C.copper,
-                marginBottom: 36,
+                marginBottom: 24,
                 letterSpacing: "0.05em",
               }}
             >
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: C.copper, animation: "pulse 2s infinite" }} />
               Open to Lahore companies & remote roles worldwide
             </div>
+          </FadeUp>
 
+          <FadeUp delay={40}>
             <h1
               style={{
                 fontFamily: "'Space Grotesk',sans-serif",
-                fontSize: "clamp(36px,5.5vw,58px)",
+                fontSize: "clamp(30px,4.4vw,48px)",
                 fontWeight: 700,
-                color: C.gold,
-                lineHeight: 1.06,
-                letterSpacing: "0.02em",
-                textTransform: "uppercase",
+                color: C.primary,
+                lineHeight: 1.15,
                 marginBottom: 18,
               }}
             >
-              I help SaaS{' '}
-              <span style={{ color: C.primary, position: "relative", display: "inline-block" }}>
-               founders ship Websites
-                <span style={{ position: "absolute", bottom: -3, left: 0, right: 0, height: 1, borderBottom: `1px dotted ${C.border}`, opacity: 0.6 }} />
-              </span>{' '}
-              & Production features.
+              I help SaaS founders ship <span style={{ color: C.copper }}>production-ready</span> Rails & React features.
             </h1>
+          </FadeUp>
 
-            {/* Typewriter line — cycles through resumeData.titles: types one role
-                title out, pauses, deletes it, moves to the next, loops forever. */}
+          <FadeUp delay={80}>
             <div
               style={{
                 fontFamily: "'JetBrains Mono',monospace",
-                fontSize: 17,
+                fontSize: 16,
                 fontWeight: 600,
                 color: C.copper,
-                minHeight: 26,
-                marginBottom: 22,
+                minHeight: 24,
+                marginBottom: 28,
               }}
             >
               <span style={{ color: C.secondary, marginRight: 8 }}>{'>'}</span>
               <TypewriterText words={resumeData.titles} />
             </div>
+          </FadeUp>
 
-            <p style={{ fontSize: 17, color: C.secondary, lineHeight: 1.75, marginBottom: 12, maxWidth: 560 }}>
-              2+ years shipping real production software across 6 SaaS products. Sole engineer on CinnaLab PRM — from architecture to CRM integrations to billing migration.
-            </p>
-            <p style={{ fontSize: 15, color: C.secondary, lineHeight: 1.7, marginBottom: 40, maxWidth: 560 }}>
-              Based in <strong style={{ color: C.primary }}>Lahore, Pakistan</strong> · Open to on-site/hybrid locally and{' '}
-              <strong style={{ color: C.primary }}>remote roles globally</strong> (GMT+5, EU/US overlap).
-            </p>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 28 }}>
+          <FadeUp delay={120}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 36 }}>
               <a
-                id="hero-view-work"
-                href="#case-studies"
+                id="hero-contact"
+                href="#contact"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 10,
-                  padding: "13px 28px",
+                  padding: "12px 24px",
                   background: `linear-gradient(135deg, ${C.gold}, ${C.goldDeep})`,
                   color: C.onGold,
                   borderRadius: C.radius,
@@ -134,102 +258,64 @@ export function HeroSection() {
                   boxShadow: `0 6px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)`,
                 }}
               >
-                View Projects <IconArrow />
+                Get in Touch <IconArrow />
               </a>
               <a
-                id="hero-contact"
-                href="#contact"
+                id="hero-view-work"
+                href="#case-studies"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  padding: "13px 28px",
-                  border: `1px solid ${C.border}`,
-                  color: C.primary,
-                  borderRadius: 12,
+                  padding: "12px 20px",
+                  color: C.secondary,
                   fontSize: 14,
                   fontWeight: 600,
                   fontFamily: "'Space Grotesk',sans-serif",
                   textDecoration: "none",
-                  transition: "border-color 0.2s",
+                  transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = C.copper)}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}
+                onMouseEnter={(e) => (e.currentTarget.style.color = C.copper)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = C.secondary)}
               >
-                Get in Touch
+                View Projects ↓
               </a>
             </div>
+          </FadeUp>
 
+          <FadeUp delay={160}>
             <div
               style={{
-                display: "inline-flex",
+                display: "flex",
                 flexWrap: "wrap",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 16px",
-                borderRadius: C.radius,
-                border: `1px solid ${C.copper}35`,
-                background: C.surface,
-                fontSize: 12,
+                gap: 20,
+                fontSize: 11,
                 fontFamily: "'JetBrains Mono',monospace",
                 color: C.secondary,
-                marginBottom: 40,
-                boxShadow: "0 4px 16px var(--shadow-base)",
+                borderTop: `1px solid ${C.border}`,
+                paddingTop: 20,
               }}
             >
-              <span>Open to:</span>
-              {resumeData.availability.modes.map((m, i) => (
-                <React.Fragment key={i}>
-                  <span style={{ color: C.primary }}>{m}</span>
-                  {i < resumeData.availability.modes.length - 1 && <span style={{ color: C.border }}>·</span>}
-                </React.Fragment>
-              ))}
-              <span style={{ marginLeft: 4, padding: "2px 8px", borderRadius: 100, background: `${C.sage}18`, border: `1px solid ${C.sage}40`, color: C.sage, fontSize: 11 }}>
-                Available now
-              </span>
-            </div>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 24, fontSize: 12, fontFamily: "'JetBrains Mono',monospace", color: C.secondary, borderTop: `1px solid ${C.border}`, paddingTop: 28 }}>
-              {resumeData.credibilityStrip.slice(0, 3).map((item, i) => (
-                <span key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.copper, flexShrink: 0 }} />
+              <span>© {new Date().getFullYear()}</span>
+              {resumeData.credibilityStrip.slice(0, 2).map((item, i) => (
+                <span key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 4, height: 4, borderRadius: "50%", background: C.copper, flexShrink: 0 }} />
                   {item}
                 </span>
               ))}
-              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.copper, flexShrink: 0 }} />
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 4, height: 4, borderRadius: "50%", background: C.copper, flexShrink: 0 }} />
                 {displayTotal}+ Gem Downloads{isLive ? " (live)" : ""}
               </span>
             </div>
-          </div>
+          </FadeUp>
+        </div>
 
-          <div className="hero-stats" style={{ gridTemplateColumns: "1fr 1fr", gap: 12, maxWidth: 380, width: "100%", alignSelf: "center", alignItems: "stretch" }}>
-            {heroStats.map((s, i) => (
-              <div
-                key={i}
-                style={{
-                  background: C.surface,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: C.radius,
-                  padding: "24px 20px",
-                  minHeight: 108,
-                  boxShadow: "0 4px 16px var(--shadow-base)",
-                  transition: "transform 0.25s, box-shadow 0.25s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 12px 32px var(--shadow-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 16px var(--shadow-base)";
-                }}
-              >
-                <div style={{ fontSize: 32, fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: C.copper, marginBottom: 6 }}>{s.value}</div>
-                <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.4 }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
+        <div style={{ position: "relative", zIndex: 2, flex: "1 1 380px", maxWidth: 420 }}>
+          <FadeUp delay={100}>
+            <TiltPortrait />
+          </FadeUp>
+          <ContactWidget />
         </div>
       </div>
     </section>

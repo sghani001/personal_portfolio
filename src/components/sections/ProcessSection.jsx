@@ -1,24 +1,36 @@
 import React from "react";
 import C from "../../theme";
 import { IconForTech } from "../Icons";
-import { FadeUp, Card, Section } from "../UI";
+import { FadeUp, Section } from "../UI";
+import { FlipCard } from "../FlipCard";
 import { processSteps } from "../../data/sectionsData";
 
 export function ProcessSection() {
   return (
-    <Section id="process" label="Engagement" title="How I Work" subtitle="A predictable, low-overhead process — for a Lahore hiring manager or a remote founder.">
+    <Section id="process" label="Engagement" title="How I Work" subtitle="A predictable, low-overhead process — for a Lahore hiring manager or a remote founder. Hover a card for the details." watermark="PROCESS">
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px,1fr))", gap: 14 }}>
         {processSteps.map((s, i) => (
           <FadeUp key={i} delay={i * 80}>
-            <Card style={{ padding: 28, height: "100%", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, borderBottomLeftRadius: 24, background: `${C.copper}08` }} />
-              <div style={{ fontSize: 28, marginBottom: 16 }}>
-                <IconForTech name={s.iconName} />
-              </div>
-              <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", color: `${C.copper}60`, marginBottom: 8 }}>{s.n}</div>
-              <h4 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, marginBottom: 10, fontSize: 16 }}>{s.title}</h4>
-              <p style={{ fontSize: 13, color: C.secondary, lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
-            </Card>
+            <FlipCard
+              front={
+                <div style={{ padding: 28, display: "flex", flexDirection: "column", flex: 1, position: "relative", overflow: "hidden", alignItems: "center", textAlign: "center", justifyContent: "center" }}>
+                  <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, borderBottomLeftRadius: 24, background: `${C.copper}08` }} />
+                  <div style={{ fontSize: 28, marginBottom: 14 }}>
+                    <IconForTech name={s.iconName} />
+                  </div>
+                  <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", color: `${C.copper}90`, marginBottom: 8 }}>{s.n}</div>
+                  <h4 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, fontSize: 16, margin: 0 }}>{s.title}</h4>
+                  <p style={{ fontSize: 11, color: C.copper, marginTop: 14, fontFamily: "'JetBrains Mono',monospace" }}>Hover for details →</p>
+                </div>
+              }
+              back={
+                <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
+                  <div style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", color: `${C.copper}90`, marginBottom: 8 }}>{s.n}</div>
+                  <h4 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, marginBottom: 10, fontSize: 15 }}>{s.title}</h4>
+                  <p style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, margin: 0 }}>{s.desc}</p>
+                </div>
+              }
+            />
           </FadeUp>
         ))}
       </div>
