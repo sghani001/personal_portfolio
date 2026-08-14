@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
 const LEETCODE_USERNAME = "sghani001";
 const PROXY_URL = "https://leetcode-proxy-2.vercel.app/api/leetcode";
@@ -73,7 +74,7 @@ export function useLeetCodeStats() {
     };
 
     // Primary: the user's own deployed Vercel proxy — bypasses CORS and LeetCode's anti-bot GraphQL blocking.
-    fetch(PROXY_URL, {
+    fetchWithTimeout(PROXY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: PROFILE_QUERY, variables: { username: LEETCODE_USERNAME } }),
@@ -89,7 +90,7 @@ export function useLeetCodeStats() {
       })
       .catch(() => {
         // Fallback 1: alfa-leetcode-api (CORS-safe, free, no auth needed)
-        fetch(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}`)
+        fetchWithTimeout(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}`)
           .then((r) => {
             if (!r.ok) throw new Error("HTTP error");
             return r.json();

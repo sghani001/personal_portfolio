@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { FadeUp, Card, Section } from "../UI";
 import { DetailModal } from "../DetailModal";
 import { IconForTech, getTechColor } from "../Icons";
@@ -37,7 +37,7 @@ export function RailsShowcaseSection() {
                   <IconForTech name={pillar.icon} size={24} />
                 </div>
                 <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, fontSize: 17, margin: 0 }}>{pillar.title}</h3>
-                <p style={{ fontSize: 11, color: C.copper, marginTop: 14, fontFamily: "'JetBrains Mono',monospace" }}>Click for details →</p>
+                <p style={{ fontSize: 11, color: C.accentText, marginTop: 14, fontFamily: "'JetBrains Mono',monospace" }}>Click for details →</p>
               </Card>
             </FadeUp>
           );
@@ -49,12 +49,12 @@ export function RailsShowcaseSection() {
             textAlign: "center",
             padding: "36px 32px",
             borderRadius: 18,
-            border: `1px solid ${C.copper}45`,
-            background: `linear-gradient(135deg, ${C.copper}12, ${C.copper}04)`,
-            boxShadow: `0 12px 40px ${C.copper}15`,
+            border: `1px solid ${alpha(C.copper, "45")}`,
+            background: `linear-gradient(135deg, ${alpha(C.copper, "12")}, ${alpha(C.copper, "04")})`,
+            boxShadow: `0 12px 40px ${alpha(C.copper, "15")}`,
           }}
         >
-          <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(20px,2.6vw,28px)", fontStyle: "italic", fontWeight: 700, color: C.copper, margin: 0, lineHeight: 1.4 }}>
+          <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(20px,2.6vw,28px)", fontStyle: "italic", fontWeight: 700, color: C.accentText, margin: 0, lineHeight: 1.4 }}>
             "{resumeData.railsClosingLine}"
           </p>
         </div>

@@ -1,5 +1,6 @@
-/* Space Grotesk (headings) + Inter (body) + JetBrains Mono — must come first */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* Fonts are requested from a <link> in index.html, not an @import here: an
+   @import can't start downloading until this stylesheet has itself downloaded
+   and parsed, which serialises two round-trips before any text can render. */
 
 @tailwind base;
 @tailwind components;
@@ -18,7 +19,11 @@
   --accent:       #E2C799;
   --accent-deep:  #C4A574;
   --accent-muted: #DBC1A0;
+  --on-accent:    #121212;
+  /* On dark, accent text and accent fills can be the same gold. */
+  --accent-text:  #E2C799;
   --success:      #A8B5A0;
+  --whatsapp:     #25D366;
   --shadow-base:  rgba(0, 0, 0, 0.45);
   --shadow-hover: rgba(0, 0, 0, 0.65);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -33,10 +38,20 @@
   --border-c:     #D8D2CA;
   --primary:      #121212;
   --secondary:    #5C5C5C;
-  --accent:       #B8956A;
-  --accent-deep:  #96784F;
+  /* Two different jobs, so two different values.
+     --accent fills things (buttons, badges, the logo tile) and always carries
+     dark text on top, so it stays a warm, bright gold — darkening it to pass
+     contrast as *text* turned every CTA muddy brown.
+     --accent-text is only ever ink on the page, where that same gold is
+     illegible (~1.4:1), so it's a deeper bronze tuned against the *tinted*
+     section bg (#EFEBE6), the darker of the two surfaces accent text sits on. */
+  --accent:       #BE9C62;  /* 7.2:1 against --on-accent */
+  --accent-deep:  #A17F45;
   --accent-muted: #C4A574;
-  --success:      #6B8F71;
+  --on-accent:    #121212;
+  --accent-text:  #9C4A21;  /* rust/terracotta — 5.1:1 on tinted */
+  --success:      #4A7355;
+  --whatsapp:     #0F7A3D;  /* brand #25D366 is only 1.7:1 on this bg */
   --shadow-base:  rgba(0, 0, 0, 0.06);
   --shadow-hover: rgba(0, 0, 0, 0.14);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -152,6 +167,20 @@
   .rails-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* GitHub heatmap + LeetCode: stacked on mobile, side-by-side on desktop.
+   The track is minmax(0,1fr) rather than 1fr — a bare 1fr track has an implicit
+   min-width:auto, which let the ~830px-wide calendar push the whole panel past
+   the viewport instead of scrolling inside its own overflow-x container. */
+.github-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .github-grid { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
 /* About two-column layout */
 .about-grid {
   display: grid;
@@ -172,9 +201,29 @@
   .contact-grid { grid-template-columns: 1fr 1.6fr; gap: 56px; }
 }
 
-/* Nav desktop links: hide on mobile, show on lg */
+/* Nav desktop links. The full 13-section row needs ~751px; the bar has
+   (viewport − 361px) to spare once the logo, theme toggle, resume dropdown and
+   CTA are accounted for — so 1120px is the narrowest viewport that fits it, and
+   below that the hamburger drawer (which lists the same 13) takes over.
+   Between 1120 and 1200 the resume dropdown is dropped to buy back its 94px. */
 .nav-links { display: none; }
-@media (min-width: 1024px) { .nav-links { display: flex; align-items: center; gap: 28px; } }
+@media (min-width: 1120px) { .nav-links { display: flex; align-items: center; gap: 14px; } }
+
+/* Hamburger + drawer are the mobile counterpart to .nav-links — exactly one of
+   the two is visible at any width, so navigation is never unreachable. */
+.nav-burger { display: flex; }
+.nav-resume-desktop { display: none; }
+@media (min-width: 1120px) { .nav-burger { display: none; } }
+@media (min-width: 1200px) { .nav-resume-desktop { display: block; } }
+
+/* Anchored sections must clear the 64px fixed nav, both when a nav link is
+   clicked and when the page loads on a hash after a refresh. */
+main section[id] { scroll-margin-top: 76px; }
+
+/* Narrow phones: the header runs out of room, so trim the CTA and gaps */
+@media (max-width: 400px) {
+  .nav-hire { padding: 8px 12px !important; font-size: 12px !important; }
+}
 
 .flowchart-layout {
   grid-template-columns: minmax(0, 1fr) 320px;
@@ -185,9 +234,14 @@
   }
 }
 
-/* Section responsive padding */
+/* Section rhythm — 96px of breathing room reads as generous on a desktop and as
+   dead space on a phone, so it tightens with the viewport. */
+.section-block { padding: 96px 0; }
+.section-inner { padding: 0 24px; }
+
 @media (max-width: 640px) {
-  .section-inner { padding: 0 16px; }
+  .section-block { padding: 56px 0; }
+  .section-inner { padding: 0 18px; }
   .card-pad { padding: 20px 18px !important; }
 }
 

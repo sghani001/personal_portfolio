@@ -1,6 +1,6 @@
 import React from "react";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { IconEducation } from "../Icons";
 import { FadeUp, Section } from "../UI";
 import { FlipCard } from "../FlipCard";
@@ -20,8 +20,8 @@ export function EducationSection() {
                       height: 52,
                       borderRadius: 14,
                       marginBottom: 18,
-                      background: `${C.copper}18`,
-                      border: `1px solid ${C.copper}40`,
+                      background: `${alpha(C.copper, "18")}`,
+                      border: `1px solid ${alpha(C.copper, "40")}`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -30,9 +30,9 @@ export function EducationSection() {
                     <IconEducation size={24} />
                   </div>
                   <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, fontSize: 18, margin: "0 0 6px" }}>{edu.degree}</h3>
-                  <p style={{ color: C.copper, fontWeight: 600, margin: "0 0 4px", fontSize: 14 }}>{edu.institution}</p>
+                  <p style={{ color: C.accentText, fontWeight: 600, margin: "0 0 4px", fontSize: 14 }}>{edu.institution}</p>
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 12, color: C.secondary }}>{edu.duration}</span>
-                  <p style={{ fontSize: 11, color: C.copper, marginTop: 16, fontFamily: "'JetBrains Mono',monospace" }}>Hover for details →</p>
+                  <p style={{ fontSize: 11, color: C.accentText, marginTop: 16, fontFamily: "'JetBrains Mono',monospace" }}>Hover for details →</p>
                 </div>
               }
               back={

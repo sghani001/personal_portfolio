@@ -4,18 +4,45 @@ import { FadeUp, Section } from "../UI";
 import { useGitHubContributions } from "../../hooks/useGitHubContributions";
 import { useLeetCodeStats } from "../../hooks/useLeetCodeStats";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useThemeMode } from "../../hooks/useThemeMode";
 
 const GITHUB_USERNAME = "sghani001";
 const LEETCODE_USERNAME = "sghani001";
 
-// GitHub contribution level → color (authentic GitHub palette, dark-mode tuned)
-const LEVEL_COLORS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"];
+// Authentic GitHub palettes — the real ones GitHub itself ships for each theme.
+// Kept as hex literals (not CSS vars) because the cells derive borders and glows
+// by appending alpha, e.g. `${color}99`, which needs a real hex string.
+const GH = {
+  dark: {
+    panel: "#0d1117",
+    line: "#21262d",
+    muted: "#8b949e",
+    link: "#58a6ff",
+    levels: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+  },
+  light: {
+    panel: "#FFFFFF",
+    line: "#D8D2CA",
+    muted: "#57606A",
+    link: "#0969DA",
+    levels: ["#EBEDF0", "#ACEEBB", "#4AC26B", "#2DA44E", "#116329"],
+  },
+};
+
+// LeetCode's brand colors are tuned for their dark UI and wash out on off-white,
+// so light mode uses darkened equivalents that still read as the same hues.
+const LC = {
+  dark: { easy: "#00b8a3", medium: "#ffc01e", hard: "#ef4743" },
+  light: { easy: "#00706B", medium: "#8A5A00", hard: "#C0322E" },
+};
 
 // Non-linear so high-activity days visibly pop — a level-4 day floats much higher than level-1.
 const Z_BY_LEVEL = [0, 10, 22, 38, 58];
 
 function ContributionHeatmap({ contributions, totalThisYear }) {
   const reducedMotion = usePrefersReducedMotion();
+  const gh = GH[useThemeMode()];
+  const LEVEL_COLORS = gh.levels;
   const weeks = useMemo(() => {
     if (!contributions || contributions.length === 0) return [];
     // Group days into weeks (columns of 7)
@@ -125,8 +152,8 @@ function ContributionHeatmap({ contributions, totalThisYear }) {
                           height: CELL,
                           borderRadius: 2,
                           background: color,
-                          border: level > 0 ? `1px solid ${color}80` : "1px solid #21262d",
-                          boxShadow: level > 0 && !reducedMotion ? `0 ${Math.round(z * 0.4)}px ${z + 10}px 0 ${color}99, 0 2px 6px rgba(0,0,0,0.6)` : "none",
+                          border: level > 0 ? `1px solid ${color}80` : `1px solid ${gh.line}`,
+                          boxShadow: level > 0 && !reducedMotion ? `0 ${Math.round(z * 0.4)}px ${z + 10}px 0 ${color}99, 0 2px 6px var(--shadow-base)` : "none",
                           cursor: "default",
                           transform: baseTransform,
                           transition: "transform 0.15s",
@@ -146,7 +173,7 @@ function ContributionHeatmap({ contributions, totalThisYear }) {
       <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 10, fontSize: 10, color: C.secondary, fontFamily: "'JetBrains Mono',monospace" }}>
         <span>Less</span>
         {LEVEL_COLORS.map((c, i) => (
-          <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: c, border: "1px solid #21262d" }} />
+          <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: c, border: `1px solid ${gh.line}` }} />
         ))}
         <span>More</span>
       </div>
@@ -155,20 +182,21 @@ function ContributionHeatmap({ contributions, totalThisYear }) {
 }
 
 function LeetCodeStats({ stats, loading, error }) {
+  const lc = LC[useThemeMode()];
   const cards = loading
     ? [
-      { label: "Total Solved", value: "…", color: C.copper },
-      { label: "Easy", value: "…", color: "#00b8a3" },
-      { label: "Medium", value: "…", color: "#ffc01e" },
-      { label: "Hard", value: "…", color: "#ef4743" },
+      { label: "Total Solved", value: "…", color: C.accentText },
+      { label: "Easy", value: "…", color: lc.easy },
+      { label: "Medium", value: "…", color: lc.medium },
+      { label: "Hard", value: "…", color: lc.hard },
     ]
     : error || !stats
       ? null
       : [
-        { label: "Total Solved", value: stats.totalSolved ?? "—", color: C.copper },
-        { label: "Easy", value: stats.easySolved ?? "—", color: "#00b8a3" },
-        { label: "Medium", value: stats.mediumSolved ?? "—", color: "#ffc01e" },
-        { label: "Hard", value: stats.hardSolved ?? "—", color: "#ef4743" },
+        { label: "Total Solved", value: stats.totalSolved ?? "—", color: C.accentText },
+        { label: "Easy", value: stats.easySolved ?? "—", color: lc.easy },
+        { label: "Medium", value: stats.mediumSolved ?? "—", color: lc.medium },
+        { label: "Hard", value: stats.hardSolved ?? "—", color: lc.hard },
       ];
 
   if (!loading && (error || !stats)) {
@@ -203,7 +231,7 @@ function LeetCodeStats({ stats, loading, error }) {
       </div>
       {stats?.ranking && (
         <div style={{ fontSize: 12, color: C.secondary, fontFamily: "'JetBrains Mono',monospace" }}>
-          Global Rank: <span style={{ color: C.copper, fontWeight: 700 }}>#{stats.ranking?.toLocaleString()}</span>
+          Global Rank: <span style={{ color: C.accentText, fontWeight: 700 }}>#{stats.ranking?.toLocaleString()}</span>
           {stats.acceptanceRate != null && (
             <span style={{ marginLeft: 16 }}>
               Acceptance: <span style={{ color: C.sage }}>{typeof stats.acceptanceRate === "number" ? `${stats.acceptanceRate.toFixed(1)}%` : stats.acceptanceRate}</span>
@@ -215,7 +243,7 @@ function LeetCodeStats({ stats, loading, error }) {
         href={`https://leetcode.com/${LEETCODE_USERNAME}`}
         target="_blank"
         rel="noreferrer"
-        style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 12, color: "#ffc01e", textDecoration: "none", fontFamily: "'JetBrains Mono',monospace" }}
+        style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 12, color: lc.medium, textDecoration: "none", fontFamily: "'JetBrains Mono',monospace" }}
         onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
         onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
       >
@@ -228,6 +256,7 @@ function LeetCodeStats({ stats, loading, error }) {
 export function GitHubSection() {
   const { data: ghData, loading: ghLoading, error: ghError } = useGitHubContributions();
   const { stats: lcStats, loading: lcLoading, error: lcError } = useLeetCodeStats();
+  const gh = GH[useThemeMode()];
 
   const contributions = ghData?.contributions ?? [];
   const totalThisYear = ghData?.total ? Object.values(ghData.total).reduce((a, b) => a + b, 0) : null;
@@ -236,29 +265,29 @@ export function GitHubSection() {
     <Section id="github" label="Activity" title="GitHub & LeetCode" watermark="ACTIVITY">
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
 
-        {/* Contribution heatmap + LeetCode side by side */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start" }}>
+        {/* Contribution heatmap + LeetCode side by side (stacked on narrow screens) */}
+        <div className="github-grid">
           {/* GitHub Heatmap */}
           <FadeUp delay={80}>
             <div
               style={{
                 borderRadius: 16,
-                background: "#0d1117",
-                border: "1px solid #21262d",
+                background: gh.panel,
+                border: `1px solid ${gh.line}`,
                 padding: "24px 28px",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+                boxShadow: "0 4px 20px var(--shadow-base)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
                 <div>
-                  <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: "#8b949e", margin: "0 0 4px" }}>
+                  <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: gh.muted, margin: "0 0 4px" }}>
                     GitHub Contributions
                   </p>
                   <a
                     href={`https://github.com/${GITHUB_USERNAME}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={{ fontSize: 13, color: "#58a6ff", textDecoration: "none", fontFamily: "'JetBrains Mono',monospace" }}
+                    style={{ fontSize: 13, color: gh.link, textDecoration: "none", fontFamily: "'JetBrains Mono',monospace" }}
                     onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
                     onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                   >
@@ -267,12 +296,12 @@ export function GitHubSection() {
                 </div>
               </div>
               {ghLoading && (
-                <div style={{ fontSize: 12, color: "#8b949e", fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
+                <div style={{ fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
                   Loading contributions…
                 </div>
               )}
               {ghError && !ghLoading && (
-                <div style={{ fontSize: 12, color: "#8b949e", fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
+                <div style={{ fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
                   GitHub API unavailable — contributions not shown.
                 </div>
               )}

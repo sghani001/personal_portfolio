@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import C from "../theme";
+import C, { alpha } from "../theme";
 
 const GITHUB_USERNAME = "sghani001";
 
@@ -74,7 +74,7 @@ export default function GitHubBadge() {
       onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.28)"; }}
     >
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: `1px solid ${C.border}`, background: `${C.bg}80` }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: `1px solid ${C.border}`, background: `${alpha(C.bg, "80")}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, color: C.primary }}>
           <GitHubLogo />
           <span style={{ fontSize: 12, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.12em", color: C.secondary }}>GitHub</span>
@@ -119,8 +119,8 @@ export default function GitHubBadge() {
             { label: "Followers", value: profile?.followers ?? "—" },
             { label: "Following", value: profile?.following ?? "—" },
           ].map((stat, i) => (
-            <div key={i} style={{ flex: 1, textAlign: "center", padding: "10px 6px", borderRadius: 10, background: `${C.copper}10`, border: `1px solid ${C.copper}20` }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 16, color: C.copper }}>{stat.value}</div>
+            <div key={i} style={{ flex: 1, textAlign: "center", padding: "10px 6px", borderRadius: 10, background: `${alpha(C.copper, "10")}`, border: `1px solid ${alpha(C.copper, "20")}` }}>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 16, color: C.accentText }}>{stat.value}</div>
               <div style={{ fontSize: 10, color: C.secondary, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2 }}>{stat.label}</div>
             </div>
           ))}
@@ -141,7 +141,7 @@ export default function GitHubBadge() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: `1px solid ${C.border}`, textAlign: "center", fontSize: 12, fontFamily: "'JetBrains Mono',monospace", color: C.copper, background: `${C.bg}80` }}>
+      <div style={{ padding: "12px 20px", borderTop: `1px solid ${C.border}`, textAlign: "center", fontSize: 12, fontFamily: "'JetBrains Mono',monospace", color: C.accentText, background: `${alpha(C.bg, "80")}` }}>
         View Profile →
       </div>
     </a>

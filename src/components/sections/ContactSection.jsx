@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { IconDownload, IconForTech, getTechColor } from "../Icons";
 import { FadeUp, Section } from "../UI";
 import { socialLinks } from "../../data/sectionsData";
@@ -88,7 +88,7 @@ export function ContactSection() {
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
             <div>
               <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.18em", color: C.secondary, marginBottom: 8 }}>Email</p>
-              <a href={`mailto:${resumeData.email}`} style={{ color: C.copper, textDecoration: "none", fontSize: 17, fontWeight: 600 }}>{resumeData.email}</a>
+              <a href={`mailto:${resumeData.email}`} style={{ color: C.accentText, textDecoration: "none", fontSize: 17, fontWeight: 600 }}>{resumeData.email}</a>
             </div>
             <div>
               <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.18em", color: C.secondary, marginBottom: 8 }}>Direct Contact</p>
@@ -96,7 +96,7 @@ export function ContactSection() {
                 <a href="tel:+923090204019" style={{ color: C.primary, textDecoration: "none", fontSize: 15, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 8 }}>
                   <IconForTech name="phone" size={16} colored={true} /> +92 309 020 4019
                 </a>
-                <a href="https://wa.me/923090204019" target="_blank" rel="noreferrer" style={{ color: "#25D366", textDecoration: "none", fontSize: 15, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <a href="https://wa.me/923090204019" target="_blank" rel="noreferrer" style={{ color: "var(--whatsapp)", textDecoration: "none", fontSize: 15, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 8 }}>
                   <IconForTech name="whatsapp" size={16} colored={true} /> WhatsApp Chat
                 </a>
               </div>
@@ -153,7 +153,7 @@ export function ContactSection() {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = C.copper;
-                      e.currentTarget.style.color = C.copper;
+                      e.currentTarget.style.color = C.accentText;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = C.border;
@@ -170,7 +170,7 @@ export function ContactSection() {
 
         <FadeUp delay={120}>
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, padding: 36, boxShadow: "0 8px 32px rgba(0,0,0,0.28)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, transparent, ${C.copper}60, transparent)` }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, transparent, ${alpha(C.copper, "60")}, transparent)` }} />
             <form id="contact-form" onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <div>
@@ -244,7 +244,7 @@ export function ContactSection() {
                   fontSize: 15,
                   fontWeight: 700,
                   fontFamily: "'Space Grotesk',sans-serif",
-                  background: state === "success" ? `${C.sage}20` : state === "error" ? `${C.copperDeep}20` : `linear-gradient(135deg, ${C.copper}, ${C.copperDeep})`,
+                  background: state === "success" ? `${alpha(C.sage, "20")}` : state === "error" ? `${alpha(C.copperDeep, "20")}` : `linear-gradient(135deg, ${C.copper}, ${C.copperDeep})`,
                   color: state === "success" ? C.sage : state === "error" ? C.goldDeep : C.onGold,
                   boxShadow: state === "idle" ? "0 6px 24px rgba(0,0,0,0.35)" : "none",
                   transition: "all 0.3s",

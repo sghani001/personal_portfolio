@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import resumeData from "../utils/resumeData";
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
 export function useGemStats() {
   const [counts, setCounts] = useState({});
@@ -11,7 +12,7 @@ export function useGemStats() {
     const gems = resumeData.openSource.gems;
     Promise.allSettled(
       gems.map(g =>
-        fetch(`https://rubygems.org/api/v1/gems/${g.name}.json`)
+        fetchWithTimeout(`https://rubygems.org/api/v1/gems/${g.name}.json`)
           .then(r => {
             if (!r.ok) throw new Error(`HTTP ${r.status}`);
             return r.json();

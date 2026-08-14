@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useTilt3D } from "../hooks/useTilt3D";
-import C from "../theme";
+import C, { alpha } from "../theme";
 import IconForTech from "./Icons";
 
 export function FadeUp({ children, delay = 0, className = "" }) {
@@ -96,7 +96,7 @@ export function SkillPill({ skill, dashed = false }) {
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = C.copper;
-          e.currentTarget.style.color = C.copper;
+          e.currentTarget.style.color = C.accentText;
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.borderColor = dashed ? C.border : C.border;
@@ -109,7 +109,7 @@ export function SkillPill({ skill, dashed = false }) {
           <span
             style={{
               fontSize: 9,
-              color: C.copper,
+              color: C.accentText,
               transform: open ? "rotate(180deg)" : "none",
               display: "inline-block",
               transition: "transform 0.2s",
@@ -128,7 +128,7 @@ export function SkillPill({ skill, dashed = false }) {
             left: "50%",
             transform: "translateX(-50%)",
             background: C.surface,
-            border: `1px solid ${C.copper}40`,
+            border: `1px solid ${alpha(C.copper, "40")}`,
             borderRadius: 10,
             padding: "10px 14px",
             minWidth: 180,
@@ -152,7 +152,7 @@ export function SkillPill({ skill, dashed = false }) {
               width: 10,
               height: 10,
               background: C.surface,
-              border: `1px solid ${C.copper}40`,
+              border: `1px solid ${alpha(C.copper, "40")}`,
               borderTop: "none",
               borderLeft: "none",
               rotate: "45deg",
@@ -170,11 +170,10 @@ export function Section({ id, label, title, subtitle, children, tinted = false, 
   return (
     <section
       id={id}
-      className={className}
+      className={`section-block ${className}`.trim()}
       style={{
         position: "relative",
         overflow: "hidden",
-        padding: "96px 0",
         background: tinted ? "var(--tinted-bg)" : "transparent",
         transition: "background 0.3s, color 0.3s",
       }}
@@ -189,7 +188,7 @@ export function Section({ id, label, title, subtitle, children, tinted = false, 
             transform: "translateX(-50%)",
             fontFamily: "'Space Grotesk',sans-serif",
             fontWeight: 800,
-            fontSize: "clamp(70px, 14vw, 200px)",
+            fontSize: "clamp(40px, 14vw, 200px)",
             lineHeight: 1,
             color: C.primary,
             opacity: 0.035,
@@ -203,7 +202,7 @@ export function Section({ id, label, title, subtitle, children, tinted = false, 
           {wm}
         </div>
       )}
-      <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+      <div className="section-inner" style={{ maxWidth: 1160, margin: "0 auto", position: "relative", zIndex: 1 }}>
         {label && (
           <FadeUp>
             <p
@@ -212,7 +211,7 @@ export function Section({ id, label, title, subtitle, children, tinted = false, 
                 fontFamily: "'JetBrains Mono',monospace",
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                color: C.copper,
+                color: C.accentText,
                 marginBottom: 8,
               }}
             >

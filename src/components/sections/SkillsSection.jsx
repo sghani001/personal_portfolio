@@ -1,10 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { IconForTech } from "../Icons";
 import { FadeUp, SkillPill, Section } from "../UI";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useInView } from "../../hooks/useInView";
 
 const RINGS = [
   { radius: 92, duration: 18, size: 38, iconSize: 16, icons: ["React.js", "PostgreSQL", "Redis"] },
@@ -12,22 +13,45 @@ const RINGS = [
   { radius: 244, duration: 48, size: 42, iconSize: 18, icons: ["Stripe", "GitHub Actions", "TailwindCSS"] },
 ];
 
-function OrbitRing({ radius, duration, size, iconSize, icons }) {
+// The ring radii above are the full-size (desktop) values. On narrow screens the
+// whole system is scaled down proportionally so it fits the viewport instead of
+// being clipped by the section's overflow:hidden.
+function useSolarScale(baseDiameter) {
+  const [scale, setScale] = React.useState(1);
+  React.useEffect(() => {
+    const compute = () => {
+      const available = Math.min(window.innerWidth, document.documentElement.clientWidth) - 32;
+      setScale(Math.min(1, available / baseDiameter));
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [baseDiameter]);
+  return scale;
+}
+
+function OrbitRing({ radius, duration, size, iconSize, icons, active }) {
+  // Parked off-screen: a stopped animation costs nothing, and nobody can see
+  // the reset to 0deg because the whole system is out of view when it happens.
+  const spin = active ? { rotate: 360 } : { rotate: 0 };
+  const spinBack = active ? { rotate: -360 } : { rotate: 0 };
+  const loop = active ? { duration, repeat: Infinity, ease: "linear" } : { duration: 0 };
+
   return (
     <>
       <div style={{ position: "absolute", top: "50%", left: "50%", width: radius * 2, height: radius * 2, marginLeft: -radius, marginTop: -radius, borderRadius: "50%", border: `1px dashed ${C.border}` }} />
       <motion.div
         style={{ position: "absolute", inset: 0 }}
-        animate={{ rotate: 360 }}
-        transition={{ duration, repeat: Infinity, ease: "linear" }}
+        animate={spin}
+        transition={loop}
       >
         {icons.map((name, i) => {
           const angle = (360 / icons.length) * i;
           return (
             <div key={name} style={{ position: "absolute", top: "50%", left: "50%", transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)` }}>
               <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration, repeat: Infinity, ease: "linear" }}
+                animate={spinBack}
+                transition={loop}
                 style={{
                   marginLeft: -size / 2,
                   marginTop: -size / 2,
@@ -54,13 +78,26 @@ function OrbitRing({ radius, duration, size, iconSize, icons }) {
 
 function SkillSolarSystem() {
   const reducedMotion = usePrefersReducedMotion();
+  const baseDiameter = RINGS[RINGS.length - 1].radius * 2 + 60;
+  const scale = useSolarScale(baseDiameter);
+  // Declared before the early return below — hooks can't run conditionally.
+  const [viewRef, inView] = useInView();
   if (reducedMotion) return null;
 
-  const outerRadius = RINGS[RINGS.length - 1].radius;
-  const diameter = outerRadius * 2 + 60;
+  const diameter = baseDiameter * scale;
+  // Scale every dimension by the same factor so the system shrinks as one rigid
+  // unit — scaling radii without the icons would leave them overlapping.
+  const rings = RINGS.map((r) => ({
+    ...r,
+    radius: r.radius * scale,
+    size: r.size * scale,
+    iconSize: Math.max(11, Math.round(r.iconSize * scale)),
+  }));
+  const sun = Math.round(76 * scale);
+  const sunInner = Math.round(46 * scale);
 
   return (
-    <div style={{ perspective: 1100, marginBottom: -diameter * 0.15, overflow: "hidden" }}>
+    <div ref={viewRef} style={{ perspective: 1100, marginBottom: -diameter * 0.15, overflow: "hidden" }}>
       <div
         style={{
           position: "relative",
@@ -71,20 +108,41 @@ function SkillSolarSystem() {
           transform: "rotateX(45deg)",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `radial-gradient(circle, ${C.copper}12 0%, transparent 65%)` }} />
-        {RINGS.map((ring, i) => (
-          <OrbitRing key={i} {...ring} />
+        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `radial-gradient(circle, ${alpha(C.copper, "12")} 0%, transparent 65%)` }} />
+        {rings.map((ring, i) => (
+          <OrbitRing key={i} {...ring} active={inView} />
         ))}
-        {/* Sun — Ruby on Rails at the center */}
+        {/* Sun — Ruby on Rails at the center. The glow is a separate layer whose
+            opacity/scale pulses, rather than an animated box-shadow: box-shadow
+            can't be composited, so animating it repainted the sun every frame
+            for as long as the page was open. */}
         <motion.div
+          aria-hidden="true"
           style={{
             position: "absolute",
             top: "50%",
             left: "50%",
-            width: 76,
-            height: 76,
-            marginLeft: -38,
-            marginTop: -38,
+            width: sun,
+            height: sun,
+            marginLeft: -sun / 2,
+            marginTop: -sun / 2,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${alpha(C.copper, "80")} 0%, transparent 70%)`,
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+          animate={inView ? { opacity: [0.55, 1, 0.55], scale: [1.25, 1.9, 1.25] } : { opacity: 0.7, scale: 1.5 }}
+          transition={inView ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : { duration: 0 }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: sun,
+            height: sun,
+            marginLeft: -sun / 2,
+            marginTop: -sun / 2,
             borderRadius: "50%",
             background: `radial-gradient(circle at 35% 30%, ${C.gold}, ${C.goldDeep})`,
             display: "flex",
@@ -92,13 +150,11 @@ function SkillSolarSystem() {
             justifyContent: "center",
             zIndex: 2,
           }}
-          animate={{ boxShadow: [`0 0 24px 6px ${C.copper}55`, `0 0 40px 14px ${C.copper}80`, `0 0 24px 6px ${C.copper}55`] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div style={{ width: 46, height: 46, borderRadius: "50%", background: "rgba(18,18,18,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <IconForTech name="Ruby on Rails" size={26} colored />
+          <div style={{ width: sunInner, height: sunInner, borderRadius: "50%", background: "rgba(18,18,18,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <IconForTech name="Ruby on Rails" size={Math.max(16, Math.round(26 * scale))} colored />
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -143,7 +199,7 @@ export function SkillsSection() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <IconForTech name="learning" size={18} />
               <h4 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em", color: C.secondary, margin: 0 }}>Currently Learning</h4>
-              <span style={{ marginLeft: 4, padding: "2px 8px", borderRadius: 100, fontSize: 10, background: `${C.copper}14`, border: `1px solid ${C.copper}30`, color: C.copper, fontFamily: "'JetBrains Mono',monospace" }}>
+              <span style={{ marginLeft: 4, padding: "2px 8px", borderRadius: 100, fontSize: 10, background: `${alpha(C.copper, "14")}`, border: `1px solid ${alpha(C.copper, "30")}`, color: C.accentText, fontFamily: "'JetBrains Mono',monospace" }}>
                 growing
               </span>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import IconForTech, { getTechColor } from "./Icons";
-import C from "../theme";
+import C, { alpha } from "../theme";
 import {
   FLOW_CORE,
   FLOW_CLUSTERS,
@@ -33,8 +33,9 @@ export default function SystemFlowchart() {
 
   const nodeCount = FLOW_CLUSTERS.reduce((n, c) => n + c.items.length, 0) + FLOW_CORE.items.length;
 
-  const GOLD = C.gold || "#E2C799";
-  const GOLD_GLOW = (C.goldGlow && C.goldGlow) || `${GOLD}44`;
+  const GOLD = C.accentText;            // accent used as ink here
+  const GOLD_FILL = C.gold;             // accent used as fill/border
+  const GOLD_GLOW = alpha(GOLD_FILL, "44");
 
   const getIconStyle = (itemId, extra = {}) => {
     const isHovered = hoveredId === itemId;
@@ -199,7 +200,7 @@ export default function SystemFlowchart() {
         {mobile ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 10 }}>
             <div ref={coreRef} style={{ marginBottom: 10, textAlign: "center" }}>
-              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: "0.18em", color: GOLD, margin: "0 0 6px", fontWeight: 700 }}>{FLOW_CORE.label}</p>
+              <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", color: GOLD, margin: "0 0 6px", fontWeight: 700 }}>{FLOW_CORE.label}</p>
               <div style={{ padding: "10px 12px", borderRadius: 12, border: `1px solid ${GOLD}`, background: C.surface, boxShadow: `0 8px 24px ${GOLD_GLOW}`, display: "flex", gap: 10 }}>
                 {FLOW_CORE.items.map(item => (
                   <IconUnit key={item.id} item={item} size={48} iconSize={14} innerSize={24} glow />
@@ -216,7 +217,7 @@ export default function SystemFlowchart() {
                     ref={el => { if (el) clusterRefs.current[cluster.id] = el; }}
                     style={{ padding: 8, borderRadius: C.radius, border: `1px solid ${lit ? GOLD : C.border}`, background: lit ? "rgba(226,199,153,0.04)" : C.surface, gridColumn: cluster.id === "payments" ? "1 / -1" : "auto" }}
                   >
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8.5, letterSpacing: "0.14em", color: lit ? GOLD : C.secondary, margin: "0 0 8px", fontWeight: 600 }}>{cluster.label}</p>
+                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: lit ? GOLD : C.secondary, margin: "0 0 8px", fontWeight: 600 }}>{cluster.label}</p>
                     {renderClusterItems(cluster, 44, 13, 22)}
                   </div>
                 );
@@ -322,7 +323,7 @@ export default function SystemFlowchart() {
                       transition: "border-color 0.25s, box-shadow 0.25s, background 0.25s",
                     }}
                   >
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8.5, letterSpacing: "0.18em", color: lit ? GOLD : C.secondary, margin: "0 0 10px", fontWeight: 600 }}>
+                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", color: lit ? GOLD : C.secondary, margin: "0 0 10px", fontWeight: 600 }}>
                       {cluster.label}
                     </p>
                     {renderClusterItems(cluster)}
@@ -350,7 +351,7 @@ export default function SystemFlowchart() {
                   minWidth: 150,
                 }}
               >
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8.5, letterSpacing: "0.22em", color: GOLD, margin: 0, fontWeight: 700 }}>
+                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.22em", color: GOLD, margin: 0, fontWeight: 700 }}>
                   {FLOW_CORE.label}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -377,7 +378,7 @@ export default function SystemFlowchart() {
           minHeight: 460,
         }}
       >
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: "0.18em", color: GOLD, margin: "0 0 16px", fontWeight: 600 }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", color: GOLD, margin: "0 0 16px", fontWeight: 600 }}>
           TELEMETRY // SPECIFICATION
         </p>
 
@@ -389,7 +390,7 @@ export default function SystemFlowchart() {
                 display: "inline-block",
                 padding: "3px 9px",
                 borderRadius: 6,
-                fontSize: 9.5,
+                fontSize: 10.5,
                 fontFamily: "'JetBrains Mono', monospace",
                 border: `1px solid ${isAuth ? GOLD : C.border}`,
                 color: isAuth ? GOLD : C.secondary,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { IconExternal } from "../Icons";
 import { FadeUp, Section } from "../UI";
 import { Coverflow } from "../Coverflow";
@@ -44,7 +44,7 @@ function TestimonialModal({ t, onClose }) {
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         style={{
           background: C.bg || "#0d0d0d",
-          border: `1px solid ${C.copper}30`,
+          border: `1px solid ${alpha(C.copper, "30")}`,
           borderRadius: 16,
           maxWidth: 560,
           width: "100%",
@@ -67,7 +67,7 @@ function TestimonialModal({ t, onClose }) {
             width: 32,
             height: 32,
             borderRadius: 8,
-            border: `1px solid ${C.copper}40`,
+            border: `1px solid ${alpha(C.copper, "40")}`,
             background: "transparent",
             color: C.primary,
             fontSize: 16,
@@ -80,9 +80,9 @@ function TestimonialModal({ t, onClose }) {
           ×
         </button>
 
-        <div style={{ fontSize: 48, color: `${C.copper}25`, fontFamily: "Georgia, serif", lineHeight: 1, marginBottom: 8 }}>"</div>
+        <div style={{ fontSize: 48, color: `${alpha(C.copper, "25")}`, fontFamily: "Georgia, serif", lineHeight: 1, marginBottom: 8 }}>"</div>
 
-        <p style={{ fontSize: 15, color: `${C.primary}DD`, lineHeight: 1.9, fontStyle: "italic", marginBottom: 28, whiteSpace: "pre-line" }}>
+        <p style={{ fontSize: 15, color: `${alpha(C.primary, "DD")}`, lineHeight: 1.9, fontStyle: "italic", marginBottom: 28, whiteSpace: "pre-line" }}>
           {t.quote}
         </p>
 
@@ -101,9 +101,9 @@ function TestimonialModal({ t, onClose }) {
                 alignItems: "center",
                 gap: 6,
                 fontSize: 12,
-                color: C.copper,
+                color: C.accentText,
                 textDecoration: "none",
-                border: `1px solid ${C.copper}40`,
+                border: `1px solid ${alpha(C.copper, "40")}`,
                 borderRadius: 8,
                 padding: "8px 12px",
                 flexShrink: 0,
@@ -138,7 +138,7 @@ function TestimonialCard({ t, isActive, onExpand }) {
     <div
       style={{
         background: C.surface,
-        border: `1px solid ${isActive ? `${C.copper}45` : C.border}`,
+        border: `1px solid ${isActive ? `${alpha(C.copper, "45")}` : C.border}`,
         borderRadius: C.radius,
         boxShadow: isActive ? "0 24px 56px rgba(0,0,0,0.42)" : "0 8px 24px rgba(0,0,0,0.25)",
         padding: 32,
@@ -149,7 +149,7 @@ function TestimonialCard({ t, isActive, onExpand }) {
         overflow: "hidden",
       }}
     >
-      <div style={{ position: "absolute", top: 12, right: 20, fontSize: 72, color: `${C.copper}09`, fontFamily: "Georgia, serif", lineHeight: 1, userSelect: "none" }}>
+      <div style={{ position: "absolute", top: 12, right: 20, fontSize: 72, color: `${alpha(C.copper, "09")}`, fontFamily: "Georgia, serif", lineHeight: 1, userSelect: "none" }}>
         "
       </div>
 
@@ -157,7 +157,7 @@ function TestimonialCard({ t, isActive, onExpand }) {
         ref={textRef}
         style={{
           fontSize: 14,
-          color: `${C.primary}CC`,
+          color: `${alpha(C.primary, "CC")}`,
           lineHeight: 1.85,
           fontStyle: "italic",
           marginBottom: 10,
@@ -185,7 +185,7 @@ function TestimonialCard({ t, isActive, onExpand }) {
             marginBottom: 20,
             fontSize: 11,
             fontFamily: "'JetBrains Mono',monospace",
-            color: C.copper,
+            color: C.accentText,
             cursor: "pointer",
             textDecoration: "underline",
             textUnderlineOffset: 3,
@@ -211,9 +211,9 @@ function TestimonialCard({ t, isActive, onExpand }) {
               alignItems: "center",
               gap: 6,
               fontSize: 11,
-              color: C.copper,
+              color: C.accentText,
               textDecoration: "none",
-              border: `1px solid ${C.copper}40`,
+              border: `1px solid ${alpha(C.copper, "40")}`,
               borderRadius: 8,
               padding: "6px 10px",
               flexShrink: 0,

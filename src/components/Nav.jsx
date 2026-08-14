@@ -2,6 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import resumeData from "../utils/resumeData";
 import C from "../theme";
 import { IconArrow, IconExternal, IconDownload } from "./Icons";
+import { useScrollSpy } from "../hooks/useScrollSpy";
+
+// Module-level constant: a fresh array each render would re-run the spy's effect
+// on every scroll-driven re-render.
+const SECTION_IDS = [
+  "rails-showcase", "case-studies", "gems", "projects", "skills", "process",
+  "tech-stack", "github", "experience", "education", "testimonials", "about", "contact",
+];
 
 function ResumeDropdown() {
   const [open, setOpen] = useState(false);
@@ -86,22 +94,48 @@ function ResumeDropdown() {
 
 export function Nav({ theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Close the drawer on Escape, and if the viewport grows back to desktop
+  // (where the drawer is hidden but would otherwise stay "open" in state).
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    const onResize = () => window.innerWidth >= 1024 && setMenuOpen(false);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", onResize);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [menuOpen]);
+
+  // Every section on the page, in document order. Labels are kept short so the
+  // full set fits the desktop bar. (There used to be a "#resume" entry here that
+  // pointed at an element that doesn't exist — it scrolled nowhere. Resume
+  // downloads live in the dropdown beside this row and in the mobile drawer.)
   const links = [
     ["#rails-showcase", "Rails"],
     ["#case-studies", "Work"],
     ["#gems", "Gems"],
+    ["#projects", "Projects"],
     ["#skills", "Skills"],
+    ["#process", "Process"],
+    ["#tech-stack", "Stack"],
+    ["#github", "Activity"],
     ["#experience", "Experience"],
+    ["#education", "Education"],
+    ["#testimonials", "Reviews"],
     ["#about", "About"],
     ["#contact", "Contact"],
-    ["#resume", "Resume"],
   ];
+
+  const activeId = useScrollSpy(SECTION_IDS);
 
   const navBg = scrolled ? (theme === "dark" ? "#121212F2" : "#F5F3F0F2") : "transparent";
 
@@ -159,22 +193,45 @@ export function Nav({ theme, toggleTheme }) {
         </a>
 
         <div className="nav-links">
-          {links.map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              style={{
-                color: C.secondary,
-                fontSize: 14,
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = C.primary)}
-              onMouseLeave={(e) => (e.target.style.color = C.secondary)}
-            >
-              {label}
-            </a>
-          ))}
+          {links.map(([href, label]) => {
+            const isActive = href.slice(1) === activeId;
+            return (
+              <a
+                key={href}
+                href={href}
+                aria-current={isActive ? "true" : undefined}
+                style={{
+                  position: "relative",
+                  color: isActive ? C.primary : C.secondary,
+                  fontWeight: isActive ? 600 : 400,
+                  fontSize: 13,
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  transition: "color 0.2s",
+                  paddingBottom: 4,
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = C.primary)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = isActive ? C.primary : C.secondary)}
+              >
+                {label}
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: 2,
+                    borderRadius: 2,
+                    background: C.copper,
+                    transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                    transformOrigin: "center",
+                    transition: "transform 0.25s ease",
+                  }}
+                />
+              </a>
+            );
+          })}
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -197,10 +254,13 @@ export function Nav({ theme, toggleTheme }) {
           >
             {theme === "dark" ? "☀" : "☾"}
           </button>
-          <ResumeDropdown />
+          <span className="nav-resume-desktop">
+            <ResumeDropdown />
+          </span>
           <a
             id="nav-hire-cta"
             href="#contact"
+            className="nav-hire"
             style={{
               padding: "8px 20px",
               background: `linear-gradient(135deg, ${C.copper}, ${C.copperDeep})`,
@@ -216,8 +276,114 @@ export function Nav({ theme, toggleTheme }) {
           >
             Hire Me
           </a>
+
+          {/* Below 1024px the .nav-links row is hidden, so this is the only way
+              to reach the sections — without it mobile has no navigation at all. */}
+          <button
+            className="nav-burger"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 10,
+              border: `1px solid ${C.border}`,
+              background: C.surface,
+              color: C.primary,
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: 4,
+              padding: 0,
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ display: "block", width: 16, height: 2, borderRadius: 2, background: "currentColor", transition: "transform 0.25s", transform: menuOpen ? "translateY(3px) rotate(45deg)" : "none" }} />
+            <span style={{ display: "block", width: 16, height: 2, borderRadius: 2, background: "currentColor", transition: "transform 0.25s", transform: menuOpen ? "translateY(-3px) rotate(-45deg)" : "none" }} />
+          </button>
         </div>
       </div>
+
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          className="nav-drawer"
+          style={{
+            borderTop: `1px solid ${C.border}`,
+            background: theme === "dark" ? "#121212F7" : "#F5F3F0F7",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            boxShadow: "0 16px 40px var(--shadow-base)",
+            maxHeight: "calc(100vh - 64px)",
+            overflowY: "auto",
+          }}
+        >
+          <div style={{ padding: "8px 24px 20px", display: "flex", flexDirection: "column" }}>
+            {links.map(([href, label]) => {
+              const isActive = href.slice(1) === activeId;
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={isActive ? "true" : undefined}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "14px 4px",
+                    color: isActive ? C.accentText : C.primary,
+                    fontSize: 16,
+                    fontFamily: "'Space Grotesk',sans-serif",
+                    fontWeight: isActive ? 700 : 600,
+                    textDecoration: "none",
+                    borderBottom: `1px solid ${C.border}`,
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      width: 3,
+                      height: 16,
+                      borderRadius: 2,
+                      background: isActive ? C.copper : "transparent",
+                      flexShrink: 0,
+                    }}
+                  />
+                  {label}
+                </a>
+              );
+            })}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
+              {resumeData.resumeDownloads.map((dl, i) => (
+                <a
+                  key={i}
+                  href={dl.file}
+                  download={dl.file.split("/").pop()}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "14px 16px",
+                    borderRadius: 10,
+                    border: `1px solid ${C.border}`,
+                    background: C.surface,
+                    color: C.primary,
+                    fontSize: 13,
+                    textDecoration: "none",
+                  }}
+                >
+                  <IconDownload /> {dl.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import C from "../theme";
+import C, { alpha } from "../theme";
 import { IconForTech } from "./Icons";
 
 const PALETTES = [
@@ -49,7 +49,7 @@ export function AutoProjectImage({ name, tech }) {
           padding: "6px 14px",
           borderRadius: 100,
           background: "rgba(0,0,0,0.35)",
-          border: `1px solid ${C.copper}30`,
+          border: `1px solid ${alpha(C.copper, "30")}`,
           fontSize: 11,
           fontFamily: "'JetBrains Mono',monospace",
           color: "#e8e8e8",

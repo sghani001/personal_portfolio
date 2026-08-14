@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import C from "../theme";
+import C, { alpha } from "../theme";
 import { IconExternal } from "./Icons";
 import { AutoProjectImage } from "./AutoProjectImage";
 
@@ -12,9 +12,15 @@ export function ProjectModal({ project, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const { name, image, url, githubUrl, flagship, role, problem, description, metrics, tech } = project;
+  const { name, image, images, url, githubUrl, flagship, role, problem, description, metrics, tech } = project;
   const linkHref = url || githubUrl;
   const linkLabel = url ? "Visit site" : "View on GitHub";
+
+  // Projects with multiple screenshots get a thumbnail strip; single-image and
+  // no-image projects fall through to the existing single-shot / placeholder path.
+  const gallery = images && images.length > 1 ? images : null;
+  const [shot, setShot] = useState(0);
+  const activeImage = gallery ? gallery[shot] : image;
 
   // Rendered via portal: Section has overflow:hidden for the background watermark, which
   // visually clips position:fixed descendants in real browsers — escape to document.body.
@@ -44,7 +50,7 @@ export function ProjectModal({ project, onClose }) {
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         style={{
           background: C.bg || "#0d0d0d",
-          border: `1px solid ${C.copper}30`,
+          border: `1px solid ${alpha(C.copper, "30")}`,
           borderRadius: 18,
           maxWidth: 640,
           width: "100%",
@@ -64,7 +70,7 @@ export function ProjectModal({ project, onClose }) {
             width: 32,
             height: 32,
             borderRadius: 8,
-            border: `1px solid ${C.copper}40`,
+            border: `1px solid ${alpha(C.copper, "40")}`,
             background: "rgba(0,0,0,0.4)",
             color: "#fff",
             fontSize: 16,
@@ -79,11 +85,12 @@ export function ProjectModal({ project, onClose }) {
         </button>
 
         <div style={{ width: "100%", aspectRatio: "16/10", overflow: "hidden", position: "relative", background: C.surface }}>
-          {image ? (
+          {activeImage ? (
             <img
-              src={image}
+              key={activeImage}
+              src={activeImage}
               alt={name}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
               onError={(e) => {
                 e.target.style.display = "none";
               }}
@@ -110,6 +117,32 @@ export function ProjectModal({ project, onClose }) {
             </div>
           )}
         </div>
+
+        {gallery && (
+          <div style={{ display: "flex", gap: 8, padding: "12px 32px 0" }}>
+            {gallery.map((src, i) => (
+              <button
+                key={src}
+                onClick={() => setShot(i)}
+                aria-label={`View screenshot ${i + 1}`}
+                style={{
+                  flex: 1,
+                  aspectRatio: "16/10",
+                  padding: 0,
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  cursor: "pointer",
+                  background: C.surface,
+                  border: `1px solid ${i === shot ? C.copper : C.border}`,
+                  opacity: i === shot ? 1 : 0.55,
+                  transition: "opacity 0.2s, border-color 0.2s",
+                }}
+              >
+                <img src={src} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
+              </button>
+            ))}
+          </div>
+        )}
 
         <div style={{ padding: "28px 32px 32px" }}>
           <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 24, fontWeight: 700, color: C.primary, margin: "0 0 16px" }}>{name}</h3>

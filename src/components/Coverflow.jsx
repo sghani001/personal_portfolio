@@ -1,6 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import C from "../theme";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+
+/** Width actually available to the carousel, tracked across resizes. */
+function useContainerWidth() {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const measure = () => setWidth(ref.current ? ref.current.getBoundingClientRect().width : 0);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, width];
+}
 
 const navBtnStyle = {
   width: 40,
@@ -22,7 +37,20 @@ export function Coverflow({ items, renderCard, cardWidth = 340, spacing = 260, a
   const [activeIdx, setActiveIdx] = useState(0);
   const reducedMotion = usePrefersReducedMotion();
   const touchStartX = useRef(null);
+  const [wrapRef, containerWidth] = useContainerWidth();
   const len = items.length;
+
+  // Shrink the card to fit narrow screens, and scale spacing/angle by the same
+  // factor so the 3D fan keeps its proportions instead of overlapping. Before
+  // this, a 340px card sat in a 375px viewport with 260px spacing, pushing the
+  // neighbours far outside the section (which clips them via overflow:hidden).
+  const fitWidth = containerWidth > 0 ? Math.min(cardWidth, containerWidth - 48) : cardWidth;
+  const shrink = fitWidth / cardWidth;
+  const isNarrow = containerWidth > 0 && containerWidth < 640;
+  const effSpacing = spacing * shrink * (isNarrow ? 0.62 : 1);
+  const effAngle = isNarrow ? angle * 0.6 : angle;
+  // One peeking card each side on phones — three would be unreadable slivers.
+  const effMaxVisible = isNarrow ? 1 : maxVisibleOffset;
 
   const go = (delta) => setActiveIdx((i) => (i + delta + len) % len);
   const wrappedOffset = (i) => {
@@ -50,7 +78,7 @@ export function Coverflow({ items, renderCard, cardWidth = 340, spacing = 260, a
   if (len === 0) return null;
 
   return (
-    <div>
+    <div ref={wrapRef}>
       <div
         tabIndex={0}
         onKeyDown={onKeyDown}
@@ -61,10 +89,10 @@ export function Coverflow({ items, renderCard, cardWidth = 340, spacing = 260, a
         {items.map((item, i) => {
           const offset = wrappedOffset(i);
           const abs = Math.abs(offset);
-          const hidden = abs > maxVisibleOffset;
+          const hidden = abs > effMaxVisible;
           const isActive = i === activeIdx;
-          const rotate = reducedMotion ? 0 : -offset * angle;
-          const translateX = offset * spacing;
+          const rotate = reducedMotion ? 0 : -offset * effAngle;
+          const translateX = offset * effSpacing;
           const scale = isActive ? 1 : Math.max(0.8, 1 - abs * 0.12);
           return (
             <div
@@ -74,8 +102,8 @@ export function Coverflow({ items, renderCard, cardWidth = 340, spacing = 260, a
                 position: "absolute",
                 top: 0,
                 left: "50%",
-                width: cardWidth,
-                marginLeft: -cardWidth / 2,
+                width: fitWidth,
+                marginLeft: -fitWidth / 2,
                 transform: `translateX(${translateX}px) rotateY(${rotate}deg) scale(${scale})`,
                 opacity: hidden ? 0 : isActive ? 1 : 0.45,
                 zIndex: 100 - abs,

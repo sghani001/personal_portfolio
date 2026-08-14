@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { useGemStatsContext } from "../../context/GemStatsContext";
 import { IconArrow } from "../Icons";
 import { TypewriterText } from "./TypewriterText";
@@ -9,13 +9,16 @@ import { FadeUp } from "../UI";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { useScrollParallax } from "../../hooks/useScrollParallax";
 import { useTilt3D } from "../../hooks/useTilt3D";
+import { useInView } from "../../hooks/useInView";
 
 function TiltPortrait() {
   const { ref, onPointerMove, onPointerLeave, tilt, enabled } = useTilt3D({ max: 8 });
   const reducedMotion = usePrefersReducedMotion();
+  const [viewRef, inView] = useInView();
+  const spinning = inView && !reducedMotion;
 
   return (
-    <div style={{ position: "relative", width: "100%", maxWidth: 460, margin: "0 auto" }}>
+    <div ref={viewRef} style={{ position: "relative", width: "100%", maxWidth: 460, margin: "0 auto" }}>
       {/* Decorative rings are deliberately much smaller than the photo so the person
           visually breaks past their edges (shoulders/head popping out of the circle)
           instead of being contained inside it. */}
@@ -28,24 +31,26 @@ function TiltPortrait() {
           aspectRatio: "1",
           transform: "translate(-50%, -50%)",
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.copper}35 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${alpha(C.copper, "35")} 0%, transparent 70%)`,
           filter: "blur(40px)",
           zIndex: 0,
         }}
       />
       {!reducedMotion && (
         <>
+          {/* Parked once scrolled past — these would otherwise spin for the
+              entire session, including while the visitor is 10 sections down. */}
           <motion.div
-            style={{ position: "absolute", top: "50%", left: "50%", width: "68%", aspectRatio: "1", borderRadius: "50%", border: `1px dashed ${C.copper}50`, zIndex: 0 }}
+            style={{ position: "absolute", top: "50%", left: "50%", width: "68%", aspectRatio: "1", borderRadius: "50%", border: `1px dashed ${alpha(C.copper, "50")}`, zIndex: 0 }}
             initial={{ x: "-50%", y: "-50%" }}
-            animate={{ rotate: 360, x: "-50%", y: "-50%" }}
-            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+            animate={spinning ? { rotate: 360, x: "-50%", y: "-50%" } : { rotate: 0, x: "-50%", y: "-50%" }}
+            transition={spinning ? { duration: 34, repeat: Infinity, ease: "linear" } : { duration: 0 }}
           />
           <motion.div
             style={{ position: "absolute", top: "50%", left: "50%", width: "80%", aspectRatio: "1", borderRadius: "50%", border: `1px dotted ${C.border}`, zIndex: 0 }}
             initial={{ x: "-50%", y: "-50%" }}
-            animate={{ rotate: -360, x: "-50%", y: "-50%" }}
-            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+            animate={spinning ? { rotate: -360, x: "-50%", y: "-50%" } : { rotate: 0, x: "-50%", y: "-50%" }}
+            transition={spinning ? { duration: 50, repeat: Infinity, ease: "linear" } : { duration: 0 }}
           />
         </>
       )}
@@ -60,20 +65,32 @@ function TiltPortrait() {
           transition: "transform 0.2s ease-out",
         }}
       >
-        <img
-          src="/syed_ghani_no_bg.png"
-          alt="Syed M. Ghani — Ruby on Rails & React Engineer, Lahore"
-          style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.5))" }}
-          onError={(e) => {
-            // Falls back to the existing photo if the no-background cutout isn't reachable.
-            if (e.target.src.indexOf("syed_ghani_no_bg") !== -1) {
-              e.target.src = resumeData.photo;
-              e.target.style.borderRadius = "24px";
-            } else {
-              e.target.style.display = "none";
-            }
-          }}
-        />
+        {/* The original cutout was a 920KB 1024px PNG rendered at ~420px — by far
+            the heaviest thing on the page. These are resized to 840px (2x for
+            retina): 62KB as WebP, 199KB as the PNG fallback. */}
+        <picture>
+          <source srcSet="/syed_ghani_no_bg.webp" type="image/webp" />
+          <img
+            src="/syed_ghani_no_bg.min.png"
+            alt="Syed M. Ghani — Ruby on Rails & React Engineer, Lahore"
+            width={840}
+            height={840}
+            /* The page's LCP element: fetched eagerly at high priority, with
+               width/height reserving the box so the hero doesn't reflow. */
+            fetchpriority="high"
+            decoding="async"
+            style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.5))" }}
+            onError={(e) => {
+              // Falls back to the existing photo if the cutout isn't reachable.
+              if (e.target.src.indexOf("syed_ghani_no_bg") !== -1) {
+                e.target.src = resumeData.photo;
+                e.target.style.borderRadius = "24px";
+              } else {
+                e.target.style.display = "none";
+              }
+            }}
+          />
+        </picture>
       </div>
     </div>
   );
@@ -81,11 +98,14 @@ function TiltPortrait() {
 
 function ContactWidget() {
   const reducedMotion = usePrefersReducedMotion();
+  const [viewRef, inView] = useInView();
+  const floating = inView && !reducedMotion;
   return (
     <motion.a
+      ref={viewRef}
       href="#contact"
-      animate={reducedMotion ? undefined : { y: [0, 8, 0] }}
-      transition={reducedMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+      animate={floating ? { y: [0, 8, 0] } : { y: 0 }}
+      transition={floating ? { duration: 4.5, repeat: Infinity, ease: "easeInOut" } : { duration: 0 }}
       style={{
         position: "absolute",
         bottom: 8,
@@ -98,7 +118,7 @@ function ContactWidget() {
         background: "rgba(12,10,8,0.8)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
-        border: `1px solid ${C.copper}45`,
+        border: `1px solid ${alpha(C.copper, "45")}`,
         boxShadow: "0 16px 40px rgba(0,0,0,0.45)",
         textDecoration: "none",
         zIndex: 3,
@@ -172,7 +192,7 @@ export function HeroSection() {
             fontWeight: 800,
             fontSize: "clamp(40px, 7vw, 110px)",
             lineHeight: 0.95,
-            color: C.gold,
+            color: C.accentText,
             opacity: 0.14,
             letterSpacing: "0.03em",
             marginTop: -6,
@@ -193,11 +213,11 @@ export function HeroSection() {
                 gap: 10,
                 padding: "8px 16px",
                 borderRadius: 100,
-                border: `1px solid ${C.copper}40`,
-                background: `${C.copper}0C`,
+                border: `1px solid ${alpha(C.copper, "40")}`,
+                background: `${alpha(C.copper, "0C")}`,
                 fontSize: 12,
                 fontFamily: "'JetBrains Mono',monospace",
-                color: C.copper,
+                color: C.accentText,
                 marginBottom: 24,
                 letterSpacing: "0.05em",
               }}
@@ -218,7 +238,7 @@ export function HeroSection() {
                 marginBottom: 18,
               }}
             >
-              I help SaaS founders ship <span style={{ color: C.copper }}>production-ready</span> Rails & React features.
+              I help SaaS founders ship <span style={{ color: C.accentText }}>production-ready</span> Rails & React features.
             </h1>
           </FadeUp>
 
@@ -228,7 +248,7 @@ export function HeroSection() {
                 fontFamily: "'JetBrains Mono',monospace",
                 fontSize: 16,
                 fontWeight: 600,
-                color: C.copper,
+                color: C.accentText,
                 minHeight: 24,
                 marginBottom: 28,
               }}
@@ -275,7 +295,7 @@ export function HeroSection() {
                   textDecoration: "none",
                   transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = C.copper)}
+                onMouseEnter={(e) => (e.currentTarget.style.color = C.accentText)}
                 onMouseLeave={(e) => (e.currentTarget.style.color = C.secondary)}
               >
                 View Projects ↓

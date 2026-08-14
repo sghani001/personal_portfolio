@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import C from "../theme";
+import C, { alpha } from "../theme";
 import { IconExternal } from "./Icons";
 
 export function DetailModal({ icon, eyebrow, title, subtitle, children, links, onClose }) {
@@ -37,7 +37,7 @@ export function DetailModal({ icon, eyebrow, title, subtitle, children, links, o
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         style={{
           background: C.bg || "#0d0d0d",
-          border: `1px solid ${C.copper}30`,
+          border: `1px solid ${alpha(C.copper, "30")}`,
           borderRadius: 18,
           maxWidth: 520,
           width: "100%",
@@ -58,7 +58,7 @@ export function DetailModal({ icon, eyebrow, title, subtitle, children, links, o
             width: 32,
             height: 32,
             borderRadius: 8,
-            border: `1px solid ${C.copper}40`,
+            border: `1px solid ${alpha(C.copper, "40")}`,
             background: "transparent",
             color: C.primary,
             fontSize: 16,
@@ -78,8 +78,8 @@ export function DetailModal({ icon, eyebrow, title, subtitle, children, links, o
               height: 52,
               borderRadius: 14,
               marginBottom: 18,
-              background: `${C.copper}18`,
-              border: `1px solid ${C.copper}40`,
+              background: `${alpha(C.copper, "18")}`,
+              border: `1px solid ${alpha(C.copper, "40")}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -94,7 +94,7 @@ export function DetailModal({ icon, eyebrow, title, subtitle, children, links, o
           </p>
         )}
         <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 22, fontWeight: 700, color: C.primary, margin: "0 0 8px" }}>{title}</h3>
-        {subtitle && <p style={{ fontSize: 14, color: C.copper, fontWeight: 600, marginBottom: 20 }}>{subtitle}</p>}
+        {subtitle && <p style={{ fontSize: 14, color: C.accentText, fontWeight: 600, marginBottom: 20 }}>{subtitle}</p>}
 
         <div style={{ marginBottom: links && links.length > 0 ? 24 : 0 }}>{children}</div>
 

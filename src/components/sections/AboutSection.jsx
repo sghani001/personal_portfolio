@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { FadeUp, Section } from "../UI";
 import { socialLinks } from "../../data/sectionsData";
 import { IconLocation, IconGlobe, IconForTech, getTechColor } from "../Icons";
@@ -42,12 +42,12 @@ export function AboutSection() {
           <div>
             <p style={{ fontSize: 17, color: C.secondary, lineHeight: 1.8, marginBottom: 16 }}>
               {summaryParts[0]}
-              <strong style={{ color: C.copper }}>{gemDownloads}</strong>
+              <strong style={{ color: C.accentText }}>{gemDownloads}</strong>
               {summaryParts[1]}
             </p>
             <p style={{ fontSize: 15, color: C.secondary, lineHeight: 1.75, marginBottom: 28 }}>{resumeData.aboutExtra}</p>
 
-            <div style={{ display: "inline-flex", flexWrap: "wrap", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 12, marginBottom: 32, background: `${C.copper}0C`, border: `1px solid ${C.copper}30`, color: C.copper, fontSize: 14, fontWeight: 600 }}>
+            <div style={{ display: "inline-flex", flexWrap: "wrap", alignItems: "center", gap: 10, padding: "10px 18px", borderRadius: 12, marginBottom: 32, background: `${alpha(C.copper, "0C")}`, border: `1px solid ${alpha(C.copper, "30")}`, color: C.accentText, fontSize: 14, fontWeight: 600 }}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                 <IconLocation size={14} /> Lahore, Pakistan
               </span>
@@ -71,7 +71,7 @@ export function AboutSection() {
             <div style={{ padding: "16px 20px", borderRadius: 12, background: C.surface, border: `1px solid ${C.border}`, marginBottom: 28 }}>
               <p style={{ fontSize: 11, fontFamily: "'JetBrains Mono',monospace", textTransform: "uppercase", letterSpacing: "0.12em", color: C.secondary, margin: "0 0 6px" }}>Education</p>
               <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, color: C.primary, fontSize: 14, margin: "0 0 2px" }}>{resumeData.education[0].degree}</p>
-              <p style={{ color: C.copper, fontSize: 13, margin: 0 }}>{resumeData.education[0].institution} · {resumeData.education[0].duration}</p>
+              <p style={{ color: C.accentText, fontSize: 13, margin: 0 }}>{resumeData.education[0].institution} · {resumeData.education[0].duration}</p>
             </div>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>

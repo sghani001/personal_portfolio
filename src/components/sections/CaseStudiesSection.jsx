@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { FadeUp, Section } from "../UI";
 import { ProjectModal } from "../ProjectModal";
 import { Coverflow } from "../Coverflow";
@@ -13,7 +13,7 @@ function CaseStudyCard({ project, isActive, onOpen }) {
       style={{
         borderRadius: 18,
         overflow: "hidden",
-        border: `1px solid ${isActive ? `${C.copper}45` : C.border}`,
+        border: `1px solid ${isActive ? `${alpha(C.copper, "45")}` : C.border}`,
         background: C.surface,
         boxShadow: isActive ? "0 24px 56px rgba(0,0,0,0.42)" : "0 8px 24px rgba(0,0,0,0.25)",
         cursor: isActive ? "pointer" : "default",
@@ -56,7 +56,7 @@ function CaseStudyCard({ project, isActive, onOpen }) {
             {project.description}
           </p>
         )}
-        {isActive && <p style={{ fontSize: 11, color: C.copper, marginTop: "auto", fontFamily: "'JetBrains Mono',monospace" }}>Click for full story →</p>}
+        {isActive && <p style={{ fontSize: 11, color: C.accentText, marginTop: "auto", fontFamily: "'JetBrains Mono',monospace" }}>Click for full story →</p>}
       </div>
     </div>
   );

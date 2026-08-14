@@ -1,10 +1,10 @@
 import React from "react";
 import resumeData from "../utils/resumeData";
-import C from "../theme";
+import C, { alpha } from "../theme";
 
 export function Footer() {
   return (
-    <footer style={{ borderTop: `1px solid ${C.border}`, padding: "48px 0", background: `${C.surface}50` }}>
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: "48px 0", background: `${alpha(C.surface, "50")}` }}>
       <div
         style={{
           maxWidth: 1160,
@@ -58,7 +58,7 @@ export function Footer() {
               target="_blank"
               rel="noreferrer"
               style={{ color: C.secondary, textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={(e) => (e.target.style.color = C.copper)}
+              onMouseEnter={(e) => (e.target.style.color = C.accentText)}
               onMouseLeave={(e) => (e.target.style.color = C.secondary)}
             >
               {label}

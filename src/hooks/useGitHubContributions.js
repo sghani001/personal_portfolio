@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
 const GITHUB_USERNAME = "sghani001";
 const API_URL = `https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=last`;
@@ -9,7 +10,7 @@ export function useGitHubContributions() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch(API_URL)
+    fetchWithTimeout(API_URL)
       .then((r) => {
         if (!r.ok) throw new Error("Failed");
         return r.json();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import resumeData from "../../utils/resumeData";
-import C from "../../theme";
+import C, { alpha } from "../../theme";
 import { useGemStatsContext } from "../../context/GemStatsContext";
 import { IconGem } from "../Icons";
 import { FadeUp, Card, Section } from "../UI";
@@ -26,8 +26,8 @@ export function GemsSection() {
                     height: 44,
                     borderRadius: 12,
                     marginBottom: 14,
-                    background: `${C.copper}14`,
-                    border: `1px solid ${C.copper}25`,
+                    background: `${alpha(C.copper, "14")}`,
+                    border: `1px solid ${alpha(C.copper, "25")}`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -40,7 +40,7 @@ export function GemsSection() {
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, fontWeight: 700, color: C.sage }}>{displayCount}</span>
                   <span style={{ fontSize: 11, color: C.secondary }}>downloads</span>
                 </div>
-                <p style={{ fontSize: 11, color: C.copper, marginTop: "auto", fontFamily: "'JetBrains Mono',monospace" }}>Click for details →</p>
+                <p style={{ fontSize: 11, color: C.accentText, marginTop: "auto", fontFamily: "'JetBrains Mono',monospace" }}>Click for details →</p>
               </Card>
             </FadeUp>
           );
@@ -65,8 +65,8 @@ export function GemsSection() {
               transition: "color 0.2s, border-color 0.2s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = C.copper;
-              e.currentTarget.style.borderColor = `${C.copper}50`;
+              e.currentTarget.style.color = C.accentText;
+              e.currentTarget.style.borderColor = `${alpha(C.copper, "50")}`;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = C.secondary;
