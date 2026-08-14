@@ -121,7 +121,7 @@ export function SkillsSection() {
       <FadeUp>
         <SkillSolarSystem />
       </FadeUp>
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 96 }}>
         {groups.map((g, i) => (
           <FadeUp key={i} delay={i * 50}>
             <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "20px 24px", boxShadow: "0 4px 16px rgba(0,0,0,0.18)" }}>
