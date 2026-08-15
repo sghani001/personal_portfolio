@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
-const GITHUB_USERNAME = "sghani001";
+const GITHUB_USERNAME = "dev-syedghani";
 const apiUrl = (year) => `https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=${year}`;
 
 // Years are switched back and forth constantly once there are buttons for it, and
