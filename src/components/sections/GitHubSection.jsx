@@ -74,6 +74,10 @@ const TILT = 38;
 // The day-of-week gutter ("Mon"/"Wed"/"Fri" at 9px mono) plus its margin.
 const DAY_GUTTER = 30;
 
+// What a rendered board occupies vertically. Reserved by the loading and error
+// states too, so the panel keeps one height from first paint onwards.
+const BOARD_MIN_H = 264;
+
 // Cells are sized to fill whatever width the panel has rather than pinned at
 // GitHub's 12px, so a year always spans the panel exactly and never needs to be
 // scrolled sideways. Bounded at both ends: below the floor a year is unreadable
@@ -525,13 +529,16 @@ export function GitHubSection() {
                   ))}
                 </div>
               </div>
+              {/* Held at the board's own height so the panel doesn't collapse and then
+                  snap back open when the fetch lands — switching years would jolt the
+                  whole page otherwise. */}
               {ghLoading && (
-                <div style={{ fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
+                <div style={{ minHeight: BOARD_MIN_H, display: "grid", placeItems: "center", fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace" }}>
                   Loading contributions…
                 </div>
               )}
               {ghError && !ghLoading && (
-                <div style={{ fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace", padding: "20px 0" }}>
+                <div style={{ minHeight: BOARD_MIN_H, display: "grid", placeItems: "center", fontSize: 12, color: gh.muted, fontFamily: "'JetBrains Mono',monospace" }}>
                   GitHub API unavailable — contributions not shown.
                 </div>
               )}

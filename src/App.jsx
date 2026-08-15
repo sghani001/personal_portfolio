@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./index.css";
 import { GemStatsProvider } from "./context/GemStatsContext";
 import { Nav } from "./components/Nav";
 import { Footer } from "./components/Footer";
+import { Preloader } from "./components/Preloader";
 import {
   HeroSection,
   MetricsSection,
@@ -22,6 +23,8 @@ import {
 } from "./components/sections/index";
 
 export default function App() {
+  const [booting, setBooting] = useState(true);
+  const finishBoot = useCallback(() => setBooting(false), []);
   const [theme, setTheme] = useState(() => {
     const stored = localStorage.getItem("portfolio-theme");
     if (stored) return stored;
@@ -42,6 +45,10 @@ export default function App() {
 
   return (
     <GemStatsProvider>
+      {/* Rendered alongside the app, never instead of it — the page lays out behind
+          the splash so the reveal shows a settled layout rather than one still
+          assembling itself. */}
+      {booting && <Preloader onDone={finishBoot} />}
       <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--primary)", fontFamily: "'Inter',sans-serif" }}>
         <Nav theme={theme} toggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} />
         <main>

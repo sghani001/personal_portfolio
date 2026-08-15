@@ -294,6 +294,215 @@
   font-weight: 600;
 }
 
+/* ── First-paint splash ──────────────────────────────────────────────────── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+/* The backdrop is blown out with the charge, so the page is already there behind the
+   debris rather than being revealed once it settles. */
+.preloader.is-burst {
+  background: transparent;
+  transition: background 300ms ease-out 120ms;
+  /* Stops the departing overlay from swallowing clicks aimed at the page behind. */
+  pointer-events: none;
+}
+
+.preloader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  animation: preloader-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── The forge: one cell that every piece is stacked into and flies out of ──── */
+.pl-forge {
+  display: grid;
+  place-items: center;
+  margin-bottom: 30px;
+  /* Sized to the core. Everything shares the single cell via grid-area, so each
+     block's transform is measured from dead centre and they all converge on the
+     same point. */
+  width: 88px;
+  height: 88px;
+}
+
+.pl-forge > * {
+  grid-area: 1 / 1;
+  place-self: center;
+}
+
+.pl-shard {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  /* Accelerating in: far away they barely move, then they rip the last stretch —
+     which is what makes the infall read as light-speed rather than a glide. */
+  animation: pl-infall var(--flight, 260ms) cubic-bezier(0.62, 0, 0.86, 0.4) both;
+  animation-delay: var(--d, 0ms);
+}
+
+.pl-shard svg { display: block; }
+
+/* Streaks in from --fx/--fy, tumbling and motion-blurred, and is swallowed by the
+   core — the last 18% is the absorption, which sells "merged" over "landed". */
+@keyframes pl-infall {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(var(--fx), var(--fy), 0) rotate(var(--frot)) scale(1.2);
+  }
+  14% { opacity: 1; }
+  /* Blur is gone by the halfway mark — past that the block is on screen and the
+     icon has to be readable, or there was no point using icons. */
+  52% { filter: blur(0); }
+  82% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.34);
+  }
+}
+
+/* ── Detonation: the very same blocks are thrown back out ────────────────────── */
+.preloader.is-burst .pl-shard {
+  /* Per-block duration over a per-block distance — that pairing is what gives each
+     fragment its own speed instead of one uniform expanding ring. */
+  animation: pl-scatter var(--sdur, 700ms) cubic-bezier(0.08, 0.82, 0.28, 1) both;
+}
+
+@keyframes pl-scatter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.34);
+  }
+  8% {
+    opacity: 1;
+    transform: translate3d(calc(var(--sx) * 0.08), calc(var(--sy) * 0.08), 0)
+      rotate(calc(var(--srot) * 0.08)) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--sx), var(--sy), 0) rotate(var(--srot)) scale(0.72);
+  }
+}
+
+/* Blast bloom at the seat of the explosion. */
+.pl-flash {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%,
+    rgba(226, 199, 153, 0.6) 35%, rgba(226, 199, 153, 0) 70%);
+}
+
+.preloader.is-burst .pl-flash {
+  animation: pl-flash 420ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes pl-flash {
+  0%   { opacity: 0; transform: scale(0.4); }
+  12%  { opacity: 1; transform: scale(6); }
+  100% { opacity: 0; transform: scale(26); }
+}
+
+.pl-core {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  /* Steps rather than a smooth ramp: one discrete jump per shard absorbed, so the
+     block is visibly gaining the stack instead of just swelling. */
+  animation: pl-core-grow var(--grow-dur, 880ms) steps(var(--grow-steps, 8), end)
+    var(--grow-delay, 230ms) both;
+}
+
+@keyframes pl-core-grow {
+  from { transform: scale(0.62); }
+  to   { transform: scale(1); }
+}
+
+.preloader.is-burst .pl-shard { opacity: 0; }
+
+.preloader.is-burst .preloader-name,
+.preloader.is-burst .preloader-role {
+  animation: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 240ms ease-in, transform 240ms ease-in;
+}
+
+/* ── Detonation: the block is consumed, the particle canvas carries the blast ─── */
+.preloader.is-burst .pl-core {
+  animation: pl-detonate 260ms cubic-bezier(0.5, 0, 0.9, 0.2) both;
+}
+
+/* A hard flinch outward, then gone — the block is the charge, not the explosion.
+   Everything after this frame is the canvas throwing particles. */
+@keyframes pl-detonate {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  35%  { transform: scale(1.35); opacity: 1; filter: brightness(2.4); }
+  100% { transform: scale(0.2); opacity: 0; filter: brightness(3); }
+}
+
+
+.preloader-name {
+  margin: 0 0 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--primary);
+  animation: preloader-rise 420ms ease-out 260ms both;
+}
+
+.preloader-role {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  animation: preloader-rise 420ms ease-out 360ms both;
+}
+
+@keyframes preloader-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader-inner,
+  .preloader-name,
+  .preloader-role { animation: none; }
+  /* No flight, no absorption, no burst — just the finished block, held still. */
+  .pl-core { animation: none; transform: none; transition: none; }
+  .pl-shard, .pl-flash { display: none; }
+}
+
 /* About two-column layout */
 .about-grid {
   display: grid;
