@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
-const LEETCODE_USERNAME = "sghani001";
+const LEETCODE_USERNAME = "dev-syedghani";
 const PROXY_URL = "https://leetcode-proxy-2.vercel.app/api/leetcode";
 
 // This site deploys to GitHub Pages (static, no serverless functions), so this repo's own

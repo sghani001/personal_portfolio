@@ -23,6 +23,11 @@ const GH = {
     muted: "#8b949e",
     link: "#58a6ff",
     levels: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    // Empty days sit one step brighter than GitHub's own #161b22 so the grid still
+    // reads as a grid against the near-black panel behind it, instead of the two
+    // dissolving into each other.
+    empty: "#1e2530",
+    label: "#c9d1d9",
     yearHover: "#21262d",
     yearActiveBg: "#1f6feb",
     yearActiveFg: "#ffffff",
@@ -33,6 +38,8 @@ const GH = {
     muted: "#57606A",
     link: "#0969DA",
     levels: ["#EBEDF0", "#ACEEBB", "#4AC26B", "#2DA44E", "#116329"],
+    empty: "#E3E7EB",
+    label: "#3D444D",
     yearHover: "#EFF2F5",
     yearActiveBg: "#0969DA",
     yearActiveFg: "#ffffff",
@@ -40,6 +47,19 @@ const GH = {
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Lighten (positive) or darken (negative) a #rrggbb by a flat step per channel.
+// Used to derive a tile's lit top edge and shaded lower edges from its one level
+// colour, so the cap reads as a surface catching a light from above rather than a
+// flat swatch — and so the whole set stays keyed to GitHub's palette.
+function shade(hex, amount) {
+  const n = parseInt(hex.slice(1), 16);
+  const clamp = (v) => Math.max(0, Math.min(255, v));
+  const r = clamp(((n >> 16) & 255) + amount);
+  const g = clamp(((n >> 8) & 255) + amount);
+  const b = clamp((n & 255) + amount);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+}
 
 // `new Date("2024-01-01")` is parsed as UTC midnight but read back in local time, so
 // west-of-UTC visitors see every date land on the previous day — which shifts the
@@ -69,7 +89,17 @@ const PERSPECTIVE = 2200;
 // grow into, even a few pixels of leftward push get clipped rather than scrolled to.
 const SIDE_PAD = 20;
 
-const TILT = 38;
+// Pitch, lowered from 38°. A steeper pitch stacks each week directly behind the
+// one in front of it, so a tall pillar hides everything upstream of it; flattening
+// toward a standard isometric angle spreads the rows apart on screen instead.
+const TILT = 30;
+
+// A small yaw alongside the pitch. With pitch alone the rise axis is exactly
+// vertical on screen, so a tall tile occludes its own column precisely; a few
+// degrees of rotation offsets that axis diagonally and background tiles stay
+// visible past the foreground ones. Kept small — the calendar still has to read
+// left-to-right as weeks, so this is a nudge, not a true isometric rotation.
+const YAW = -7;
 
 // The day-of-week gutter ("Mon"/"Wed"/"Fri" at 9px mono) plus its margin.
 const DAY_GUTTER = 30;
@@ -92,16 +122,20 @@ const BASE_CELL = 12;
 // would keep 12px-board heights and read as flat.
 function boardMetrics(cell) {
   const CELL = Math.round(cell);
-  const GAP = Math.max(2, Math.round(CELL * 0.25));
+  // Widened from 0.25. The gap is the gutter between pillar *bases*: too tight and
+  // neighbouring bases bleed into each other once they have height and side walls.
+  const GAP = Math.max(3, Math.round(CELL * 0.42));
   // How far the busiest day floats, and the floor for a day with any commits at
-  // all — a single commit still has to visibly lift off the plane.
-  const MAX_Z = Math.round(CELL * (70 / BASE_CELL));
-  const MIN_Z = CELL;
-  // A tile at MAX_Z climbs ~0.72 × its z in screen pixels once the board is tilted
-  // back — z · sin(38°), plus a little from the perspective divide (measured, not
-  // derived). The grid is pushed down by that much plus the tile's own height, so
-  // the busiest days have somewhere to rise into instead of landing on the labels.
-  const HEADROOM = Math.ceil(MAX_Z * 0.72) + Math.round(CELL * 2.2);
+  // all — a single commit still has to visibly lift off the plane. Capped, because
+  // an uncapped top tier produced giant pillars that masked whole weeks behind
+  // them; the ceiling costs a little dynamic range and buys back readability.
+  const MAX_Z = Math.min(Math.round(CELL * 3.6), 52);
+  const MIN_Z = Math.round(CELL * 0.55);
+  // A tile at MAX_Z climbs ~0.58 × its z in screen pixels once the board is tilted
+  // back — z · sin(30°), plus a little from the perspective divide. The grid is
+  // pushed down by that much plus the tile's own height, so the busiest days have
+  // somewhere to rise into instead of landing on the labels.
+  const HEADROOM = Math.ceil(MAX_Z * 0.58) + Math.round(CELL * 2.2);
   // Tilting the board doesn't change what it reserves in layout, only what it
   // covers on screen — so the untilted height stays booked and cos(38°) of it goes
   // unused, leaving ~70px of empty panel under the last row. Pulled back with a
@@ -112,14 +146,16 @@ function boardMetrics(cell) {
 }
 
 // Solves the column pitch back into a cell size: a column costs CELL + GAP, and
-// GAP is a quarter of CELL, so CELL is 0.8 of the pitch. Floored so rounding can
-// only ever make the board narrower than the space it has, never wider.
-// `contentWidth` is the board container's content box — its side padding is
+// GAP is 0.42 of CELL, so CELL is 1/1.42 of the pitch. This ratio has to track the
+// one in boardMetrics — widening the gap there without widening it here would size
+// cells for the old pitch and overflow the panel by the difference. Floored so
+// rounding can only ever make the board narrower than the space it has, never
+// wider. `contentWidth` is the board container's content box — its side padding is
 // already excluded, so only the day-of-week gutter comes off here.
 function fitCell(contentWidth, weekCount) {
   if (!contentWidth || !weekCount) return BASE_CELL;
   const pitch = (contentWidth - DAY_GUTTER) / weekCount;
-  return Math.max(MIN_CELL, Math.min(MAX_CELL, Math.floor(pitch * 0.8)));
+  return Math.max(MIN_CELL, Math.min(MAX_CELL, Math.floor(pitch / 1.42)));
 }
 
 // Height comes from the raw commit count rather than GitHub's 5-step level, so a
@@ -231,6 +267,9 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
 
   const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
   const totalWidth = weeks.length * (CELL + GAP);
+  // Vertical drop the yaw introduces at the board's far corner: half the width is
+  // the lever arm, sin(YAW) the drop per unit of it.
+  const YAW_DROP = Math.ceil((totalWidth / 2) * Math.abs(Math.sin((YAW * Math.PI) / 180)));
 
   return (
     // overflow-y is pinned to hidden because CSS won't let one axis scroll while the
@@ -250,7 +289,12 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
         style={{
           perspective: reducedMotion ? "none" : PERSPECTIVE,
           paddingTop: reducedMotion ? 0 : 16,
-          paddingBottom: reducedMotion ? 0 : 12,
+          // The yaw rotates the board about its top-centre, which swings one bottom
+          // corner below the height the untilted layout reserved for it — measured
+          // as ~4px of the last row being clipped by the overflow container. The
+          // allowance scales with the board's half-width, since that is the lever
+          // arm the rotation acts on.
+          paddingBottom: reducedMotion ? 0 : 12 + YAW_DROP,
           marginBottom: reducedMotion ? 0 : -FORESHORTEN,
         }}
       >
@@ -262,14 +306,14 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
             // few px of scroll alive.
             width: "fit-content",
             transformStyle: reducedMotion ? "flat" : "preserve-3d",
-            transform: reducedMotion ? "none" : "rotateX(38deg)",
+            transform: reducedMotion ? "none" : `rotateX(${TILT}deg) rotateZ(${YAW}deg)`,
             transformOrigin: "top",
           }}
         >
           {/* Day-of-week labels */}
           <div style={{ display: "flex", flexDirection: "column", gap: GAP, marginRight: 6, paddingTop: 18 + (reducedMotion ? 0 : HEADROOM) }}>
             {DAY_LABELS.map((label, i) => (
-              <div key={i} style={{ height: CELL, fontSize: 9, color: C.secondary, fontFamily: "'JetBrains Mono',monospace", lineHeight: `${CELL}px`, textAlign: "right", whiteSpace: "nowrap" }}>
+              <div key={i} style={{ height: CELL, fontSize: 10, fontWeight: 500, color: gh.label, fontFamily: "'JetBrains Mono',monospace", lineHeight: `${CELL}px`, textAlign: "right", whiteSpace: "nowrap" }}>
                 {label}
               </div>
             ))}
@@ -292,8 +336,9 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
                     position: "absolute",
                     top: 0,
                     left: ml.weekIdx * (CELL + GAP),
-                    fontSize: 9,
-                    color: C.secondary,
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: gh.label,
                     fontFamily: "'JetBrains Mono',monospace",
                     whiteSpace: "nowrap",
                   }}
@@ -327,10 +372,14 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
                           title={level > 0 ? undefined : title}
                           style={{
                             background: lit
-                              ? `linear-gradient(${color}33, ${color}33), ${LEVEL_COLORS[0]}`
-                              : LEVEL_COLORS[0],
-                            border: `1px solid ${lit ? `${color}55` : gh.line}`,
-                            boxShadow: lit ? `inset 0 0 6px ${color}66` : "none",
+                              ? `linear-gradient(${color}2b, ${color}2b), ${gh.empty}`
+                              : gh.empty,
+                            border: `1px solid ${lit ? `${color}4d` : gh.line}`,
+                            // Contact shadow rather than a glow: a tight dark inset
+                            // under a lit pillar reads as the tile sitting *on* the
+                            // board (cheap ambient occlusion), where the old outward
+                            // bloom just smeared green over the neighbouring days.
+                            boxShadow: lit ? `inset 0 0 4px 1px rgba(0,0,0,0.55)` : "none",
                           }}
                         />
                         {lit && (
@@ -342,7 +391,10 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
                               // Brightest where it meets the underside of the tile,
                               // fading out before it reaches the board — a shaft of
                               // light, not a bar-chart column.
-                              background: `linear-gradient(to bottom, ${color}00 0%, ${color}33 35%, ${color}8c 100%)`,
+                              // Dimmer than before, and narrower in its falloff: the
+                              // side wall should describe the pillar's height, not
+                              // cast a murky halo across the tiles either side of it.
+                              background: `linear-gradient(to bottom, ${color}00 0%, ${color}1f 45%, ${color}66 100%)`,
                             }}
                           />
                         )}
@@ -355,11 +407,18 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
                               // Diagonal offset so the bob crosses the board as a
                               // slow wave instead of every tile pulsing in unison.
                               "--delay": delay,
-                              background: color,
-                              border: `1px solid ${color}80`,
+                              // Top cap lit from above: a lighter wash across the
+                              // face plus a bright top edge, so the cap reads as a
+                              // distinct surface from the side wall beneath it
+                              // instead of the whole pillar being one flat colour.
+                              background: `linear-gradient(160deg, ${color}, ${shade(color, -18)})`,
+                              borderTop: `1px solid ${shade(color, 42)}`,
+                              borderLeft: `1px solid ${shade(color, 16)}`,
+                              borderRight: `1px solid ${shade(color, -22)}`,
+                              borderBottom: `1px solid ${shade(color, -30)}`,
                               boxShadow: reducedMotion
                                 ? "none"
-                                : `0 ${Math.round(z * 0.45)}px ${Math.round(z * 0.9) + 10}px -2px ${color}aa, 0 2px 0px var(--shadow-base)`,
+                                : `0 ${Math.round(z * 0.3)}px ${Math.round(z * 0.4) + 6}px -4px ${color}77`,
                             }}
                           />
                         )}
@@ -376,7 +435,7 @@ function ContributionHeatmap({ contributions, totalThisYear, year }) {
       <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 10, fontSize: 10, color: C.secondary, fontFamily: "'JetBrains Mono',monospace" }}>
         <span>Less</span>
         {LEVEL_COLORS.map((c, i) => (
-          <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: c, border: `1px solid ${gh.line}` }} />
+          <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: i === 0 ? gh.empty : c, border: `1px solid ${gh.line}` }} />
         ))}
         <span>More</span>
       </div>

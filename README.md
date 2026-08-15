@@ -6,7 +6,7 @@
 
 [![Live Site](https://img.shields.io/badge/🌐%20Live%20Portfolio-syedghani.is--a.dev-0A071B?style=for-the-badge&logoColor=635BFF)](https://syedghani.is-a.dev/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Syed%20M%20Ghani-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/syedmghani/)
-[![GitHub](https://img.shields.io/badge/GitHub-sghani001-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sghani001)
+[![GitHub](https://img.shields.io/badge/GitHub-dev-syedghani-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dev-syedghani)
 
 <br/>
 

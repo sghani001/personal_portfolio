@@ -295,6 +295,24 @@
 }
 
 /* ── First-paint splash ──────────────────────────────────────────────────── */
+/* Splash tokens, so the chips and icons follow the theme instead of being pinned
+   to dark-mode values that vanish on the light background. */
+:root {
+  --pl-chip-bg: rgba(18, 18, 18, 0.9);
+  --pl-chip-edge: rgba(226, 199, 153, 0.45);
+  --pl-chip-glow: rgba(226, 199, 153, 0.32);
+  --pl-icon: #E2C799;
+  --pl-shell: rgba(226, 199, 153, 0.22);
+}
+
+.light {
+  --pl-chip-bg: #FFFFFF;
+  --pl-chip-edge: rgba(161, 127, 69, 0.5);
+  --pl-chip-glow: rgba(161, 127, 69, 0.22);
+  --pl-icon: #A17F45;
+  --pl-shell: rgba(161, 127, 69, 0.28);
+}
+
 .preloader {
   position: fixed;
   inset: 0;
@@ -304,11 +322,25 @@
   background: var(--bg);
 }
 
-/* The backdrop is blown out with the charge, so the page is already there behind the
-   debris rather than being revealed once it settles. */
-.preloader.is-burst {
+/* Cut to solid black once every skill has been swallowed — this, not a fade of
+   the splash's own backdrop, is what "the debris doesn't show on the profile"
+   actually rests on: everything else (core, rings, shards) is already invisible
+   by the time this class lands (see the JS: shards fade individually as they're
+   absorbed, core+rings fade below), so there is nothing left to carry over into
+   the reveal that follows. Finishes turning black (180ms) well inside the JS
+   hold on this phase (BLACKOUT_MS, 260ms), leaving a beat of plain black before
+   the reveal starts. */
+.preloader.is-blackout {
+  background: #000;
+  transition: background 180ms ease-in;
+}
+
+/* Solid black fades out to the real page underneath. Timed a hair under the JS
+   wait on this phase (REVEAL_MS, 700ms) so the crossfade has visibly finished
+   before onDone() unmounts the overlay, not cut off mid-fade. */
+.preloader.is-reveal {
   background: transparent;
-  transition: background 300ms ease-out 120ms;
+  transition: background 650ms ease-out;
   /* Stops the departing overlay from swallowing clicks aimed at the page behind. */
   pointer-events: none;
 }
@@ -319,18 +351,42 @@
   align-items: center;
   gap: 2px;
   animation: preloader-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* Positioned so it stacks above the fixed trail canvas — otherwise the canvas
+     paints over the blocks and buries the icons. */
+  position: relative;
+  z-index: 1;
 }
 
-/* ── The forge: one cell that every piece is stacked into and flies out of ──── */
+/* One cell that every orbiting block is positioned from. Sharing a single grid
+   cell means each block's transform is measured from dead centre. */
 .pl-forge {
   display: grid;
+  /* Pins the single implicit track to the container's own box. Without this, an
+     `auto` track sizes to its content's intrinsic size — and the shell SVG is
+     336px×336px by design (it has to span the outer ring), so the track grew to
+     336×336 anchored at the container's top-left corner instead of staying at
+     76×76. Every child "centered in the cell" was then centered on that oversized,
+     off-centre cell — the core and all 15 shards sat ~140px down-right of the
+     screen's true centre, not the container's own centre. */
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
   place-items: center;
-  margin-bottom: 30px;
-  /* Sized to the core. Everything shares the single cell via grid-area, so each
-     block's transform is measured from dead centre and they all converge on the
-     same point. */
-  width: 88px;
-  height: 88px;
+  width: 76px;
+  height: 76px;
+  /* Without a perspective the black hole's rotateX layers collapse to flat lines
+     (an orthographic projection of an edge-on circle is a segment) — this is what
+     turns them into the ellipses that read as a disk seen from above. */
+  perspective: 700px;
+}
+
+/* Out of the orbit's way, at the foot of the screen. */
+.pl-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 7vh;
+  text-align: center;
+  z-index: 1;
 }
 
 .pl-forge > * {
@@ -338,69 +394,208 @@
   place-self: center;
 }
 
+/* Position, rotation and opacity are written by the loop every frame — the blocks
+   have to leave orbit from wherever they happen to be, which a keyframe cannot
+   know. Only the look lives here. */
 .pl-shard {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  /* Accelerating in: far away they barely move, then they rip the last stretch —
-     which is what makes the infall read as light-speed rather than a glide. */
-  animation: pl-infall var(--flight, 260ms) cubic-bezier(0.62, 0, 0.86, 0.4) both;
-  animation-delay: var(--d, 0ms);
+  border-radius: 50%;
+  border: 1px solid var(--pl-chip-edge);
+  background: var(--pl-chip-bg);
+  box-shadow: 0 0 18px -6px var(--pl-chip-glow);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* The visible shells. Stroked, never filled — a filled ellipse would black out the
+   core and everything behind it. z-index 0 keeps them under every skill. */
+.pl-shells {
+  overflow: visible;
+  z-index: 0;
+  pointer-events: none;
+  /* Belt-and-suspenders alongside the fixed grid-template above: min-width/height:0
+     stops this item's own intrinsic size from being counted toward auto track
+     sizing at all, in case any engine still tries to grow the track to fit it. */
+  min-width: 0;
+  min-height: 0;
+}
+
+.pl-shells ellipse {
+  fill: none;
+  stroke: var(--pl-shell);
+  stroke-width: 1;
 }
 
 .pl-shard svg { display: block; }
 
-/* Streaks in from --fx/--fy, tumbling and motion-blurred, and is swallowed by the
-   core — the last 18% is the absorption, which sells "merged" over "landed". */
-@keyframes pl-infall {
-  0% {
-    opacity: 0;
-    filter: blur(5px);
-    transform: translate3d(var(--fx), var(--fy), 0) rotate(var(--frot)) scale(1.2);
-  }
-  14% { opacity: 1; }
-  /* Blur is gone by the halfway mark — past that the block is on screen and the
-     icon has to be readable, or there was no point using icons. */
-  52% { filter: blur(0); }
-  82% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  }
-  100% {
-    opacity: 0;
-    filter: blur(0);
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.34);
-  }
+/* ── Gargantua ───────────────────────────────────────────────────────────────
+   A layered black hole: pure-black event horizon in front, a flattened accretion
+   disk swirling around its equator, and a second ring tilted off-axis to fake the
+   gravitational lensing that bends the far side of the disk up over the top.
+
+   .pl-core itself stays an unstyled 76px box because the dive physics measures it
+   (getBoundingClientRect for the origin, and metricsFor().core for the absorb
+   radius) — all the visuals are children that overflow it, so the layering can
+   change freely without moving the horizon the simulation is aiming at. */
+.pl-core {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  transform: scale(0.7);
+  /* Between the far half of each shell (1) and the near half (3), so skills
+     genuinely pass behind and in front of the singularity. */
+  z-index: 2;
+  position: relative;
 }
 
-/* ── Detonation: the very same blocks are thrown back out ────────────────────── */
-.preloader.is-burst .pl-shard {
-  /* Per-block duration over a per-block distance — that pairing is what gives each
-     fragment its own speed instead of one uniform expanding ring. */
-  animation: pl-scatter var(--sdur, 700ms) cubic-bezier(0.08, 0.82, 0.28, 1) both;
+/* Every ring layer is centred on the core with left/top:50% plus a negative
+   percentage margin of half its own size, NOT `inset:0; margin:auto` — for an
+   over-constrained absolutely-positioned box (left, right and width all set) the
+   spec ignores `right` and resolves `margin-left` to zero, so `margin:auto` does
+   not centre an oversized child at all: it pins its left edge to the parent's and
+   lets it hang off to the right by half the overflow. Percentage margins resolve
+   against the containing block's *width* on both axes, which is why the core is
+   kept square. This also leaves each layer's `transform` free for its own tilt. */
+.pl-bh-glow,
+.pl-bh-eh {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
 }
 
-@keyframes pl-scatter {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.34);
-  }
-  8% {
-    opacity: 1;
-    transform: translate3d(calc(var(--sx) * 0.08), calc(var(--sy) * 0.08), 0)
-      rotate(calc(var(--srot) * 0.08)) scale(1.1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--sx), var(--sy), 0) rotate(var(--srot)) scale(0.72);
-  }
+/* Ambient bloom bleeding past the disk. */
+.pl-bh-glow {
+  width: 100%;
+  height: 100%;
+  margin: -50% 0 0 -50%;
+  background: var(--accent);
+  opacity: 0.28;
+  filter: blur(26px);
+  transform: scale(2.4);
 }
 
-/* Blast bloom at the seat of the explosion. */
+/* ── The two light rings ─────────────────────────────────────────────────────
+   Each ring is split into a far half and a near half, drawn on opposite sides of
+   the event horizon in the stacking order. That split is the whole trick: with
+   one element the ring can only ever be entirely in front of the sphere or
+   entirely behind it, which is why it read as "hidden behind" before. Halved,
+   the far arc passes behind the sphere and the near arc crosses in front, so the
+   ring genuinely wraps it.
+
+   Sized at 132% of the core so the band sits just off the surface rather than
+   floating out at 250% with a gap. */
+.pl-bh-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 132%;
+  height: 132%;
+  margin: -66% 0 0 -66%;
+}
+
+/* clip-path is evaluated in the element's own box, before its transform is
+   applied — so clipping the local top half and then tilting yields exactly the
+   half that ends up facing away. Which local half that is follows from the
+   rotation: rotateX(+θ) sends local +y (below centre) toward +z (the viewer), so
+   the bottom half is the near one; rotateY(+θ) sends local +x away, so for the
+   vertical ring the left half is the near one. */
+.pl-bh-ring--h { transform: rotateX(74deg); }
+.pl-bh-ring--v { transform: rotateZ(-16deg) rotateY(74deg); }
+
+.pl-bh-ring--h.is-far   { clip-path: inset(0 0 50% 0); z-index: 1; }
+.pl-bh-ring--h.is-near  { clip-path: inset(50% 0 0 0); z-index: 20; }
+.pl-bh-ring--v.is-far   { clip-path: inset(0 0 0 50%); z-index: 1; }
+.pl-bh-ring--v.is-near  { clip-path: inset(0 50% 0 0); z-index: 20; }
+
+/* The lit band itself lives on an inner element so the halves' clip-paths stay
+   still while this spins — spinning the clipped element instead would drag the
+   clip around with it and the two halves would stop meeting. */
+.pl-bh-ring > i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba(255, 255, 255, 0.98),
+    var(--accent),
+    var(--accent-deep),
+    var(--accent),
+    rgba(255, 255, 255, 0.98));
+  /* Ring, not disc. A radial mask rather than a gradient border-image: a
+     border-image makes the browser ignore border-radius and draw the border as a
+     rectangle, which the tilt then skews into a visible parallelogram. */
+  -webkit-mask: radial-gradient(circle closest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+  mask: radial-gradient(circle closest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+  animation: pl-bh-spin 9s linear infinite;
+  /* Both halves run the same animation from the same start, so they stay in
+     phase and the gradient reads as one continuous ring across the seam. */
+  will-change: transform;
+}
+
+/* Bloom, as its own blurred copy: a mask clips the element's entire rendering,
+   box-shadow included, so a shadow on the masked band would be cut away with
+   everything outside it. */
+.pl-bh-ring > i::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: inherit;
+  -webkit-mask: radial-gradient(circle closest-side, transparent calc(100% - 12px), #000 calc(100% - 12px));
+  mask: radial-gradient(circle closest-side, transparent calc(100% - 12px), #000 calc(100% - 12px));
+  filter: blur(7px);
+  opacity: 0.6;
+}
+
+/* Event horizon. Pure black, in front of both rings, with an inset ring of light
+   trapped at its edge — the photon sphere. */
+.pl-bh-eh {
+  width: 100%;
+  height: 100%;
+  margin: -50% 0 0 -50%;
+  background: #000;
+  z-index: 10;
+  box-shadow:
+    inset 0 0 18px 3px var(--pl-chip-glow),
+    0 0 15px var(--accent);
+}
+
+.pl-bh-label {
+  position: relative;
+  z-index: 20;
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Pure rotateZ — the ring's tilt is on its wrapper now, so this stays a flat
+   spin in the ring's own plane. Linear, so it never visibly eases or stutters. */
+@keyframes pl-bh-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Birth: the core flares and becomes the black hole ────────────────────────
+   Skills are still on their normal shell orbits through this whole beat — it's
+   about the core, not them, so nothing about their motion changes here. */
+.preloader.is-birth .pl-core {
+  animation: pl-birth-flare 480ms cubic-bezier(0.3, 0, 0.4, 1) both;
+}
+
+@keyframes pl-birth-flare {
+  0%   { transform: scale(1); filter: brightness(1); }
+  35%  { transform: scale(1.4); filter: brightness(3.5); }
+  100% { transform: scale(1); filter: brightness(1.3); }
+}
+
+/* The shockwave announcing it — reused from the old outward blast, repurposed:
+   there is no outward blast anymore (nothing ever scatters over the real page),
+   so this ring now marks the birth instead. */
 .pl-flash {
   position: fixed;
   left: 50%;
@@ -412,63 +607,43 @@
   pointer-events: none;
   opacity: 0;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%,
-    rgba(226, 199, 153, 0.6) 35%, rgba(226, 199, 153, 0) 70%);
+    var(--pl-chip-glow) 35%, rgba(226, 199, 153, 0) 70%);
 }
 
-.preloader.is-burst .pl-flash {
-  animation: pl-flash 420ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+.preloader.is-birth .pl-flash {
+  animation: pl-flash 480ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
 }
 
 @keyframes pl-flash {
   0%   { opacity: 0; transform: scale(0.4); }
-  12%  { opacity: 1; transform: scale(6); }
-  100% { opacity: 0; transform: scale(26); }
+  14%  { opacity: 1; transform: scale(5); }
+  100% { opacity: 0; transform: scale(16); }
 }
 
-.pl-core {
-  display: grid;
-  place-items: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 24px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: 0.02em;
-  /* Steps rather than a smooth ramp: one discrete jump per shard absorbed, so the
-     block is visibly gaining the stack instead of just swelling. */
-  animation: pl-core-grow var(--grow-dur, 880ms) steps(var(--grow-steps, 8), end)
-    var(--grow-delay, 230ms) both;
+/* Once active, the disk spins faster — visibly working, not just decorative. */
+.preloader.is-absorb .pl-bh-ring > i,
+.preloader.is-blackout .pl-bh-ring > i {
+  animation-duration: 2.2s;
 }
 
-@keyframes pl-core-grow {
-  from { transform: scale(0.62); }
-  to   { transform: scale(1); }
+/* ── Blackout: everything left goes dark before the cut to solid black ───────── */
+.preloader.is-blackout .pl-core,
+.preloader.is-blackout .pl-shells,
+.preloader.is-reveal .pl-core,
+.preloader.is-reveal .pl-shells {
+  opacity: 0;
+  transition: opacity 200ms ease-in;
 }
 
-.preloader.is-burst .pl-shard { opacity: 0; }
-
-.preloader.is-burst .preloader-name,
-.preloader.is-burst .preloader-role {
+.preloader.is-blackout .preloader-name,
+.preloader.is-blackout .preloader-role,
+.preloader.is-reveal .preloader-name,
+.preloader.is-reveal .preloader-role {
   animation: none;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 240ms ease-in, transform 240ms ease-in;
+  transition: opacity 200ms ease-in, transform 200ms ease-in;
 }
-
-/* ── Detonation: the block is consumed, the particle canvas carries the blast ─── */
-.preloader.is-burst .pl-core {
-  animation: pl-detonate 260ms cubic-bezier(0.5, 0, 0.9, 0.2) both;
-}
-
-/* A hard flinch outward, then gone — the block is the charge, not the explosion.
-   Everything after this frame is the canvas throwing particles. */
-@keyframes pl-detonate {
-  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
-  35%  { transform: scale(1.35); opacity: 1; filter: brightness(2.4); }
-  100% { transform: scale(0.2); opacity: 0; filter: brightness(3); }
-}
-
 
 .preloader-name {
   margin: 0 0 4px;
@@ -477,6 +652,12 @@
   font-size: 15px;
   color: var(--primary);
   animation: preloader-rise 420ms ease-out 260ms both;
+}
+
+.pl-pct {
+  color: var(--accent-text);
+  font-weight: 700;
+  margin-left: 6px;
 }
 
 .preloader-role {
@@ -494,12 +675,23 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* The rings reach out toward the screen edges, so the caption needs to sit closer
+   in on a phone or it collides with the outermost orbit. */
+@media (max-width: 520px) {
+  .pl-forge { width: 60px; height: 60px; }
+  .pl-caption { bottom: 5vh; }
+  .pl-core { width: 60px; height: 60px; font-size: 14px; }
+  .preloader-name { font-size: 13px; }
+  .preloader-role { font-size: 10px; letter-spacing: 0.1em; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .preloader-inner,
   .preloader-name,
   .preloader-role { animation: none; }
-  /* No flight, no absorption, no burst — just the finished block, held still. */
-  .pl-core { animation: none; transform: none; transition: none; }
+  /* No orbit, no collapse, no blast — just the finished mark, held still. */
+  .pl-core { transform: none; }
+  .pl-bh-ring > i { animation: none; }
   .pl-shard, .pl-flash { display: none; }
 }
 

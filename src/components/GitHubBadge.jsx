@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import C, { alpha } from "../theme";
 
-const GITHUB_USERNAME = "sghani001";
+const GITHUB_USERNAME = "dev-syedghani";
 
 // GitHub achievement data (hardcoded — GitHub API doesn't expose these)
 const ACHIEVEMENTS = [

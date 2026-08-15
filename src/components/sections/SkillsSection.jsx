@@ -7,10 +7,19 @@ import { FadeUp, SkillPill, Section } from "../UI";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { useInView } from "../../hooks/useInView";
 
+// Electron shells rather than concentric tracks. `incline` flattens each ring
+// toward edge-on and `tilt` rolls it to its own angle — rings sharing one tilt
+// just nest inside each other and read as a dartboard; crossing them at different
+// angles is what makes it an atom. Matches the splash's shells, minus the black
+// hole: here the centre is the Rails "sun", not a singularity.
+//
+// The outermost ring is kept nearly horizontal (small tilt) deliberately: a
+// rotated ring's on-screen height grows with its tilt, so a steeply-tilted outer
+// ring is the one that overruns the section's vertical bounds.
 const RINGS = [
-  { radius: 92, duration: 18, size: 38, iconSize: 16, icons: ["React.js", "PostgreSQL", "Redis"] },
-  { radius: 168, duration: 32, size: 42, iconSize: 18, icons: ["Sidekiq", "Docker", "AWS"] },
-  { radius: 244, duration: 48, size: 42, iconSize: 18, icons: ["Stripe", "GitHub Actions", "TailwindCSS"] },
+  { radius: 92, duration: 18, size: 38, iconSize: 16, incline: 72, tilt: -20, icons: ["React.js", "PostgreSQL", "Redis"] },
+  { radius: 168, duration: 32, size: 42, iconSize: 18, incline: 66, tilt: 42, icons: ["Sidekiq", "Docker", "AWS"] },
+  { radius: 244, duration: 48, size: 42, iconSize: 18, incline: 70, tilt: 8, icons: ["Stripe", "GitHub Actions", "TailwindCSS"] },
 ];
 
 // The ring radii above are the full-size (desktop) values. On narrow screens the
@@ -30,49 +39,68 @@ function useSolarScale(baseDiameter) {
   return scale;
 }
 
-function OrbitRing({ radius, duration, size, iconSize, icons, active }) {
+function OrbitRing({ radius, duration, size, iconSize, icons, active, incline, tilt }) {
   // Parked off-screen: a stopped animation costs nothing, and nobody can see
   // the reset to 0deg because the whole system is out of view when it happens.
   const spin = active ? { rotate: 360 } : { rotate: 0 };
   const spinBack = active ? { rotate: -360 } : { rotate: 0 };
   const loop = active ? { duration, repeat: Infinity, ease: "linear" } : { duration: 0 };
 
+  // Undoes this shell's own tilt so the icon faces the viewer instead of lying
+  // flat in the ring's plane. Every rotation between here and the shell is about
+  // Z (the orbital spin, its counter-spin, and the ±angle placement) and they all
+  // cancel, so the only orientation left to reverse is the shell's rotateX·rotateZ
+  // — applied in reverse order, which cancels to identity exactly.
+  const faceViewer = `rotateX(${-incline}deg) rotateZ(${-tilt}deg)`;
+
   return (
-    <>
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        transformStyle: "preserve-3d",
+        transform: `rotateZ(${tilt}deg) rotateX(${incline}deg)`,
+      }}
+    >
       <div style={{ position: "absolute", top: "50%", left: "50%", width: radius * 2, height: radius * 2, marginLeft: -radius, marginTop: -radius, borderRadius: "50%", border: `1px dashed ${C.border}` }} />
       <motion.div
-        style={{ position: "absolute", inset: 0 }}
+        style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d" }}
         animate={spin}
         transition={loop}
       >
         {icons.map((name, i) => {
           const angle = (360 / icons.length) * i;
           return (
-            <div key={name} style={{ position: "absolute", top: "50%", left: "50%", transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)` }}>
+            <div key={name} style={{ position: "absolute", top: "50%", left: "50%", transformStyle: "preserve-3d", transform: `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)` }}>
               <motion.div
                 animate={spinBack}
                 transition={loop}
-                style={{
-                  marginLeft: -size / 2,
-                  marginTop: -size / 2,
-                  width: size,
-                  height: size,
-                  borderRadius: Math.round(size * 0.28),
-                  background: C.surface,
-                  border: `1px solid ${C.border}`,
-                  boxShadow: "0 4px 16px var(--shadow-base)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                style={{ transformStyle: "preserve-3d" }}
               >
-                <IconForTech name={name} size={iconSize} colored />
+                <div
+                  style={{
+                    transform: faceViewer,
+                    marginLeft: -size / 2,
+                    marginTop: -size / 2,
+                    width: size,
+                    height: size,
+                    borderRadius: "50%",
+                    background: C.surface,
+                    border: `1px solid ${C.border}`,
+                    boxShadow: "0 4px 16px var(--shadow-base)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconForTech name={name} size={iconSize} colored />
+                </div>
               </motion.div>
             </div>
           );
         })}
       </motion.div>
-    </>
+    </div>
   );
 }
 
@@ -105,7 +133,9 @@ function SkillSolarSystem() {
           height: diameter,
           margin: "0 auto",
           transformStyle: "preserve-3d",
-          transform: "rotateX(45deg)",
+          /* No shared rotateX here any more: one tilt applied to the whole system
+             nests the rings inside each other (a dartboard). Each ring now carries
+             its own incline/tilt so they cross — see RINGS. */
         }}
       >
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `radial-gradient(circle, ${alpha(C.copper, "12")} 0%, transparent 65%)` }} />
