@@ -377,6 +377,19 @@
      (an orthographic projection of an edge-on circle is a segment) — this is what
      turns them into the ellipses that read as a disk seen from above. */
   perspective: 700px;
+  /* Fades the whole atom up on mount. The simulation starts at t=0 with every
+     skill already at its seeded angle, so without this the first painted frame is
+     a fully-formed system appearing out of nowhere mid-orbit — which reads as a
+     glitch rather than a start. Applied to the container, not the skills: their
+     opacity is written per-frame by the loop, so a fade on them individually
+     would be overwritten on the very next frame. Parent opacity multiplies with
+     the inline values instead, leaving the loop's depth-fading intact. */
+  animation: pl-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pl-enter {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* Out of the orbit's way, at the foot of the screen. */
@@ -689,7 +702,10 @@
   .preloader-inner,
   .preloader-name,
   .preloader-role { animation: none; }
-  /* No orbit, no collapse, no blast — just the finished mark, held still. */
+  /* No orbit, no collapse, no blast — just the finished mark, held still. Note
+     the forge needs opacity:1 explicitly, since killing the animation drops the
+     fill-mode that was holding it visible. */
+  .pl-forge { animation: none; opacity: 1; transform: none; }
   .pl-core { transform: none; }
   .pl-bh-ring > i { animation: none; }
   .pl-shard, .pl-flash { display: none; }

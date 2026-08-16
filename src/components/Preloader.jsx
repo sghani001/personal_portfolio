@@ -3,39 +3,53 @@ import { IconForTech } from "./Icons";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 // ── Timeline ────────────────────────────────────────────────────────────────
-// orbit → birth → absorb → blackout → reveal.
-// This is the dial to turn if the splash feels long overall.
-const ORBIT_MS = 3600;
+// orbit → birth → absorb → blackout → reveal. Roughly 3.2s end to end on a warm
+// load, down from ~7s: the orbit was a fixed 3.6s that ran in full even when the
+// page was already sitting there ready behind it.
+//
+// This is a FLOOR, not a fixed duration. The handover gates on `orbitDone && ready`
+// (see below), so the orbit actually lasts max(this, time to DOMContentLoaded) —
+// a fast connection gets a brief pass, a slow one still gets the full show while
+// it waits. Long enough that the shells read as orbiting rather than flashing.
+const ORBIT_MIN_MS = 1300;
 // The core flaring — the moment it "goes off" and becomes a black hole. Skills
 // keep orbiting untouched through this; it's a beat about the core, not them.
-const BIRTH_MS = 480;
+const BIRTH_MS = 340;
 // Skills start diving at random moments inside this window after birth, rather
 // than in shell/index order, so the infall looks like it's coming apart rather
 // than counting down.
-const DIVE_STAGGER_MS = 750;
+const DIVE_STAGGER_MS = 380;
 // Held once every skill has been swallowed, before the screen goes black — long
 // enough to register "it's finished eating" before the cut.
-const SETTLE_MS = 180;
+const SETTLE_MS = 120;
 // Core and rings vanish, screen goes solid black. No debris outlives this — it's
 // what guarantees nothing from the sequence is ever seen on top of the real page.
-const BLACKOUT_MS = 260;
+const BLACKOUT_MS = 170;
 // Solid black fades out to reveal the page underneath.
-const REVEAL_MS = 700;
-// Ceiling on waiting for `load` only — the choreography above runs regardless.
-const MAX_WAIT_MS = 9000;
+const REVEAL_MS = 420;
+// Hard ceiling on waiting for the document, so a pathologically slow parse can
+// never strand anyone on the splash. Lowered from 8000: with the gate now on
+// DOMContentLoaded rather than `load`, waiting longer than this means something
+// is wrong and showing the page is better than showing more animation.
+const MAX_WAIT_MS = 3000;
 
 // ── Dive physics ────────────────────────────────────────────────────────────
 // A skill breaking from its shell gets a tangential kick (exaggerated relative to
 // its slow display-orbit speed — a stylised sling, not a literal continuation of
 // it, or the curve is too subtle to read) and is then pulled in by a softened
 // inverse-linear force with drag bleeding its angular momentum. Kick, pull and
-// drag were tuned numerically (not eyeballed) against the actual shell radii this
-// splash uses — see the simulation notes in the PR — landing on a visible partial
-// spiral (roughly a sixth to half a loop depending on how far out it started) that
-// still finishes within about a second even for the outermost shell.
-const DIVE_PULL = 520000;
+// drag are tuned numerically against the shell radii this splash actually uses
+// (141/230/320px desktop, 66/108/150 mobile), not eyeballed: the pairing below
+// gives a visible partial spiral — 0.13 to 0.31 of a turn depending on how far out
+// it started — with the slowest dive landing in ~500ms.
+//
+// Drag is the non-obvious lever. Raising PULL alone made the outer shell *worse*
+// (a 900k/1.8 pairing sent it nearly a full 0.83-turn loop, taking 1033ms — longer
+// than the gentler setting it replaced), because a faster particle that keeps its
+// angular momentum just orbits instead of falling. Drag has to come up with it.
+const DIVE_PULL = 1300000;
 const DIVE_SOFT = 70;
-const DIVE_DRAG = 1.8;
+const DIVE_DRAG = 2.4;
 const DIVE_KICK = 1.55;
 // Where the final shrink/fade begins, in px of distance from the core — keyed to
 // proximity rather than elapsed time, since dive duration now varies per skill.
@@ -111,6 +125,10 @@ export function Preloader({ onDone }) {
   const shardRefs = useRef([]);
   const pctRef = useRef(null);
   const allAbsorbedRef = useRef(null);
+  // Timestamp the absorb phase opened. The physics loop reads this to know when
+  // skills may start leaving orbit, so the simulation follows the choreography
+  // rather than running a parallel clock that can drift out of step with it.
+  const diveStartRef = useRef(0);
   const [orbitDone, setOrbitDone] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -120,7 +138,7 @@ export function Preloader({ onDone }) {
   // this gate depended on the physics loop instead, a stalled compositor would
   // leave the splash orbiting forever with the real site never revealed.
   useEffect(() => {
-    const t = setTimeout(() => setOrbitDone(true), reducedMotion ? 0 : ORBIT_MS);
+    const t = setTimeout(() => setOrbitDone(true), reducedMotion ? 0 : ORBIT_MIN_MS);
     return () => clearTimeout(t);
   }, [reducedMotion]);
 
@@ -187,7 +205,12 @@ export function Preloader({ onDone }) {
       const t = now - t0;
       const { outer, core: coreSize } = metricsRef.current;
       const coreR = coreSize / 2;
-      const diveEligibleAt = ORBIT_MS + BIRTH_MS;
+      // Set by the choreography when the absorb phase opens, rather than derived
+      // from this loop's own clock. The orbit's length is adaptive (it waits on
+      // `load`), so a locally-computed "dive at ORBIT+BIRTH" would fire on its own
+      // schedule and skills would start falling while the phase machine was still
+      // holding on the orbit.
+      const diveFrom = diveStartRef.current;
 
       parts.forEach((p) => {
         if (p.state === "absorbed") return;
@@ -195,7 +218,7 @@ export function Preloader({ onDone }) {
         let depth = 0;
 
         if (p.state === "orbit") {
-          if (t >= diveEligibleAt + p.diveAt) {
+          if (diveFrom && now >= diveFrom + p.diveAt) {
             // Breaking from the shell: capture the tangent direction of the orbit
             // at this exact point (the derivative of the position formula below)
             // so the handoff has no snap, then exaggerate it into a kick — the
@@ -282,9 +305,11 @@ export function Preloader({ onDone }) {
       // absorption finishes it. Written straight to the node — running this
       // through React state would re-render the whole splash sixty times a second.
       if (pctRef.current) {
+        // Capped at 70 during the orbit rather than run off its own clock: the
+        // orbit can last arbitrarily long while waiting on `load`, and a bar that
+        // marched to 100% and sat there would be lying about being finished.
         let pct;
-        if (t < ORBIT_MS) pct = (t / ORBIT_MS) * 70;
-        else if (t < diveEligibleAt) pct = 70 + ((t - ORBIT_MS) / BIRTH_MS) * 8;
+        if (!diveFrom) pct = Math.min(70, (t / ORBIT_MIN_MS) * 70);
         else pct = 78 + (absorbed / parts.length) * 22;
         pctRef.current.textContent = `${Math.min(100, Math.round(pct))}%`;
       }
@@ -308,14 +333,22 @@ export function Preloader({ onDone }) {
     };
   }, [reducedMotion, seeds]);
 
+  // Gated on DOMContentLoaded, not `load`. `load` waits for every subresource —
+  // every project screenshot, every below-the-fold image — so on a cold visit it
+  // can fire many seconds after the page is perfectly presentable, and the splash
+  // would sit there the whole time. (Locally the two are indistinguishable, 789ms
+  // vs 794ms, because everything is cached and same-host — which is exactly why
+  // this is worth being deliberate about rather than trusting a local reading.)
+  // What the splash is actually covering is the initial render, and that is done
+  // at DOMContentLoaded.
   useEffect(() => {
     const markReady = () => setReady(true);
     const ceiling = setTimeout(markReady, MAX_WAIT_MS);
-    if (document.readyState === "complete") markReady();
-    else window.addEventListener("load", markReady, { once: true });
+    if (document.readyState !== "loading") markReady();
+    else document.addEventListener("DOMContentLoaded", markReady, { once: true });
     return () => {
       clearTimeout(ceiling);
-      window.removeEventListener("load", markReady);
+      document.removeEventListener("DOMContentLoaded", markReady);
     };
   }, []);
 
@@ -342,16 +375,17 @@ export function Preloader({ onDone }) {
       await wait(BIRTH_MS);
       if (cancelled) return;
 
+      diveStartRef.current = performance.now();
       setPhase("absorb");
-      // Raced against a generous ceiling, not awaited outright: this promise only
-      // resolves from inside the rAF physics loop, and rAF does not run at all on
-      // a stalled/backgrounded compositor. Worst realistic case is one stagger
-      // window plus one outer-shell dive plus the settle beat (≈750+950+180ms);
+      // Raced against a ceiling, not awaited outright: this promise only resolves
+      // from inside the rAF physics loop, and rAF does not run at all on a
+      // stalled/backgrounded compositor. Worst realistic case is one stagger
+      // window plus one outer-shell dive plus the settle beat (≈380+500+120ms);
       // the ceiling gives that roughly 2× headroom so a genuinely stuck loop can't
       // leave the real site permanently hidden behind the splash.
       await Promise.race([
         new Promise((resolve) => { allAbsorbedRef.current = resolve; }),
-        wait(4500),
+        wait(2200),
       ]);
       if (cancelled) return;
 
