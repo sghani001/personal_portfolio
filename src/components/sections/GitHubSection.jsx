@@ -6,8 +6,8 @@ import { useLeetCodeStats } from "../../hooks/useLeetCodeStats";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { useThemeMode } from "../../hooks/useThemeMode";
 
-const GITHUB_USERNAME = "sghani001";
-const LEETCODE_USERNAME = "sghani001";
+const GITHUB_USERNAME = "dev-syedghani";
+const LEETCODE_USERNAME = "syedghani";
 
 // Oldest year worth offering — GitHub's own profile sidebar stops here, because
 // there is no contribution data before the account existed.
